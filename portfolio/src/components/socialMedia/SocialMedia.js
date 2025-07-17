@@ -127,6 +127,18 @@ export default function socialMedia() {
           <span></span>
         </a>
       ) : null}
+
+      {socialMediaLinks.phone ? (
+        <a
+          href={`tel:${socialMediaLinks.phone}`}
+          className="icon-button phone"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <i className="fas fa-phone"></i>
+          <span></span>
+        </a>
+      ) : null}
     </div>
   );
 }

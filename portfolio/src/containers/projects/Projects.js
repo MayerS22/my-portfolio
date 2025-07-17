@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useContext, Suspense, lazy} from "react";
 import "./Project.scss";
 import Button from "../../components/button/Button";
-import {openSource, socialMediaLinks} from "../../portfolio";
+import {socialMediaLinks} from "../../portfolio";
 import StyleContext from "../../contexts/StyleContext";
 import Loading from "../../containers/loading/Loading";
 export default function Projects() {
@@ -15,33 +15,14 @@ export default function Projects() {
   const {isDark} = useContext(StyleContext);
 
   useEffect(() => {
-    const getRepoData = () => {
-      fetch("/profile.json")
-        .then(result => {
-          if (result.ok) {
-            return result.json();
-          }
-          throw result;
-        })
-        .then(response => {
-          setrepoFunction(response.data.user.pinnedItems.edges);
-        })
-        .catch(function (error) {
-          console.error(
-            `${error} (because of this error, nothing is shown in place of Projects section. Also check if Projects section has been configured)`
-          );
-          setrepoFunction("Error");
-        });
-    };
-    getRepoData();
+    // Remove all fetch('/profile.json') and related logic for GitHub profile. Only keep default projects display logic.
   }, []);
 
   function setrepoFunction(array) {
     setrepo(array);
   }
   if (
-    !(typeof repo === "string" || repo instanceof String) &&
-    openSource.display
+    !(typeof repo === "string" || repo instanceof String)
   ) {
     return (
       <Suspense fallback={renderLoader()}>

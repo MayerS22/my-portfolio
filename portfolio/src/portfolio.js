@@ -23,7 +23,7 @@ const greeting = {
   username: "Mayer Soliman Hedya",
   title: "Hi, I'm Mayer",
   subTitle: emoji(
-    "I am an avid believer in personal growth and creative exploration, constantly seeking opportunities to enhance my skills and knowledge. With a passion for self-learning and discovery, I am eager to connect with individuals who share fresh perspectives and diverse experiences. I am excited to both learn from and contribute to this dynamic exchange of ideas, fostering mutual growth and inspiration."
+    "I am a passionate full stack developer who thrives on continuous learning and creative problem-solving. I believe that personal growth comes from embracing new challenges and exploring innovative solutions. My curiosity drives me to stay up-to-date with the latest technologies and best practices, while my collaborative spirit inspires me to connect with people from diverse backgrounds. I’m always eager to share knowledge, gain fresh perspectives, and contribute to a dynamic community where everyone can grow and succeed together."
   ),
   resumeLink: "", // Add a link if you have an online resume
   displayGreeting: true
@@ -32,9 +32,10 @@ const greeting = {
 // Social Media Links
 
 const socialMediaLinks = {
-  github: "", // Add your GitHub if available
-  linkedin: "", // Add your LinkedIn if available
-  gmail: "", // Add your email if you want
+  github: "https://github.com/MayerS22",
+  linkedin: "https://www.linkedin.com/in/mayer-frieg-7a0368226/",
+  gmail: "mayerfrieg@outlook.com",
+  phone: "+201288244283",
   display: true
 };
 
@@ -73,10 +74,10 @@ const educationInfo = {
   schools: [
     {
       schoolName: "Ain Shams University",
-      logo: require("./assets/images/harvardLogo.png"), // Replace with your university logo if available
+      logo: require("./assets/images/AinShams.jpeg"), // Replace with your university logo if available
       subHeader: "Bachelors of Computer and Information Science",
       duration: "Sept 2021 - July 2025",
-      desc: "GPA: 3.025"
+      desc: "GPA: 3.005"
     }
   ]
 };
@@ -108,25 +109,32 @@ const workExperiences = {
   display: true,
   experience: [
     {
+      role: "Software Engineer",
+      company: "QueenSoft",
+      companylogo: require("./assets/images/QueenSoft.jpg"), // Replace with your logo if available
+      date: "Jan. 2025 – Present",
+      desc: "Full Stack Developer"
+    },
+    {
       role: "Assistant",
       company: "Christian Medical Foundation (CMF)",
-      companylogo: require("./assets/images/facebookLogo.png"), // Replace with your logo if available
+      companylogo: require("./assets/images/cmf.jpg"), // Replace with your logo if available
       date: "Aug. 2023 – Present",
       desc: "Assistant for the manager of the foundation. Making reports, organizing meetings, and events."
     },
     {
       role: "HR Team Leader (Volunteer)",
       company: "Microsoft Tech Club at Ain Shams University (MSP)",
-      companylogo: require("./assets/images/quoraLogo.png"),
+      companylogo: require("./assets/images/MSP.png"),
       date: "Oct 2022 – Oct 2023",
       desc: "Volunteering job."
     },
     {
       role: "Data Entry",
       company: "Christian Medical Foundation (CMF)",
-      companylogo: require("./assets/images/airbnbLogo.png"),
+      companylogo: require("./assets/images/cmf.jpg"),
       date: "Sept 2022 – Feb 2023",
-      desc: "Created a database for the committee using Microsoft Access."
+      desc: "Creating a database for the committee using Microsoft Access."
     }
   ]
 };
@@ -263,38 +271,6 @@ const blogSection = {
   display: true // Set false to hide this section, defaults to true
 };
 
-// Talks Sections
-
-const talkSection = {
-  title: "TALKS",
-  subtitle: emoji(
-    "I LOVE TO SHARE MY LIMITED KNOWLEDGE AND GET A SPEAKER BADGE 😅"
-  ),
-
-  talks: [
-    {
-      title: "Build Actions For Google Assistant",
-      subtitle: "Codelab at GDG DevFest Karachi 2019",
-      slides_url: "https://bit.ly/saadpasta-slides",
-      event_url: "https://www.facebook.com/events/2339906106275053/"
-    }
-  ],
-  display: true // Set false to hide this section, defaults to true
-};
-
-// Podcast Section
-
-const podcastSection = {
-  title: emoji("Podcast 🎙️"),
-  subtitle: "I LOVE TO TALK ABOUT MYSELF AND TECHNOLOGY",
-
-  // Please Provide with Your Podcast embeded Link
-  podcast: [
-    "https://anchor.fm/codevcast/embed/episodes/DevStory---Saad-Pasta-from-Karachi--Pakistan-e9givv/a-a15itvo"
-  ],
-  display: true // Set false to hide this section, defaults to true
-};
-
 // Resume Section
 const resumeSection = {
   title: "Resume",
@@ -307,8 +283,6 @@ const resumeSection = {
 const contactInfo = {
   title: emoji("Contact Me ☎️"),
   subtitle: "Discuss a project or just want to say hi? My Inbox is open for all.",
-  number: "", // Add your phone number if you want
-  email_address: "" // Add your email if you want
 };
 
 // Twitter Section
@@ -329,12 +303,9 @@ export {
   educationInfo,
   techStack,
   workExperiences,
-  openSource,
   bigProjects,
   achievementSection,
   blogSection,
-  talkSection,
-  podcastSection,
   contactInfo,
   twitterDetails,
   isHireable,
