@@ -13,24 +13,24 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Your Name - Full Stack Developer",
+  title: "Mayer Frieg - Full Stack Developer",
   description: "Professional full-stack developer specializing in modern web technologies. Creating exceptional digital experiences with React, Next.js, Node.js, and more.",
-  keywords: "full stack developer, web developer, react, nextjs, typescript, nodejs, portfolio",
-  authors: [{ name: "Your Name" }],
-  creator: "Your Name",
+  keywords: "full stack developer, web developer, react, nextjs, typescript, nodejs, portfolio, mayer frieg",
+  authors: [{ name: "Mayer Frieg" }],
+  creator: "Mayer Frieg",
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://yourportfolio.com",
-    title: "Your Name - Full Stack Developer",
+    url: "https://mayerfrieg.dev",
+    title: "Mayer Frieg - Full Stack Developer",
     description: "Professional full-stack developer specializing in modern web technologies.",
-    siteName: "Your Portfolio",
+    siteName: "Mayer Frieg Portfolio",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Your Name - Full Stack Developer",
+    title: "Mayer Frieg - Full Stack Developer",
     description: "Professional full-stack developer specializing in modern web technologies.",
-    creator: "@yourusername",
+    creator: "@mayerfrieg",
   },
   robots: {
     index: true,

@@ -1,8 +1,13 @@
 'use client'
 
+import { motion } from 'framer-motion'
+import { useInView } from 'framer-motion'
+import { useRef } from 'react'
 import { Code, Users, Zap, Target } from 'lucide-react'
 
 const About = () => {
+  const ref = useRef(null)
+  const isInView = useInView(ref, { once: true, margin: "-100px" })
 
   const stats = [
     { icon: Code, value: "1+", label: "Years Experience" },
@@ -12,81 +17,169 @@ const About = () => {
   ]
 
   return (
-    <section id="about" className="py-20 relative overflow-hidden animated-bg">
-      {/* Simplified Background Elements */}
+    <section id="about" ref={ref} className="py-20 relative overflow-hidden animated-bg">
+      {/* Enhanced Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
-        {/* Static floating orbs */}
-        <div className="absolute top-20 right-20 w-72 h-72 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full blur-3xl" />
-        <div className="absolute bottom-20 left-20 w-96 h-96 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 rounded-full blur-3xl" />
+        {/* Animated floating orbs */}
+        <motion.div 
+          className="absolute top-20 right-20 w-72 h-72 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full blur-3xl"
+          animate={{ 
+            scale: [1, 1.1, 1],
+            opacity: [0.3, 0.6, 0.3]
+          }}
+          transition={{ 
+            duration: 4,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
+        <motion.div 
+          className="absolute bottom-20 left-20 w-96 h-96 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 rounded-full blur-3xl"
+          animate={{ 
+            scale: [1.1, 1, 1.1],
+            opacity: [0.4, 0.7, 0.4]
+          }}
+          transition={{ 
+            duration: 5,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 1
+          }}
+        />
       </div>
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="text-center mb-16">
+        <motion.div 
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6 }}
+        >
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
             About <span className="text-gradient">Me</span>
           </h2>
           <p className="text-lg text-gray-400 max-w-3xl mx-auto">
             Passionate Full-Stack Developer with expertise in modern web technologies
           </p>
-        </div>
+        </motion.div>
 
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left side - Content */}
-          <div className="space-y-6">
-            <h3 className="text-2xl md:text-3xl font-bold text-white">
+          <motion.div 
+            className="space-y-6"
+            initial={{ opacity: 0, x: -30 }}
+            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            <motion.h3 
+              className="text-2xl md:text-3xl font-bold text-white"
+              whileHover={{ scale: 1.02 }}
+              transition={{ duration: 0.3 }}
+            >
               Turning Ideas Into Digital Reality
-            </h3>
+            </motion.h3>
             
             <div className="space-y-4 text-gray-300 leading-relaxed">
-              <p>
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.6, delay: 0.3 }}
+              >
                 I am a passionate Full-Stack Developer who thrives on continuous learning and creative problem-solving. 
                 I specialize in building complete web applications from frontend to backend, ensuring seamless user experiences 
                 and robust server-side solutions. My approach combines technical expertise with a focus on user-centered design.
-              </p>
+              </motion.p>
               
-              <p>
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.6, delay: 0.4 }}
+              >
                 I specialize in building modern, scalable full-stack web applications. From responsive frontend interfaces 
                 to robust backend systems, I create complete solutions that deliver exceptional user experiences and powerful functionality.
                 My expertise spans across web development, mobile applications, and cloud infrastructure.
-              </p>
+              </motion.p>
               
-              <p>
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.6, delay: 0.5 }}
+              >
                 When I&apos;m not coding, you&apos;ll find me exploring new technologies, 
                 contributing to open-source projects, or sharing knowledge with 
                 the developer community. I believe in continuous learning and 
                 staying ahead of industry trends.
-              </p>
+              </motion.p>
             </div>
 
-            {/* Stats */}
-            <div className="grid grid-cols-2 gap-6 pt-8">
+            {/* Enhanced Stats */}
+            <motion.div 
+              className="grid grid-cols-2 gap-6 pt-8"
+              initial={{ opacity: 0, y: 30 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.6, delay: 0.6 }}
+            >
               {stats.map((stat, index) => (
-                <div
+                <motion.div
                   key={stat.label}
-                  className="text-center p-4 rounded-lg glass-card hover:glow transition-all duration-300"
+                  className="text-center p-6 rounded-xl glass-card hover:glow transition-all duration-300 group"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={isInView ? { opacity: 1, scale: 1 } : {}}
+                  transition={{ duration: 0.4, delay: 0.7 + index * 0.1 }}
+                  whileHover={{ 
+                    scale: 1.05,
+                    y: -5,
+                    transition: { duration: 0.2 }
+                  }}
                 >
-                  <stat.icon className="w-8 h-8 text-cyan-400 mx-auto mb-2" />
-                  <div className="text-2xl font-bold text-white">{stat.value}</div>
+                  <motion.div
+                    whileHover={{ rotate: 360 }}
+                    transition={{ duration: 0.6 }}
+                  >
+                    <stat.icon className="w-10 h-10 text-cyan-400 mx-auto mb-3 group-hover:text-purple-400 transition-colors duration-300" />
+                  </motion.div>
+                  <div className="text-3xl font-bold text-white mb-1">{stat.value}</div>
                   <div className="text-sm text-gray-400">{stat.label}</div>
-                </div>
+                </motion.div>
               ))}
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
 
           {/* Right side - Visual */}
-          <div className="relative">
-            {/* Main card */}
-            <div className="relative p-8 rounded-2xl glass-card hover:glow transition-all duration-300">
+          <motion.div 
+            className="relative"
+            initial={{ opacity: 0, x: 30 }}
+            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.4 }}
+          >
+            {/* Enhanced Main card */}
+            <motion.div 
+              className="relative p-8 rounded-2xl glass-card hover:glow transition-all duration-300"
+              whileHover={{ 
+                scale: 1.02,
+                y: -5,
+                transition: { duration: 0.3 }
+              }}
+            >
               <div className="space-y-6">
-                <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 bg-gradient-to-br from-cyan-500 to-purple-500 rounded-full flex items-center justify-center">
+                <motion.div 
+                  className="flex items-center gap-4"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={isInView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ duration: 0.6, delay: 0.8 }}
+                >
+                  <motion.div 
+                    className="w-16 h-16 bg-gradient-to-br from-cyan-500 to-purple-500 rounded-full flex items-center justify-center"
+                    whileHover={{ rotate: 360 }}
+                    transition={{ duration: 0.6 }}
+                  >
                     <Code className="w-8 h-8 text-white" />
-                  </div>
+                  </motion.div>
                   <div>
                     <h4 className="text-xl font-bold text-white">Full-Stack Development</h4>
                     <p className="text-gray-400">End-to-end solutions</p>
                   </div>
-                </div>
+                </motion.div>
 
                 <div className="space-y-4">
                   {[
@@ -96,18 +189,26 @@ const About = () => {
                     "UI/UX Design Implementation",
                     "Performance Optimization & Testing"
                   ].map((skill, index) => (
-                    <div
+                    <motion.div
                       key={skill}
-                      className="flex items-center gap-3"
+                      className="flex items-center gap-3 group"
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={isInView ? { opacity: 1, x: 0 } : {}}
+                      transition={{ duration: 0.4, delay: 0.9 + index * 0.1 }}
+                      whileHover={{ x: 10 }}
                     >
-                      <div className="w-2 h-2 bg-cyan-400 rounded-full" />
-                      <span className="text-gray-300">{skill}</span>
-                    </div>
+                      <motion.div 
+                        className="w-2 h-2 bg-cyan-400 rounded-full group-hover:bg-purple-400 transition-colors duration-300"
+                        whileHover={{ scale: 1.5 }}
+                        transition={{ duration: 0.2 }}
+                      />
+                      <span className="text-gray-300 group-hover:text-white transition-colors duration-300">{skill}</span>
+                    </motion.div>
                   ))}
                 </div>
               </div>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </div>
       </div>
     </section>
