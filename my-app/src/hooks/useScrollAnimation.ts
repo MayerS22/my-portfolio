@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { useInView, useScroll, useTransform, useSpring } from 'framer-motion'
 
 export const useScrollAnimation = (threshold = 0.1) => {
   const ref = useRef<HTMLElement>(null)
@@ -56,4 +57,68 @@ export const useScrollPosition = () => {
   }, [])
 
   return scrollY
+}
+
+// Advanced scroll trigger hook with Framer Motion
+export const useAdvancedScrollTrigger = (options = {}) => {
+  const ref = useRef(null)
+  const isInView = useInView(ref, { 
+    once: true, 
+    margin: "-100px",
+    ...options 
+  })
+  
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"]
+  })
+  
+  const y = useTransform(scrollYProgress, [0, 1], [100, -100])
+  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0])
+  const scale = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.8, 1, 1, 0.8])
+  
+  const springY = useSpring(y, { stiffness: 100, damping: 30 })
+  const springOpacity = useSpring(opacity, { stiffness: 100, damping: 30 })
+  const springScale = useSpring(scale, { stiffness: 100, damping: 30 })
+
+  return {
+    ref,
+    isInView,
+    scrollYProgress,
+    y: springY,
+    opacity: springOpacity,
+    scale: springScale
+  }
+}
+
+// Hook for staggered animations
+export const useStaggeredAnimation = (delay = 0.1) => {
+  const ref = useRef(null)
+  const isInView = useInView(ref, { once: true, margin: "-50px" })
+  
+  return {
+    ref,
+    isInView,
+    staggerChildren: delay,
+    delayChildren: delay
+  }
+}
+
+// Hook for scroll-based progress
+export const useScrollProgress = () => {
+  const [scrollProgress, setScrollProgress] = useState(0)
+  
+  useEffect(() => {
+    const updateScrollProgress = () => {
+      const scrollTop = window.scrollY
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight
+      const progress = (scrollTop / docHeight) * 100
+      setScrollProgress(progress)
+    }
+    
+    window.addEventListener('scroll', updateScrollProgress)
+    return () => window.removeEventListener('scroll', updateScrollProgress)
+  }, [])
+  
+  return scrollProgress
 }

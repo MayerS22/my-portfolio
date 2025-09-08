@@ -1,14 +1,26 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { motion, useScroll, useTransform } from 'framer-motion'
 import { useInView } from 'framer-motion'
 import { useRef } from 'react'
 import { Calendar, MapPin, Building, GraduationCap, Award, Briefcase } from 'lucide-react'
 import Image from 'next/image'
+import { useAdvancedScrollTrigger, useStaggeredAnimation } from '@/hooks/useScrollAnimation'
 
 const Experience = () => {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
+  
+  // Scroll trigger for the entire section
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"]
+  })
+  
+  // Transform scroll progress into different animation values
+  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0])
+  const scale = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.8, 1, 1, 0.8])
+  const y = useTransform(scrollYProgress, [0, 1], [100, -100])
 
   const experiences = [
     {
@@ -159,26 +171,16 @@ const Experience = () => {
 
   return (
     <section id="experience" ref={ref} className="py-20 relative overflow-hidden animated-bg">
-      {/* Simplified Background Elements */}
+      {/* Simple Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
         {/* Static floating orbs */}
-        <div className="absolute top-20 right-20 w-72 h-72 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-20 left-20 w-96 h-96 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 rounded-full blur-3xl animate-pulse" />
-        
-        {/* Static grid pattern */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-            backgroundRepeat: 'repeat'
-          }}></div>
-        </div>
+        <div className="absolute top-20 right-20 w-72 h-72 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full blur-3xl" />
+        <div className="absolute bottom-20 left-20 w-96 h-96 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 rounded-full blur-3xl" />
       </div>
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8 }}
+          style={{ opacity, scale, y }}
           className="text-center mb-16"
         >
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
@@ -192,22 +194,17 @@ const Experience = () => {
         <div className="grid lg:grid-cols-2 gap-12">
           {/* Left Column - Education & Work Experience */}
           <motion.div
-            initial={{ opacity: 0, x: -50 }}
+            initial={{ opacity: 0, x: -30 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.2 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
             className="space-y-12"
           >
             {/* Education */}
             <div>
-              <motion.div 
-                className="flex items-center mb-8"
-                initial={{ opacity: 0, x: -30 }}
-                animate={isInView ? { opacity: 1, x: 0 } : {}}
-                transition={{ duration: 0.6, delay: 0.3 }}
-              >
+              <div className="flex items-center mb-8">
                 <GraduationCap className="text-cyan-400 mr-3" size={24} />
                 <h3 className="text-2xl font-bold text-white">Education</h3>
-              </motion.div>
+              </div>
               
               <div className="space-y-6">
                 {education.map((edu, index) => (
@@ -215,10 +212,11 @@ const Experience = () => {
                     key={index}
                     initial={{ opacity: 0, y: 20 }}
                     animate={isInView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.6, delay: 0.4 + index * 0.1 }}
+                    transition={{ duration: 0.4, delay: 0.3 + index * 0.1 }}
                     whileHover={{ 
                       scale: 1.02, 
-                      y: -5
+                      y: -5,
+                      transition: { duration: 0.2 }
                     }}
                     className="p-6 rounded-2xl glass-card hover:glow transition-all duration-300"
                   >
@@ -267,15 +265,10 @@ const Experience = () => {
 
             {/* Work Experience */}
             <div>
-              <motion.div 
-                className="flex items-center mb-8"
-                initial={{ opacity: 0, x: -30 }}
-                animate={isInView ? { opacity: 1, x: 0 } : {}}
-                transition={{ duration: 0.6, delay: 0.5 }}
-              >
+              <div className="flex items-center mb-8">
                 <Briefcase className="text-cyan-400 mr-3" size={24} />
                 <h3 className="text-2xl font-bold text-white">Work Experience</h3>
-              </motion.div>
+              </div>
               
               <div className="space-y-6">
                 {experiences.map((exp, index) => (
@@ -283,10 +276,11 @@ const Experience = () => {
                     key={index}
                     initial={{ opacity: 0, y: 20 }}
                     animate={isInView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.6, delay: 0.6 + index * 0.1 }}
+                    transition={{ duration: 0.4, delay: 0.5 + index * 0.1 }}
                     whileHover={{ 
                       scale: 1.02, 
-                      y: -5
+                      y: -5,
+                      transition: { duration: 0.2 }
                     }}
                     className="p-6 rounded-2xl glass-card hover:glow transition-all duration-300"
                   >
@@ -348,22 +342,17 @@ const Experience = () => {
 
           {/* Right Column - Certifications & Courses */}
           <motion.div
-            initial={{ opacity: 0, x: 50 }}
+            initial={{ opacity: 0, x: 30 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.4 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
             className="space-y-12"
           >
             {/* Certifications */}
             <div>
-              <motion.div 
-                className="flex items-center mb-8"
-                initial={{ opacity: 0, x: 30 }}
-                animate={isInView ? { opacity: 1, x: 0 } : {}}
-                transition={{ duration: 0.6, delay: 0.4 }}
-              >
+              <div className="flex items-center mb-8">
                 <Award className="text-cyan-400 mr-3" size={24} />
                 <h3 className="text-2xl font-bold text-white">Certifications & Training</h3>
-              </motion.div>
+              </div>
               
               <div className="space-y-4">
                 {certifications.map((cert, index) => (
@@ -371,10 +360,11 @@ const Experience = () => {
                     key={index}
                     initial={{ opacity: 0, y: 20 }}
                     animate={isInView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.6, delay: 0.8 + index * 0.1 }}
+                    transition={{ duration: 0.4, delay: 0.6 + index * 0.1 }}
                     whileHover={{ 
                       scale: 1.05, 
-                      y: -3
+                      y: -3,
+                      transition: { duration: 0.2 }
                     }}
                     className="p-4 rounded-xl glass-card hover:glow transition-all duration-300"
                   >
@@ -411,15 +401,10 @@ const Experience = () => {
 
             {/* Courses */}
             <div>
-              <motion.div 
-                className="flex items-center mb-8"
-                initial={{ opacity: 0, x: 30 }}
-                animate={isInView ? { opacity: 1, x: 0 } : {}}
-                transition={{ duration: 0.6, delay: 0.6 }}
-              >
+              <div className="flex items-center mb-8">
                 <GraduationCap className="text-cyan-400 mr-3" size={24} />
                 <h3 className="text-2xl font-bold text-white">Courses & Learning</h3>
-              </motion.div>
+              </div>
               
               <div className="space-y-4">
                 {courses.map((course, index) => (
@@ -427,10 +412,11 @@ const Experience = () => {
                     key={index}
                     initial={{ opacity: 0, y: 20 }}
                     animate={isInView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.6, delay: 1.2 + index * 0.1 }}
+                    transition={{ duration: 0.4, delay: 0.8 + index * 0.1 }}
                     whileHover={{ 
                       scale: 1.05, 
-                      y: -3
+                      y: -3,
+                      transition: { duration: 0.2 }
                     }}
                     className="p-4 rounded-xl glass-card hover:glow transition-all duration-300"
                   >

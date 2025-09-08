@@ -1,15 +1,27 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
 import { useInView } from 'framer-motion'
 import { useRef, useState, useMemo } from 'react'
 import { Github } from 'lucide-react'
 import Image from 'next/image'
+import { useAdvancedScrollTrigger, useStaggeredAnimation } from '@/hooks/useScrollAnimation'
 
 export default function Projects() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
   const [hoveredProject, setHoveredProject] = useState<number | null>(null)
+  
+  // Scroll trigger for the entire section
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"]
+  })
+  
+  // Transform scroll progress into different animation values
+  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0])
+  const scale = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.8, 1, 1, 0.8])
+  const y = useTransform(scrollYProgress, [0, 1], [100, -100])
 
   // Memoize projects data to prevent unnecessary re-renders
   const projects = useMemo(() => [
@@ -67,26 +79,16 @@ export default function Projects() {
 
   return (
     <section id="projects" ref={ref} className="py-20 relative overflow-hidden animated-bg">
-      {/* Animated Background Elements */}
+      {/* Simple Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
-        {/* Floating orbs */}
-        <div className="absolute top-20 left-20 w-72 h-72 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-20 right-20 w-96 h-96 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full blur-3xl animate-pulse" />
-        
-        {/* Grid pattern */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-            backgroundRepeat: 'repeat'
-          }}></div>
-        </div>
+        {/* Static floating orbs */}
+        <div className="absolute top-20 left-20 w-72 h-72 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 rounded-full blur-3xl" />
+        <div className="absolute bottom-20 right-20 w-96 h-96 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full blur-3xl" />
       </div>
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8 }}
+          style={{ opacity, scale, y }}
           className="text-center mb-16"
         >
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
@@ -123,16 +125,31 @@ export default function Projects() {
 
         {/* Projects Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredProjects.map((project, index) => (
-            <motion.div
-              key={project.id}
-              initial={{ opacity: 0, y: 50 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, delay: index * 0.1 }}
-              onHoverStart={() => setHoveredProject(project.id)}
-              onHoverEnd={() => setHoveredProject(null)}
-              className="group relative glass-card rounded-xl overflow-hidden hover:glow transition-all duration-300"
-            >
+          {filteredProjects.map((project, index) => {
+            // Individual scroll trigger for each project card
+            const cardRef = useRef(null)
+            const { scrollYProgress: cardScrollProgress } = useScroll({
+              target: cardRef,
+              offset: ["start end", "end start"]
+            })
+            
+            const cardOpacity = useTransform(cardScrollProgress, [0, 0.3, 0.7, 1], [0, 1, 1, 0])
+            const cardY = useTransform(cardScrollProgress, [0, 0.5, 1], [50, 0, -50])
+            const cardScale = useTransform(cardScrollProgress, [0, 0.3, 0.7, 1], [0.8, 1, 1, 0.8])
+            
+            return (
+              <motion.div
+                key={project.id}
+                ref={cardRef}
+                style={{ opacity: cardOpacity, y: cardY, scale: cardScale }}
+                onHoverStart={() => setHoveredProject(project.id)}
+                onHoverEnd={() => setHoveredProject(null)}
+                whileHover={{ 
+                  y: -5,
+                  transition: { duration: 0.2 }
+                }}
+                className="group relative glass-card rounded-xl overflow-hidden hover:glow transition-all duration-300"
+              >
               {/* Project Image */}
               <div className="relative h-48 overflow-hidden">
                 <Image
@@ -201,15 +218,12 @@ export default function Projects() {
                 {/* Technologies */}
                 <div className="flex flex-wrap gap-2">
                   {project.technologies.map((tech, techIndex) => (
-                    <motion.span
+                    <span
                       key={tech}
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                      transition={{ delay: index * 0.1 + techIndex * 0.05 }}
                       className="px-3 py-1 glass-card text-gray-300 text-xs rounded-full"
                     >
                       {tech}
-                    </motion.span>
+                    </span>
                   ))}
                 </div>
               </div>
@@ -220,8 +234,9 @@ export default function Projects() {
                 animate={{ opacity: hoveredProject === project.id ? 0.1 : 0 }}
                 className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-purple-500"
               />
-            </motion.div>
-          ))}
+              </motion.div>
+            )
+          })}
         </div>
 
         {/* Call to Action */}

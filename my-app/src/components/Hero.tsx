@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { motion } from 'framer-motion'
 import { ChevronUp, Download, Github, Linkedin, ArrowRight, Code, Database, Smartphone } from 'lucide-react'
 
 export default function Hero() {
@@ -38,33 +39,44 @@ export default function Hero() {
       </div>
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="text-center">
-          {/* Professional Badge */}
-          <div className="mb-6">
-            <div className="inline-flex items-center gap-2 glass px-6 py-3 rounded-full">
-              <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-              <span className="text-sm font-medium text-gray-300">
-                Available for Projects
-              </span>
-            </div>
-          </div>
+        <motion.div 
+          className="text-center"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8 }}
+        >
 
           {/* Greeting */}
-          <div className="mb-4">
+          <motion.div 
+            className="mb-4"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+          >
             <span className="text-lg text-gray-400 font-medium tracking-wide uppercase">
               Hello, I'm
             </span>
-          </div>
+          </motion.div>
 
           {/* Name */}
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-6">
+          <motion.h1 
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-6"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+          >
             <span className="text-gradient">
               Your Name
             </span>
-          </h1>
+          </motion.h1>
 
           {/* Title */}
-          <div className="mb-8">
+          <motion.div 
+            className="mb-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+          >
             <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl text-white font-light mb-4">
               Full Stack Developer
             </h2>
@@ -72,54 +84,81 @@ export default function Hero() {
               Crafting enterprise-grade applications with cutting-edge technologies. 
               Specializing in scalable solutions and exceptional user experiences.
             </p>
-          </div>
+          </motion.div>
 
           {/* Tech Icons */}
-          <div className="flex justify-center space-x-4 sm:space-x-8 mb-12">
+          <motion.div 
+            className="flex justify-center space-x-4 sm:space-x-8 mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+          >
             {techIcons.map((tech, index) => (
-              <div
+              <motion.div
                 key={index}
                 className="glass-card p-3 sm:p-4 rounded-xl hover:glow transition-all duration-300"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.4, delay: 0.7 + index * 0.1 }}
+                whileHover={{ scale: 1.1 }}
               >
                 <tech.icon size={24} className="sm:w-8 sm:h-8 text-cyan-400" />
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center mb-16 px-4">
-            <a
+          <motion.div 
+            className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center mb-16 px-4"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.8 }}
+          >
+            <motion.a
               href="#projects"
               className="group glass px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold text-white hover:glow transition-all duration-300 flex items-center gap-3 w-full sm:w-auto justify-center"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
               View My Work
               <ArrowRight size={18} className="sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform duration-300" />
-            </a>
-            <a
+            </motion.a>
+            <motion.a
               href="#contact"
               className="glass-dark px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold text-gray-300 hover:text-white hover:glow-purple transition-all duration-300 flex items-center gap-3 w-full sm:w-auto justify-center"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
               <Download size={18} className="sm:w-5 sm:h-5" />
               Download CV
-            </a>
-          </div>
+            </motion.a>
+          </motion.div>
 
           {/* Social Links */}
-          <div className="flex justify-center space-x-4 sm:space-x-6">
-            <a
+          <motion.div 
+            className="flex justify-center space-x-4 sm:space-x-6"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.9 }}
+          >
+            <motion.a
               href="#"
               className="glass-card p-3 sm:p-4 rounded-xl hover:glow transition-all duration-300"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
             >
               <Github size={20} className="sm:w-6 sm:h-6 text-gray-300 hover:text-white" />
-            </a>
-            <a
+            </motion.a>
+            <motion.a
               href="#"
               className="glass-card p-3 sm:p-4 rounded-xl hover:glow transition-all duration-300"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
             >
               <Linkedin size={20} className="sm:w-6 sm:h-6 text-gray-300 hover:text-white" />
-            </a>
-          </div>
-        </div>
+            </motion.a>
+          </motion.div>
+        </motion.div>
 
         {/* Scroll Up Button - Only shows when scrolled down */}
         {showScrollUp && (
