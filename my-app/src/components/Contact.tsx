@@ -8,19 +8,19 @@ const Contact = () => {
     {
       icon: Mail,
       title: 'Email',
-      value: 'mayerfrieg@outlook.com',
-      link: 'mailto:mayerfrieg@outlook.com'
+      value: 'mayerfrieg@gmail.com',
+      link: 'mailto:mayerfrieg@gmail.com'
     },
     {
       icon: Phone,
       title: 'Phone',
-      value: '+201288244283',
-      link: 'tel:+201288244283'
+      value: '+20188244283',
+      link: 'tel:+20188244283'
     },
     {
       icon: MapPin,
       title: 'Location',
-      value: 'Egypt',
+      value: 'Cairo, Egypt',
       link: '#'
     }
   ]
@@ -119,7 +119,7 @@ const Contact = () => {
                 </button>
                 
                 <button
-                  onClick={() => window.open('mailto:mayerfrieg@outlook.com')}
+                  onClick={() => window.open('mailto:mayerfrieg@gmail.com')}
                   className="p-4 glass-card rounded-lg text-white font-semibold hover:glow transition-all duration-300 relative z-10"
                 >
                   Send Email

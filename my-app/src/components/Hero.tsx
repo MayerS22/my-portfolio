@@ -66,7 +66,7 @@ export default function Hero() {
             transition={{ duration: 0.8, delay: 0.4 }}
           >
             <span className="text-gradient">
-              Your Name
+              Mayer Frieg
             </span>
           </motion.h1>
 
@@ -78,7 +78,7 @@ export default function Hero() {
             transition={{ duration: 0.6, delay: 0.5 }}
           >
             <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl text-white font-light mb-4">
-              Full Stack Developer
+              Software Engineer & Full Stack Developer
             </h2>
             <p className="text-base sm:text-lg text-gray-400 max-w-3xl mx-auto leading-relaxed px-4">
               Crafting enterprise-grade applications with cutting-edge technologies. 

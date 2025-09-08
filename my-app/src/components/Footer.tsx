@@ -1,11 +1,10 @@
 'use client'
 
-import { Heart, Github, Linkedin, Twitter, Mail } from 'lucide-react'
+import { Heart, Github, LinkedinIcon , Mail } from 'lucide-react'
 
 const socialLinks = [
   { name: 'GitHub', href: '#', icon: Github },
-  { name: 'LinkedIn', href: '#', icon: Linkedin },
-  { name: 'Twitter', href: '#', icon: Twitter },
+  { name: 'LinkedIn', href: '#', icon: LinkedinIcon },
   { name: 'Email', href: '#', icon: Mail },
 ]
 
@@ -83,9 +82,9 @@ export default function Footer() {
           <div className="space-y-4">
             <h4 className="text-lg font-semibold">Get In Touch</h4>
             <div className="space-y-2 text-gray-400">
-              <p>your.email@example.com</p>
-              <p>+1 (555) 123-4567</p>
-              <p>San Francisco, CA</p>
+              <p>mayerfrieg@outlook.com</p>
+              <p>+20188244283</p>
+              <p>Cairo, Egypt</p>
             </div>
           </div>
         </div>
@@ -93,7 +92,7 @@ export default function Footer() {
         {/* Bottom Section */}
         <div className="border-t border-gray-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-400 text-sm">
-            © {currentYear} Your Name. All rights reserved.
+            © {currentYear} Mayer Frieg. All rights reserved.
           </p>
           <p className="text-gray-400 text-sm flex items-center gap-1 mt-4 md:mt-0">
             Made with <Heart className="text-red-500" size={16} /> and Next.js

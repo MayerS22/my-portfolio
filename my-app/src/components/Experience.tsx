@@ -5,7 +5,6 @@ import { useInView } from 'framer-motion'
 import { useRef } from 'react'
 import { Calendar, MapPin, Building, GraduationCap, Award, Briefcase } from 'lucide-react'
 import Image from 'next/image'
-import { useAdvancedScrollTrigger, useStaggeredAnimation } from '@/hooks/useScrollAnimation'
 
 const Experience = () => {
   const ref = useRef(null)

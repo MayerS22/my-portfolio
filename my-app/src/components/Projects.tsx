@@ -125,31 +125,20 @@ export default function Projects() {
 
         {/* Projects Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredProjects.map((project, index) => {
-            // Individual scroll trigger for each project card
-            const cardRef = useRef(null)
-            const { scrollYProgress: cardScrollProgress } = useScroll({
-              target: cardRef,
-              offset: ["start end", "end start"]
-            })
-            
-            const cardOpacity = useTransform(cardScrollProgress, [0, 0.3, 0.7, 1], [0, 1, 1, 0])
-            const cardY = useTransform(cardScrollProgress, [0, 0.5, 1], [50, 0, -50])
-            const cardScale = useTransform(cardScrollProgress, [0, 0.3, 0.7, 1], [0.8, 1, 1, 0.8])
-            
-            return (
-              <motion.div
-                key={project.id}
-                ref={cardRef}
-                style={{ opacity: cardOpacity, y: cardY, scale: cardScale }}
-                onHoverStart={() => setHoveredProject(project.id)}
-                onHoverEnd={() => setHoveredProject(null)}
-                whileHover={{ 
-                  y: -5,
-                  transition: { duration: 0.2 }
-                }}
-                className="group relative glass-card rounded-xl overflow-hidden hover:glow transition-all duration-300"
-              >
+          {filteredProjects.map((project, index) => (
+            <motion.div
+              key={project.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.3, delay: index * 0.05 }}
+              onHoverStart={() => setHoveredProject(project.id)}
+              onHoverEnd={() => setHoveredProject(null)}
+              whileHover={{ 
+                y: -5,
+                transition: { duration: 0.2 }
+              }}
+              className="group relative glass-card rounded-xl overflow-hidden hover:glow transition-all duration-300"
+            >
               {/* Project Image */}
               <div className="relative h-48 overflow-hidden">
                 <Image
@@ -234,9 +223,8 @@ export default function Projects() {
                 animate={{ opacity: hoveredProject === project.id ? 0.1 : 0 }}
                 className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-purple-500"
               />
-              </motion.div>
-            )
-          })}
+            </motion.div>
+          ))}
         </div>
 
         {/* Call to Action */}
