@@ -279,3 +279,4 @@ export function Glitch({ children, intensity = 0.1, className = '' }: GlitchProp
     </motion.div>
   )
 }
+
