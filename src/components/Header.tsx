@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, Github, Linkedin, Mail } from 'lucide-react'
+import { useMounted } from '@/hooks/useMounted'
 
 const navItems = [
   { name: 'Home', href: '#home' },
@@ -23,8 +24,11 @@ export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [activeSection, setActiveSection] = useState('home')
+  const isMounted = useMounted()
 
   useEffect(() => {
+    if (!isMounted) return
+    
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50)
       
@@ -46,13 +50,13 @@ export default function Header() {
     
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+  }, [isMounted])
 
   return (
     <motion.header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed top-4 left-4 right-4 z-50 transition-all duration-300 ${
         isScrolled
-          ? 'glass backdrop-blur-xl border-b border-gray-800/50'
+          ? 'glass backdrop-blur-xl border border-gray-800/50 rounded-xl'
           : 'bg-transparent'
       }`}
       initial={{ y: -100 }}

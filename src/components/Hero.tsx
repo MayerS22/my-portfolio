@@ -1,240 +1,165 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronUp, Download, Github, Linkedin, ArrowRight, Code, Database, Smartphone } from 'lucide-react'
-
-// Simple typewriter effect component
-const TypewriterText = ({ texts, speed = 100 }: { texts: string[], speed?: number }) => {
-  const [currentTextIndex, setCurrentTextIndex] = useState(0)
-  const [currentText, setCurrentText] = useState('')
-  const [isDeleting, setIsDeleting] = useState(false)
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      const fullText = texts[currentTextIndex]
-      
-      if (isDeleting) {
-        setCurrentText(fullText.substring(0, currentText.length - 1))
-        if (currentText === '') {
-          setIsDeleting(false)
-          setCurrentTextIndex((prev) => (prev + 1) % texts.length)
-        }
-      } else {
-        setCurrentText(fullText.substring(0, currentText.length + 1))
-        if (currentText === fullText) {
-          setTimeout(() => setIsDeleting(true), 2000)
-        }
-      }
-    }, isDeleting ? speed / 2 : speed)
-
-    return () => clearTimeout(timeout)
-  }, [currentText, currentTextIndex, isDeleting, texts, speed])
-
-  return (
-    <span className="text-gradient">
-      {currentText}
-      <span className="animate-pulse ml-1">|</span>
-    </span>
-  )
-}
+import { useMounted } from '@/hooks/useMounted'
+import NoSSR from '@/components/NoSSR'
 
 export default function Hero() {
   const [showScrollUp, setShowScrollUp] = useState(false)
+  const [isVisible, setIsVisible] = useState(false)
+  const isMounted = useMounted()
 
   useEffect(() => {
+    if (!isMounted) return
+    
     const handleScroll = () => {
       setShowScrollUp(window.scrollY > 300)
     }
     
+    // Trigger animations on mount with a small delay
+    const timer = setTimeout(() => {
+      setIsVisible(true)
+    }, 100)
+    
     window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+    return () => {
+      clearTimeout(timer)
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [isMounted])
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
-  const techIcons = [
-    { icon: Code, delay: 0.1 },
-    { icon: Database, delay: 0.2 },
-    { icon: Smartphone, delay: 0.3 },
-  ]
-
-  const typewriterTexts = [
-    "Full Stack Developer",
-    "Software Engineer", 
-    "React Specialist",
-    "Node.js Expert",
-    "TypeScript Developer",
-    "Problem Solver"
-  ]
-
   return (
     <section 
       id="home" 
-      className="min-h-screen flex items-center justify-center relative overflow-hidden animated-bg"
+      className="min-h-screen flex items-center justify-center relative bg-gradient-to-br from-gray-900 via-black to-gray-900 overflow-hidden"
     >
-      {/* Simple Background Elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        {/* Static floating orbs */}
-        <div className="absolute top-20 left-20 w-72 h-72 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 rounded-full blur-3xl animate-pulse-slow" />
-        <div className="absolute bottom-20 right-20 w-96 h-96 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full blur-3xl animate-pulse-slow" />
-      </div>
-
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <motion.div 
-          className="text-center"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8 }}
-        >
+      {/* Animated background elements */}
+      <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 via-transparent to-purple-500/10" />
+      
+      {/* Floating orbs - only show after mount to prevent hydration issues */}
+      <NoSSR>
+        <div className="absolute top-20 left-20 w-32 h-32 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 rounded-full blur-xl animate-float" />
+        <div className="absolute bottom-20 right-20 w-40 h-40 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full blur-xl animate-float-slow" />
+        <div className="absolute top-1/2 left-1/4 w-24 h-24 bg-gradient-to-r from-green-500/15 to-teal-500/15 rounded-full blur-lg animate-float" 
+             style={{ animationDelay: '2s' }} />
+      </NoSSR>
+      
+      <div className="container mx-auto px-4 relative z-10">
+        <div className="text-center">
           {/* Greeting */}
-          <motion.div 
-            className="mb-4"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
+          <div 
+            className={`mb-4 ${isMounted && isVisible ? 'animate-slide-down' : 'opacity-0'}`}
+            style={{ animationDelay: isMounted ? '0.2s' : '0s' }}
           >
-            <span className="text-lg text-gray-400 font-medium tracking-wide uppercase">
+            <span className="text-sm md:text-lg text-gray-400 font-medium tracking-wide uppercase">
               Hello, I&apos;m
             </span>
-          </motion.div>
+          </div>
 
           {/* Name */}
-          <motion.h1 
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-6"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
+          <h1 
+            className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 ${isMounted && isVisible ? 'animate-fade-scale' : 'opacity-0'}`}
+            style={{ animationDelay: isMounted ? '0.4s' : '0s' }}
           >
-            <span className="text-gradient">
+            <span className="bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">
               Mayer Frieg
             </span>
-          </motion.h1>
+          </h1>
 
-          {/* Dynamic title with typewriter effect */}
-          <motion.div 
-            className="mb-8"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.5 }}
+          {/* Title */}
+          <div 
+            className={`mb-8 ${isMounted && isVisible ? 'animate-slide-up' : 'opacity-0'}`}
+            style={{ animationDelay: isMounted ? '0.6s' : '0s' }}
           >
-            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl text-white font-light mb-4 min-h-[3rem] flex items-center justify-center">
-              <TypewriterText texts={typewriterTexts} speed={100} />
+            <h2 className="text-lg sm:text-xl md:text-2xl text-white font-light mb-4">
+              Full Stack Developer
             </h2>
-            <motion.p 
-              className="text-base sm:text-lg text-gray-400 max-w-3xl mx-auto leading-relaxed px-4"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1.5, duration: 0.8 }}
-            >
+            <p className="text-sm sm:text-base text-gray-400 max-w-2xl mx-auto leading-relaxed px-4">
               Crafting enterprise-grade applications with cutting-edge technologies. 
               Specializing in scalable solutions and exceptional user experiences.
-            </motion.p>
-          </motion.div>
+            </p>
+          </div>
 
           {/* Tech Icons */}
-          <motion.div 
-            className="flex justify-center space-x-4 sm:space-x-8 mb-12"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.6 }}
+          <div 
+            className={`flex justify-center space-x-4 mb-8 ${isMounted && isVisible ? 'animate-slide-up' : 'opacity-0'}`}
+            style={{ animationDelay: isMounted ? '0.8s' : '0s' }}
           >
-            {techIcons.map((tech, index) => (
-              <motion.div
-                key={index}
-                className="glass-card p-3 sm:p-4 rounded-xl hover:glow transition-all duration-300"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.4, delay: 0.7 + index * 0.1 }}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <tech.icon size={24} className="sm:w-8 sm:h-8 text-cyan-400" />
-              </motion.div>
-            ))}
-          </motion.div>
+            <div className="p-3 bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 hover:bg-white/20 hover:scale-110 transition-all duration-300">
+              <Code size={20} className="text-cyan-400" />
+            </div>
+            <div className="p-3 bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 hover:bg-white/20 hover:scale-110 transition-all duration-300">
+              <Database size={20} className="text-cyan-400" />
+            </div>
+            <div className="p-3 bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 hover:bg-white/20 hover:scale-110 transition-all duration-300">
+              <Smartphone size={20} className="text-cyan-400" />
+            </div>
+          </div>
 
           {/* CTA Buttons */}
-          <motion.div 
-            className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center mb-16 px-4"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.8 }}
+          <div 
+            className={`flex flex-col sm:flex-row gap-4 justify-center items-center mb-8 px-4 ${isMounted && isVisible ? 'animate-slide-up' : 'opacity-0'}`}
+            style={{ animationDelay: isMounted ? '1s' : '0s' }}
           >
-            <motion.a
+            <a
               href="#projects"
-              className="group glass px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold text-white hover:glow transition-all duration-300 flex items-center gap-3 w-full sm:w-auto justify-center"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              className="w-full sm:w-auto bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 flex items-center justify-center gap-2 hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/25"
             >
               View My Work
-              <ArrowRight size={18} className="sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform duration-300" />
-            </motion.a>
+              <ArrowRight size={16} />
+            </a>
             
-            <motion.a
+            <a
               href="#contact"
-              className="glass-dark px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold text-gray-300 hover:text-white hover:glow-purple transition-all duration-300 flex items-center gap-3 w-full sm:w-auto justify-center"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              className="w-full sm:w-auto bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 flex items-center justify-center gap-2 hover:scale-105"
             >
-              <Download size={18} className="sm:w-5 sm:h-5" />
+              <Download size={16} />
               Download CV
-            </motion.a>
-          </motion.div>
+            </a>
+          </div>
 
           {/* Social Links */}
-          <motion.div 
-            className="flex justify-center space-x-4 sm:space-x-6"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.9 }}
+          <div 
+            className={`flex justify-center space-x-4 ${isMounted && isVisible ? 'animate-slide-up' : 'opacity-0'}`}
+            style={{ animationDelay: isMounted ? '1.2s' : '0s' }}
           >
-            <motion.a
+            <a
               href="https://github.com/MayerS22"
               target="_blank"
               rel="noopener noreferrer"
-              className="glass-card p-3 sm:p-4 rounded-xl hover:glow transition-all duration-300"
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
+              className="p-3 bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 hover:bg-white/20 hover:scale-110 transition-all duration-300"
             >
-              <Github size={20} className="sm:w-6 sm:h-6 text-gray-300 hover:text-white transition-colors duration-300" />
-            </motion.a>
-            <motion.a
+              <Github size={20} className="text-gray-300 hover:text-white" />
+            </a>
+            <a
               href="https://www.linkedin.com/in/mayer-frieg-7a0368226/"
               target="_blank"
               rel="noopener noreferrer"
-              className="glass-card p-3 sm:p-4 rounded-xl hover:glow transition-all duration-300"
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
+              className="p-3 bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 hover:bg-white/20 hover:scale-110 transition-all duration-300"
             >
-              <Linkedin size={20} className="sm:w-6 sm:h-6 text-gray-300 hover:text-white transition-colors duration-300" />
-            </motion.a>
-          </motion.div>
-        </motion.div>
+              <Linkedin size={20} className="text-gray-300 hover:text-white" />
+            </a>
+          </div>
+        </div>
 
         {/* Scroll Up Button */}
-        <AnimatePresence>
+        <NoSSR>
           {showScrollUp && (
-            <motion.div 
-              className="fixed bottom-8 left-8 z-50"
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0 }}
-              transition={{ type: "spring", stiffness: 200, damping: 20 }}
-            >
-              <motion.button
+            <div className="fixed bottom-8 left-8 z-50">
+              <button
                 onClick={scrollToTop}
-                className="glass p-3 rounded-full hover:glow transition-all duration-300"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
+                className="p-3 bg-white/10 backdrop-blur-sm rounded-full border border-white/20 hover:bg-white/20 transition-all duration-300"
               >
-                <ChevronUp size={24} className="text-gray-300 hover:text-white" />
-              </motion.button>
-            </motion.div>
+                <ChevronUp size={20} className="text-gray-300 hover:text-white" />
+              </button>
+            </div>
           )}
-        </AnimatePresence>
+        </NoSSR>
       </div>
     </section>
   )
