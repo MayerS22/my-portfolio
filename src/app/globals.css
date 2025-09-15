@@ -12,7 +12,8 @@
   --surface: #111111;
 }
 
-@theme inline {
+/* Tailwind CSS theme variables */
+:root {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
@@ -53,6 +54,8 @@ body {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .glass-hover:hover {
@@ -148,6 +151,9 @@ button, a, .hover\:scale-105:hover, .hover\:scale-110:hover {
 @media (max-width: 768px) {
   .glass, .glass-card, .glass-dark {
     backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    background: rgba(0, 0, 0, 0.3) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
   }
   
   .animate-fade-in-up,
@@ -158,6 +164,22 @@ button, a, .hover\:scale-105:hover, .hover\:scale-110:hover {
   
   .animated-bg {
     animation-duration: 20s;
+  }
+  
+  /* Ensure text is visible on mobile */
+  .glass-card span {
+    color: #ffffff !important;
+  }
+  
+  /* Optimize framer-motion for mobile */
+  [data-framer-motion] {
+    will-change: transform, opacity;
+  }
+  
+  /* Reduce motion intensity on mobile */
+  .motion-reduce {
+    transform: none !important;
+    animation: none !important;
   }
 }
 
@@ -197,6 +219,12 @@ button, a, .hover\:scale-105:hover, .hover\:scale-110:hover {
   .animate-fade-in-right,
   .animate-scale-in {
     animation: fadeInUp 0.2s ease-out forwards;
+  }
+  
+  /* Disable framer-motion animations for reduced motion */
+  [data-framer-motion] {
+    animation: none !important;
+    transform: none !important;
   }
 }
 
