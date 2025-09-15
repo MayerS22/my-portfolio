@@ -16,7 +16,7 @@ const navItems = [
 const socialLinks = [
   { name: 'GitHub', href: 'https://github.com/MayerS22', icon: Github },
   { name: 'LinkedIn', href: 'https://www.linkedin.com/in/mayer-frieg-7a0368226/', icon: Linkedin },
-  { name: 'Email', href: 'mailto:mayerfrieg@gmail.com', icon: Mail },
+  { name: 'Email', href: 'mailto:mayerfrieg@outlook.com', icon: Mail },
 ]
 
 export default function Header() {

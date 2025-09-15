@@ -164,7 +164,7 @@ export default function Footer() {
                 transition={{ duration: 0.2 }}
               >
                 <Mail size={20} className="text-cyan-400" />
-                <span className="text-lg">mayerfrieg@gmail.com</span>
+                <span className="text-lg">mayerfrieg@outlook.com</span>
               </motion.div>
               <motion.div 
                 className="flex items-center space-x-3 text-gray-400 hover:text-white transition-colors duration-300 group"

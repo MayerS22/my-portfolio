@@ -8,8 +8,8 @@ const Contact = () => {
     {
       icon: Mail,
       title: 'Email',
-      value: 'mayerfrieg@gmail.com',
-      link: 'mailto:mayerfrieg@gmail.com'
+      value: 'mayerfrieg@outlook.com',
+      link: 'mailto:mayerfrieg@outlook.com'
     },
     {
       icon: Phone,
@@ -119,7 +119,7 @@ const Contact = () => {
                 </button>
                 
                 <button
-                  onClick={() => window.open('mailto:mayerfrieg@gmail.com')}
+                  onClick={() => window.open('mailto:mayerfrieg@outlook.com')}
                   className="p-4 glass-card rounded-lg text-white font-semibold hover:glow transition-all duration-300 relative z-10"
                 >
                   Send Email

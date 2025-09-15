@@ -192,7 +192,9 @@ export default function Hero() {
             transition={{ duration: 0.6, delay: 0.9 }}
           >
             <motion.a
-              href="#"
+              href="https://github.com/MayerS22"
+              target="_blank"
+              rel="noopener noreferrer"
               className="glass-card p-3 sm:p-4 rounded-xl hover:glow transition-all duration-300"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
@@ -200,7 +202,9 @@ export default function Hero() {
               <Github size={20} className="sm:w-6 sm:h-6 text-gray-300 hover:text-white transition-colors duration-300" />
             </motion.a>
             <motion.a
-              href="#"
+              href="https://www.linkedin.com/in/mayer-frieg-7a0368226/"
+              target="_blank"
+              rel="noopener noreferrer"
               className="glass-card p-3 sm:p-4 rounded-xl hover:glow transition-all duration-300"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
