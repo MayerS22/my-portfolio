@@ -46,7 +46,7 @@ export default function HeroSimple() {
           {/* Greeting */}
           <div className="mb-4">
             <span className="text-lg text-gray-400 font-medium tracking-wide uppercase">
-              Hello, I'm
+              Hello, I&apos;m
             </span>
           </div>
 

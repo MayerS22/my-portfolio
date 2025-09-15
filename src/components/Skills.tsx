@@ -48,7 +48,7 @@ const Skills = () => {
         </div>
 
         <div className="grid lg:grid-cols-3 gap-8">
-          {skillCategories.map((category, categoryIndex) => (
+          {skillCategories.map((category) => (
             <div
               key={category.title}
               className="group relative"
@@ -68,7 +68,7 @@ const Skills = () => {
                 
                 {/* Skills grid */}
                 <div className="grid grid-cols-2 gap-3">
-                  {category.skills.map((skill, skillIndex) => (
+                  {category.skills.map((skill) => (
                     <div
                       key={skill}
                       className="p-3 rounded-xl glass-card hover:glow transition-all duration-300 text-center"
@@ -114,7 +114,7 @@ const Skills = () => {
                 icon: "👥",
                 gradient: "from-blue-500 to-purple-600"
               }
-            ].map((highlight, index) => (
+            ].map((highlight) => (
               <div
                 key={highlight.title}
                 className="group relative"

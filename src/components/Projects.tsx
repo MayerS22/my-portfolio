@@ -1,11 +1,11 @@
 'use client'
 
-import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
+import { motion, useScroll, useTransform } from 'framer-motion'
 import { useInView } from 'framer-motion'
 import { useRef, useState, useMemo } from 'react'
 import { Github } from 'lucide-react'
 import Image from 'next/image'
-import { useAdvancedScrollTrigger, useStaggeredAnimation } from '@/hooks/useScrollAnimation'
+// Removed unused imports
 
 export default function Projects() {
   const ref = useRef(null)
@@ -206,7 +206,7 @@ export default function Projects() {
 
                 {/* Technologies */}
                 <div className="flex flex-wrap gap-2">
-                  {project.technologies.map((tech, techIndex) => (
+                  {project.technologies.map((tech) => (
                     <span
                       key={tech}
                       className="px-3 py-1 glass-card text-gray-300 text-xs rounded-full"

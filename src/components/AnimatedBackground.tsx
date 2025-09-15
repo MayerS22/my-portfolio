@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useCallback } from 'react'
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 
 interface Particle {
@@ -32,7 +32,7 @@ export default function AnimatedBackground({
   className = ''
 }: AnimatedBackgroundProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const animationRef = useRef<number>()
+  const animationRef = useRef<number | null>(null)
   const [particles, setParticles] = useState<Particle[]>([])
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 })
@@ -138,7 +138,7 @@ export default function AnimatedBackground({
   }, [particles, mousePosition, dimensions])
 
   // Draw connections
-  const drawConnections = (ctx: CanvasRenderingContext2D) => {
+  const drawConnections = useCallback((ctx: CanvasRenderingContext2D) => {
     if (!showConnections) return
 
     for (let i = 0; i < particles.length; i++) {
@@ -158,10 +158,10 @@ export default function AnimatedBackground({
         }
       }
     }
-  }
+  }, [particles, showConnections, connectionDistance])
 
   // Draw particles
-  const drawParticles = (ctx: CanvasRenderingContext2D) => {
+  const drawParticles = useCallback((ctx: CanvasRenderingContext2D) => {
     if (!showParticles) return
 
     particles.forEach(particle => {
@@ -172,7 +172,7 @@ export default function AnimatedBackground({
       ctx.fill()
     })
     ctx.globalAlpha = 1
-  }
+  }, [particles, showParticles])
 
   // Canvas drawing
   useEffect(() => {
@@ -192,7 +192,7 @@ export default function AnimatedBackground({
     }
 
     draw()
-  }, [particles, dimensions, showConnections, showParticles])
+  }, [particles, dimensions, showConnections, showParticles, drawConnections, drawParticles])
 
   return (
     <div className={`fixed inset-0 pointer-events-none ${className}`}>

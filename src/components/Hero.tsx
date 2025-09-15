@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronUp, Download, Github, Linkedin, ArrowRight, Code, Database, Smartphone } from 'lucide-react'
 
@@ -97,7 +97,7 @@ export default function Hero() {
             transition={{ duration: 0.6, delay: 0.3 }}
           >
             <span className="text-lg text-gray-400 font-medium tracking-wide uppercase">
-              Hello, I'm
+              Hello, I&apos;m
             </span>
           </motion.div>
 
