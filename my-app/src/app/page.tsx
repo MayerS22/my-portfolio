@@ -23,7 +23,7 @@ const BackToTop = dynamic(() => import('@/components/BackToTop'), {
 
 export default function Home() {
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen relative">
       <ScrollProgress />
       <Header />
       <Hero />
