@@ -2,34 +2,58 @@
 
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { useInView } from 'framer-motion'
-import { useRef, useState, useMemo } from 'react'
+import { useRef, useState, useMemo, useCallback } from 'react'
 import { Github } from 'lucide-react'
 import Image from 'next/image'
-// Removed unused imports
+import ProjectDetailModal, { Project } from './ProjectDetailModal'
 
 export default function Projects() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
   const [hoveredProject, setHoveredProject] = useState<number | null>(null)
-  
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
   // Scroll trigger for the entire section
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"]
   })
-  
+
   // Transform scroll progress into different animation values
   const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0])
   const scale = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.8, 1, 1, 0.8])
   const y = useTransform(scrollYProgress, [0, 1], [100, -100])
 
-  // Memoize projects data to prevent unnecessary re-renders
+  // Memoize hover handlers for performance
+  const handleHoverStart = useCallback((id: number) => {
+    setHoveredProject(id)
+  }, [])
+
+  const handleHoverEnd = useCallback(() => {
+    setHoveredProject(null)
+  }, [])
+
+  // Open modal with project details
+  const openProjectModal = useCallback((project: Project) => {
+    setSelectedProject(project)
+    setIsModalOpen(true)
+  }, [])
+
+  // Close modal
+  const closeProjectModal = useCallback(() => {
+    setIsModalOpen(false)
+    setSelectedProject(null)
+  }, [])
+
+  // Memoize projects data with multiple images
   const projects = useMemo(() => [
     {
       id: 1,
       title: "AutoInsight - Business Intelligence Platform",
       description: "A+ Graduation project: Advanced data analysis and machine learning platform designed to help businesses navigate challenges during layoffs and restructuring. Features predictive analytics, workforce forecasting, and real-time decision-making tools.",
       image: "/images/AutoInsight.png",
+      images: ["/images/AutoInsight.png"],
       technologies: ["React", "Vite", "Tailwind CSS", "Redux", "Python", "Machine Learning", "Data Analysis", "Forecasting Models", "Interactive Dashboards", "Real-time Analytics"],
       liveUrl: "#",
       githubUrl: "https://github.com/MayerS22/AutoInsight",
@@ -40,6 +64,7 @@ export default function Projects() {
       title: "Taskify - Task Management App",
       description: "Smart, simple, and stylish task management application for daily organization, deadline reminders, and personal productivity. Built with TypeScript and modern web technologies.",
       image: "/images/Taskify.png",
+      images: ["/images/Taskify.png"],
       technologies: ["TypeScript", "React", "Next.js", "Tailwind CSS", "SQLite", "Authentication", "Real-time Updates"],
       liveUrl: "#",
       githubUrl: "https://github.com/MayerS22/Taskify",
@@ -50,6 +75,7 @@ export default function Projects() {
       title: "Speedo Transfer Mobile Application",
       description: "Completed secure money transfer application for Banque Misr. Features include user authentication, fund transfers, transaction history, and real-time notifications. Built with Jetpack Compose, Kotlin, and MVVM architecture.",
       image: "/images/Speedo.png",
+      images: ["/images/Speedo.png"],
       technologies: ["Kotlin", "Jetpack Compose", "MVVM", "Android", "Firebase", "REST APIs", "Material Design", "Biometric Auth"],
       liveUrl: "#",
       githubUrl: "https://github.com/MayerS22/speedoo",
@@ -57,9 +83,31 @@ export default function Projects() {
     },
     {
       id: 4,
+      title: "Checko - Smart Todo & Task Manager",
+      description: "Full-stack mobile todo application with intelligent insights and seamless collaboration. Features calendar integration, task analytics, productivity tracking, and real-time team collaboration. Beautiful intuitive interface for effortless task management.",
+      image: "/images/Checko/checko-1.jpeg",
+      images: [
+        "/images/Checko/checko-1.jpeg",
+        "/images/Checko/checko-2.jpeg",
+        "/images/Checko/checko-3.jpeg",
+        "/images/Checko/checko-4.jpeg",
+        "/images/Checko/checko-5.jpeg",
+        "/images/Checko/checko-6.jpeg",
+        "/images/Checko/checko-7.jpeg",
+        "/images/Checko/checko-8.jpeg",
+        "/images/Checko/checko-9.jpeg"
+      ],
+      technologies: ["React Native", "Firebase", "Firestore", "Authentication", "Calendar Integration", "Analytics", "Collaboration", "Push Notifications", "TypeScript"],
+      liveUrl: "#",
+      githubUrl: "https://github.com/MayerS22/Checko",
+      category: "Mobile"
+    },
+    {
+      id: 5,
       title: "E-Commerce Mobile Application",
       description: "Mobile e-commerce app with user authentication and real-time product data. Built with Flutter and Firebase.",
       image: "/images/ecommerce-app.jpg",
+      images: ["/images/ecommerce-app.jpg"],
       technologies: ["Flutter", "Firebase", "Dart", "State Management", "Cloud Firestore", "Authentication", "Payment Integration", "Push Notifications"],
       liveUrl: "#",
       githubUrl: "https://github.com/MayerS22/E-commerce-Mobile-App",
@@ -70,9 +118,9 @@ export default function Projects() {
   const categories = useMemo(() => ["All", "Full-Stack", "Mobile", "Frontend", "Backend", "AI/ML"], [])
   const [activeCategory, setActiveCategory] = useState("All")
 
-  const filteredProjects = useMemo(() => 
-    activeCategory === "All" 
-      ? projects 
+  const filteredProjects = useMemo(() =>
+    activeCategory === "All"
+      ? projects
       : projects.filter(project => project.category === activeCategory),
     [activeCategory, projects]
   )
@@ -131,9 +179,9 @@ export default function Projects() {
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.3, delay: index * 0.05 }}
-              onHoverStart={() => setHoveredProject(project.id)}
-              onHoverEnd={() => setHoveredProject(null)}
-              whileHover={{ 
+              onHoverStart={() => handleHoverStart(project.id)}
+              onHoverEnd={handleHoverEnd}
+              whileHover={{
                 y: -5,
                 transition: { duration: 0.2 }
               }}
@@ -147,40 +195,26 @@ export default function Projects() {
                   fill
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   className="object-cover group-hover:scale-110 transition-transform duration-300"
-                  priority={index < 2} // Prioritize first 2 images
-                  onError={(e) => {
-                    // Fallback to a gradient background if image fails to load
-                    const target = e.target as HTMLImageElement;
-                    target.style.display = 'none';
-                    const fallback = target.nextElementSibling as HTMLElement;
-                    if (fallback) fallback.style.display = 'flex';
-                  }}
+                  loading={index < 2 ? "eager" : "lazy"}
                 />
-                
-                {/* Fallback gradient background */}
-                <div 
-                  className="w-full h-full bg-gradient-to-br from-cyan-500/20 to-purple-500/20 flex items-center justify-center"
-                  style={{ display: 'none' }}
-                >
-                  <span className="text-4xl opacity-50">📱</span>
-                </div>
-                
-                {/* Overlay */}
+
+                {/* Overlay - Fixed pointer events to allow clicking through */}
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: hoveredProject === project.id ? 1 : 0 }}
-                  className="absolute inset-0 bg-black/70 flex items-center justify-center gap-4"
+                  transition={{ duration: 0.2 }}
+                  className="absolute inset-0 bg-black/70 flex items-center justify-center gap-4 pointer-events-none"
                 >
-                  <motion.a
+                  {/* GitHub Link - pointer-events-auto to enable clicks */}
+                  <a
                     href={project.githubUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                    className="p-3 glass rounded-full text-white hover:text-cyan-400 transition-colors"
+                    className="p-3 glass rounded-full text-white hover:text-cyan-400 transition-colors pointer-events-auto hover:scale-110 active:scale-95"
+                    aria-label="View on GitHub"
                   >
                     <Github size={20} />
-                  </motion.a>
+                  </a>
                 </motion.div>
               </div>
 
@@ -188,23 +222,25 @@ export default function Projects() {
               <div className="p-6">
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-sm text-cyan-400 font-medium">{project.category}</span>
-                  <motion.div
-                    animate={{ scale: hoveredProject === project.id ? 1.1 : 1 }}
-                    className="text-2xl"
+                  <button
+                    onClick={() => openProjectModal(project)}
+                    className={`text-2xl transition-transform duration-200 hover:scale-125 active:scale-95 ${hoveredProject === project.id ? 'scale-110' : ''}`}
+                    aria-label="View project details"
+                    title="View project details"
                   >
                     👁️
-                  </motion.div>
+                  </button>
                 </div>
-                
+
                 <h3 className="text-xl font-bold text-white mb-3 group-hover:text-cyan-400 transition-colors">
                   {project.title}
                 </h3>
-                
+
                 <p className="text-gray-400 text-sm leading-relaxed mb-4">
                   {project.description}
                 </p>
 
-                {/* Technologies */}
+                {/* Technologies - Removed individual animations for better performance */}
                 <div className="flex flex-wrap gap-2">
                   {project.technologies.map((tech) => (
                     <span
@@ -217,11 +253,9 @@ export default function Projects() {
                 </div>
               </div>
 
-              {/* Hover effect */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: hoveredProject === project.id ? 0.1 : 0 }}
-                className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-purple-500"
+              {/* Hover effect - Using CSS instead of motion for better performance */}
+              <div
+                className={`absolute inset-0 bg-gradient-to-r from-cyan-500 to-purple-500 pointer-events-none transition-opacity duration-200 ${hoveredProject === project.id ? 'opacity-10' : 'opacity-0'}`}
               />
             </motion.div>
           ))}
@@ -250,6 +284,13 @@ export default function Projects() {
           </motion.button>
         </motion.div>
       </div>
+
+      {/* Project Detail Modal */}
+      <ProjectDetailModal
+        project={selectedProject}
+        isOpen={isModalOpen}
+        onClose={closeProjectModal}
+      />
     </section>
   )
 }
