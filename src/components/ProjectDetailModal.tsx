@@ -9,8 +9,10 @@ export interface Project {
   id: number
   title: string
   description: string
+  image: string
   images: string[]
   technologies: string[]
+  liveUrl: string
   githubUrl: string
   category: string
 }
@@ -138,7 +140,7 @@ export default function ProjectDetailModal({ project, isOpen, onClose }: Project
                     className="w-full h-full relative"
                   >
                     <Image
-                      src={project.images[currentImageIndex]}
+                      src={project.images[currentImageIndex] || project.image}
                       alt={`${project.title} - Image ${currentImageIndex + 1}`}
                       fill
                       className="object-contain"
@@ -230,15 +232,17 @@ export default function ProjectDetailModal({ project, isOpen, onClose }: Project
                   </div>
                 </div>
 
-                {/* GitHub Link */}
-                <a
-                  href={project.githubUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-auto w-full px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-cyan-500 to-purple-500 text-white rounded-xl font-medium text-center hover:opacity-90 transition-opacity"
-                >
-                  View on GitHub
-                </a>
+                {/* GitHub Link - only show if not "#" */}
+                {project.githubUrl !== "#" && (
+                  <a
+                    href={project.githubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-auto w-full px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-cyan-500 to-purple-500 text-white rounded-xl font-medium text-center hover:opacity-90 transition-opacity"
+                  >
+                    View on GitHub
+                  </a>
+                )}
 
                 {/* Keyboard Hints */}
                 {hasMultipleImages && (

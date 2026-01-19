@@ -112,6 +112,24 @@ export default function Projects() {
       liveUrl: "#",
       githubUrl: "https://github.com/MayerS22/E-commerce-Mobile-App",
       category: "Mobile"
+    },
+    {
+      id: 6,
+      title: "SafetyZone - Civil Defense Services",
+      description: "A mobile application designed to support Civil Defense services in Saudi Arabia by providing an easy and fast way for users to access safety equipment, maintenance services, and emergency solutions. Provider app for certified service providers to manage orders, schedules, and service requests. Built with Flutter, Socket.io for real-time communication, and Firebase for notifications.",
+      image: "/images/SaftyZone/SaftyZone.png",
+      images: [
+        "/images/SaftyZone/SaftyZone.png",
+        "/images/SaftyZone/HomePage.png",
+        "/images/SaftyZone/Offers.png",
+        "/images/SaftyZone/PendingScreen.png",
+        "/images/SaftyZone/chats.png",
+        "/images/SaftyZone/BasicInfo.png"
+      ],
+      technologies: ["Flutter", "Dart", "Socket.io", "Firebase", "Push Notifications", "REST APIs", "State Management", "UI/UX Design"],
+      liveUrl: "#",
+      githubUrl: "#",
+      category: "Mobile"
     }
   ], [])
 
@@ -205,16 +223,18 @@ export default function Projects() {
                   transition={{ duration: 0.2 }}
                   className="absolute inset-0 bg-black/70 flex items-center justify-center gap-4 pointer-events-none"
                 >
-                  {/* GitHub Link - pointer-events-auto to enable clicks */}
-                  <a
-                    href={project.githubUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-3 glass rounded-full text-white hover:text-cyan-400 transition-colors pointer-events-auto hover:scale-110 active:scale-95"
-                    aria-label="View on GitHub"
-                  >
-                    <Github size={20} />
-                  </a>
+                  {/* GitHub Link - pointer-events-auto to enable clicks - only show if not "#" */}
+                  {project.githubUrl !== "#" && (
+                    <a
+                      href={project.githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-3 glass rounded-full text-white hover:text-cyan-400 transition-colors pointer-events-auto hover:scale-110 active:scale-95"
+                      aria-label="View on GitHub"
+                    >
+                      <Github size={20} />
+                    </a>
+                  )}
                 </motion.div>
               </div>
 
