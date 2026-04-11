@@ -1,23 +1,23 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0a0a0a;
-  --foreground: #ededed;
-  --glass-bg: rgba(255, 255, 255, 0.05);
-  --glass-border: rgba(255, 255, 255, 0.1);
-  --accent-primary: #00d4ff;
-  --accent-secondary: #7c3aed;
-  --text-primary: #ffffff;
-  --text-secondary: #a1a1aa;
-  --surface: #111111;
-}
+  /* Overall darker theme - medium gray, not pitch black */
+  --background: #d4d4d8;
+  --foreground: #171717;
 
-/* Tailwind CSS theme variables */
-:root {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Green accent */
+  --accent: #22c55e;
+  --accent-hover: #16a34a;
+
+  /* Cards */
+  --card-bg: #e5e5eb;
+  --card-border: #c4c4ca;
+  --card-hover: #22c55e;
+
+  /* Text */
+  --text-primary: #09090b;
+  --text-secondary: #52525b;
+  --text-muted: #a1a1aa;
 }
 
 * {
@@ -29,7 +29,7 @@ html {
 }
 
 body {
-  background: linear-gradient(135deg, #0a0a0a 0%, #111111 50%, #0a0a0a 100%);
+  background: #d4d4d8;
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
   line-height: 1.6;
@@ -37,90 +37,127 @@ body {
   min-height: 100vh;
 }
 
-/* Simplified glass effects for better mobile performance */
+/* Simple cards */
+.card {
+  background: #e5e5eb;
+  border: 1px solid #c4c4ca;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  border-color: #22c55e;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Minimal glass for header */
 .glass {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.2);
+  background: rgba(229, 229, 235, 0.9);
+  border: 1px solid #c4c4ca;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .glass-dark {
-  background: rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.3);
+  background: #e5e5eb;
+  border: 1px solid #c4c4ca;
 }
 
 .glass-card {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background: #e5e5eb;
+  border: 1px solid #c4c4ca;
 }
 
-.glass-hover:hover {
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  transform: translateY(-1px);
-}
-
-/* Custom scrollbar */
+/* Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #111111;
+  background: #c4c4ca;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(to bottom, #00d4ff, #7c3aed);
-  border-radius: 4px;
+  background: #a1a1aa;
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(to bottom, #00b8e6, #6d28d9);
+  background: #71717a;
 }
 
-/* Selection styling */
+/* Selection */
 ::selection {
-  background: rgba(0, 212, 255, 0.3);
+  background: rgba(34, 197, 94, 0.3);
   color: inherit;
 }
 
-/* Focus styles */
 *:focus {
-  outline: 2px solid #00d4ff;
-  outline-offset: 2px;
+  outline: none;
 }
 
-/* Optimized transitions - only for interactive elements */
-button, a, .hover\:scale-105:hover, .hover\:scale-110:hover {
-  transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+/* Text styles */
+.text-gradient {
+  color: #22c55e;
+  font-weight: 600;
 }
 
-/* Simple background */
-.animated-bg {
-  background: linear-gradient(135deg, #0a0a0a 0%, #111111 50%, #0a0a0a 100%);
+.glow {
+  box-shadow: 0 0 0 transparent;
 }
 
-/* Fast, essential animations only */
+/* Animations */
 @keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
 }
 
 .animate-fade-in-up {
-  animation: fadeInUp 0.3s ease-out forwards;
+  animation: fadeInUp 0.5s ease-out forwards;
 }
 
-/* Typing animation cursor */
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.3s ease-out forwards;
+}
+
+/* Scroll animation classes - pure CSS to avoid hydration mismatch */
+.scroll-animate {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+}
+
+.scroll-animate.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Staggered animation delays */
+.scroll-animate.delay-100 { transition-delay: 0.1s; }
+.scroll-animate.delay-200 { transition-delay: 0.2s; }
+.scroll-animate.delay-300 { transition-delay: 0.3s; }
+.scroll-animate.delay-400 { transition-delay: 0.4s; }
+
 .typing-cursor {
   animation: blink 1s infinite;
 }
@@ -130,163 +167,66 @@ button, a, .hover\:scale-105:hover, .hover\:scale-110:hover {
   51%, 100% { opacity: 0; }
 }
 
-/* Glow effects */
-.glow {
-  box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+.animated-bg {
+  background: #d4d4d8;
 }
 
-.glow-purple {
-  box-shadow: 0 0 20px rgba(124, 58, 237, 0.3);
-}
-
-/* Text gradient */
-.text-gradient {
-  background: linear-gradient(135deg, #00d4ff 0%, #7c3aed 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* Mobile optimizations */
+/* Mobile */
 @media (max-width: 768px) {
-  .glass, .glass-card, .glass-dark {
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    background: rgba(0, 0, 0, 0.3) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  .glass-card, .glass {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
   }
-  
-  .animate-fade-in-up,
-  .animate-fade-in-left,
-  .animate-fade-in-right {
-    animation-duration: 0.4s;
-  }
-  
-  .animated-bg {
-    animation-duration: 20s;
-  }
-  
-  /* Ensure text is visible on mobile */
-  .glass-card span {
-    color: #ffffff !important;
-  }
-  
-  /* Optimize framer-motion for mobile */
-  [data-framer-motion] {
-    will-change: transform, opacity;
-  }
-  
-  /* Reduce motion intensity on mobile */
-  .motion-reduce {
-    transform: none !important;
-    animation: none !important;
-  }
+  .animate-fade-in-up { animation-duration: 0.2s; }
+  [data-framer-motion] { will-change: transform, opacity; }
 }
 
-/* Performance optimizations */
-.glass, .glass-card, .glass-dark {
-  will-change: transform, opacity;
-  transform: translateZ(0);
-  backface-visibility: hidden;
+/* Safe area */
+@supports (padding: env(safe-area-inset-top)) {
+  .safe-area-top { padding-top: env(safe-area-inset-top); }
+  .safe-area-bottom { padding-bottom: env(safe-area-inset-bottom); }
 }
 
-/* Optimize animations for better performance */
-.animate-fade-in-up {
-  will-change: opacity, transform;
-  transform: translateZ(0);
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+  min-height: 48px;
+  min-width: 48px;
 }
 
-/* Reduce paint operations */
-* {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-.animate-pulse-slow {
-  will-change: transform, opacity;
-}
-
-/* Reduce motion for users who prefer it */
-@media (prefers-reduced-motion: reduce) {
-  .animated-bg,
-  .animate-pulse-slow,
-  .animate-bounce {
-    animation: none;
-  }
-  
-  .animate-fade-in-up,
-  .animate-fade-in-left,
-  .animate-fade-in-right,
-  .animate-scale-in {
-    animation: fadeInUp 0.2s ease-out forwards;
-  }
-  
-  /* Disable framer-motion animations for reduced motion */
-  [data-framer-motion] {
-    animation: none !important;
-    transform: none !important;
-  }
-}
-
-/* Touch optimizations */
+/* Touch feedback - better for mobile */
 @media (hover: none) and (pointer: coarse) {
-  .glass-hover:hover {
-    transform: none;
-    background: rgba(255, 255, 255, 0.05);
-  }
-  
-  .hover\:glow:hover {
-    box-shadow: none;
-  }
-  
-  .hover\:glow-purple:hover {
-    box-shadow: none;
+  button:active, a:active {
+    opacity: 0.7;
+    transform: scale(0.97);
   }
 }
 
-/* High contrast mode support */
-@media (prefers-contrast: high) {
-  .glass, .glass-card, .glass-dark {
-    background: rgba(0, 0, 0, 0.8);
-    border: 2px solid rgba(255, 255, 255, 0.3);
-  }
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .animated-bg, .animate-pulse, .animate-bounce { animation: none; }
+  .animate-fade-in-up { animation: fadeInUp 0.2s ease-out forwards; }
+  [data-framer-motion] { animation: none !important; transform: none !important; }
 }
 
-/* Optimized animation effects - keeping only essential ones */
-@keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
+/* Typography - better mobile scaling */
+.text-clamp-hero { font-size: clamp(2rem, 6vw, 4rem); }
+.text-clamp-section { font-size: clamp(1.5rem, 4vw, 2.5rem); }
+
+/* Horizontal scroll */
+.horizontal-scroll {
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
 }
+.horizontal-scroll::-webkit-scrollbar { display: none; }
+.horizontal-scroll > * { scroll-snap-align: start; }
 
-/* Essential animation utility classes */
-.animate-shimmer {
-  position: relative;
-  overflow: hidden;
+/* Transitions */
+button, a, .card {
+  transition: transform 0.15s ease,
+              background-color 0.15s ease,
+              color 0.15s ease,
+              border-color 0.15s ease;
 }
-
-.animate-shimmer::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-  animation: shimmer 2s infinite;
-}
-
-/* Performance optimizations for animations */
-.gpu-accelerated {
-  transform: translateZ(0);
-  will-change: transform, opacity;
-}
-
-.animation-optimized {
-  backface-visibility: hidden;
-  perspective: 1000px;
-  transform-style: preserve-3d;
-}
-
-/* Removed heavy floating animations for better performance */
-
-/* Removed complex text animations for better performance */

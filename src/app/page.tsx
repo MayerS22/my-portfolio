@@ -7,8 +7,8 @@ import About from '@/components/About'
 import Skills from '@/components/Skills'
 import Contact from '@/components/Contact'
 import Footer from '@/components/Footer'
+import ScrollAnimations from '@/components/ScrollAnimations'
 
-// Dynamic import for client-only components to prevent hydration issues
 const ScrollProgress = dynamic(() => import('@/components/ScrollProgress'), {
   ssr: false,
   loading: () => null
@@ -19,24 +19,29 @@ const BackToTop = dynamic(() => import('@/components/BackToTop'), {
   loading: () => null
 })
 
-// Lazy load heavy components
 const Experience = dynamic(() => import('@/components/Experience'), {
-  loading: () => <div className="h-96 bg-gray-800/20 rounded-lg animate-pulse" />
+  loading: () => <div className="h-96 bg-neutral-800/20 rounded-lg animate-pulse" />
 })
 
 const Projects = dynamic(() => import('@/components/Projects'), {
-  loading: () => <div className="h-96 bg-gray-800/20 rounded-lg animate-pulse" />
+  loading: () => <div className="h-96 bg-neutral-800/20 rounded-lg animate-pulse" />
+})
+
+const Freelance = dynamic(() => import('@/components/Freelance'), {
+  loading: () => <div className="h-96 bg-neutral-800/20 rounded-lg animate-pulse" />
 })
 
 export default function Home() {
   return (
     <main className="min-h-screen relative">
+      <ScrollAnimations />
       <ScrollProgress />
       <Header />
       <Hero />
       <About />
       <Skills />
       <Experience />
+      <Freelance />
       <Projects />
       <Contact />
       <Footer />

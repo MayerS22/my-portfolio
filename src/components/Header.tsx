@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Menu, X, Github, Linkedin, Mail } from 'lucide-react'
 import { useMounted } from '@/hooks/useMounted'
 
@@ -10,6 +10,7 @@ const navItems = [
   { name: 'Skills', href: '#skills' },
   { name: 'Experience', href: '#experience' },
   { name: 'Projects', href: '#projects' },
+  { name: 'Freelance', href: '#freelance' },
   { name: 'Contact', href: '#contact' },
 ]
 
@@ -25,125 +26,99 @@ export default function Header() {
   const [activeSection, setActiveSection] = useState('home')
   const isMounted = useMounted()
 
-  useEffect(() => {
-    if (!isMounted) return
-    
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50)
-      
-      // Update active section based on scroll position
-      const sections = ['home', 'about', 'skills', 'experience', 'projects', 'contact']
-      const scrollPosition = window.scrollY + 100
-      
-      for (const section of sections) {
-        const element = document.getElementById(section)
-        if (element) {
-          const { offsetTop, offsetHeight } = element
-          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
-            setActiveSection(section)
-            break
-          }
+  const handleScroll = useCallback(() => {
+    setIsScrolled(window.scrollY > 50)
+    const sections = ['home', 'about', 'skills', 'experience', 'projects', 'contact']
+    const scrollPosition = window.scrollY + 100
+    for (const section of sections) {
+      const element = document.getElementById(section)
+      if (element) {
+        const { offsetTop, offsetHeight } = element
+        if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
+          setActiveSection(section)
+          break
         }
       }
     }
-    
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [isMounted])
+  }, [])
+
+  useEffect(() => {
+    if (!isMounted) return
+    let ticking = false
+    const throttledScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          handleScroll()
+          ticking = false
+        })
+        ticking = true
+      }
+    }
+    window.addEventListener('scroll', throttledScroll, { passive: true })
+    return () => window.removeEventListener('scroll', throttledScroll)
+  }, [isMounted, handleScroll])
 
   return (
-    <header
-      className={`fixed top-4 left-4 right-4 z-50 transition-all duration-300 ${
-        isScrolled
-          ? 'glass backdrop-blur-xl border border-gray-800/50 rounded-xl'
-          : 'bg-transparent'
-      }`}
-    >
+    <header className={`fixed top-0 left-0 right-0 z-50 transition-all border-b ${
+      isScrolled ? 'bg-neutral-200/90 backdrop-blur-sm border-neutral-300' : 'bg-transparent border-transparent'
+    }`}>
       <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <div 
-            className="text-2xl font-bold text-gradient cursor-pointer hover:scale-105 transition-transform duration-200"
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          >
+          <div className="text-xl font-bold text-neutral-900 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
             Mayer Frieg
           </div>
 
-          {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             {navItems.map((item) => (
-              <a
+              <button
                 key={item.name}
-                href={item.href}
-                className={`relative font-medium transition-colors duration-200 hover:-translate-y-0.5 ${
-                  activeSection === item.name.toLowerCase()
-                    ? 'text-cyan-400'
-                    : 'text-gray-300 hover:text-cyan-400'
+                onClick={() => document.querySelector(item.href)?.scrollIntoView({ behavior: 'smooth' })}
+                className={`text-sm font-medium transition-colors ${
+                  activeSection === item.name.toLowerCase() ? 'text-green-700' : 'text-neutral-700 hover:text-neutral-900'
                 }`}
               >
                 {item.name}
-                {activeSection === item.name.toLowerCase() && (
-                  <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-cyan-500 to-purple-500" />
-                )}
-              </a>
+              </button>
             ))}
           </div>
 
-          {/* Social Links */}
           <div className="hidden md:flex items-center space-x-2">
             {socialLinks.map((social) => (
-              <a
-                key={social.name}
-                href={social.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2 text-gray-400 hover:text-cyan-400 transition-all duration-200 rounded-lg hover:bg-gray-800/50 hover:scale-110 hover:-translate-y-0.5"
-              >
+              <a key={social.name} href={social.href} target="_blank" rel="noopener noreferrer" className="p-3 text-neutral-600 hover:text-green-700 rounded-lg hover:bg-neutral-300 transition-colors touch-target">
                 <social.icon size={20} />
               </a>
             ))}
           </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden p-2 text-gray-300 rounded-lg hover:bg-gray-800/50 transition-all duration-200 hover:scale-105"
-          >
+          <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="md:hidden p-3 text-neutral-700 hover:bg-neutral-300 rounded-lg touch-target">
             {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
 
-        {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden glass-dark border-t border-gray-700/50">
-            <div className="px-4 py-6 space-y-4">
+          <div className="md:hidden bg-neutral-200 border-t border-neutral-300 py-4">
+            <div className="space-y-2">
               {navItems.map((item) => (
-                <a
+                <button
                   key={item.name}
-                  href={item.href}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className={`block font-medium transition-colors duration-200 hover:translate-x-2 ${
-                    activeSection === item.name.toLowerCase()
-                      ? 'text-cyan-400'
-                      : 'text-gray-300 hover:text-cyan-400'
+                  onClick={() => {
+                    setIsMobileMenuOpen(false)
+                    document.querySelector(item.href)?.scrollIntoView({ behavior: 'smooth' })
+                  }}
+                  className={`block w-full text-left px-4 py-3 rounded-lg text-sm font-medium touch-target ${
+                    activeSection === item.name.toLowerCase() ? 'bg-green-100 text-green-700' : 'text-neutral-700 hover:bg-neutral-300'
                   }`}
                 >
                   {item.name}
+                </button>
+              ))}
+            </div>
+            <div className="flex items-center space-x-4 px-4 pt-4 border-t border-neutral-300 mt-4">
+              {socialLinks.map((social) => (
+                <a key={social.name} href={social.href} target="_blank" rel="noopener noreferrer" className="p-3 text-neutral-600 hover:text-green-700 touch-target">
+                  <social.icon size={24} />
                 </a>
               ))}
-              <div className="flex items-center space-x-4 pt-4 border-t border-gray-700/50">
-                {socialLinks.map((social) => (
-                  <a
-                    key={social.name}
-                    href={social.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-2 text-gray-400 hover:text-cyan-400 transition-all duration-200 rounded-lg hover:bg-gray-800/50 hover:scale-110"
-                  >
-                    <social.icon size={20} />
-                  </a>
-                ))}
-              </div>
             </div>
           </div>
         )}

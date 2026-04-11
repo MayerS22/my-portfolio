@@ -1,457 +1,230 @@
 'use client'
 
-import { motion, useScroll, useTransform } from 'framer-motion'
-import { useInView } from 'framer-motion'
-import { useRef } from 'react'
-import { Calendar, MapPin, Building, GraduationCap, Award, Briefcase } from 'lucide-react'
+import { useRef, useState, useCallback, useEffect } from 'react'
+import { Calendar, MapPin, Building, GraduationCap, Award, Briefcase, Eye, X } from 'lucide-react'
 import Image from 'next/image'
 
 const Experience = () => {
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, margin: "-100px" })
-  
-  // Scroll trigger for the entire section
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"]
-  })
-  
-  // Transform scroll progress into different animation values
-  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0])
-  const scale = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.8, 1, 1, 0.8])
-  const y = useTransform(scrollYProgress, [0, 1], [100, -100])
-
   const experiences = [
-    {
-      title: 'Software Engineer',
-      company: 'QueenSoft',
-      location: 'Egypt',
-      period: 'July. 2025 – Present',
-      description: 'Full Stack Developer building scalable web applications with modern technologies.',
-      technologies: ['Next.js', 'Nest.js', 'PostgreSQL', 'TypeScript', 'React', 'Node.js', 'REST APIs'],
-      type: 'work',
-      image: '/images/QueenSoft.jpg',
-      imageAlt: 'QueenSoft Logo'
-    },
-    {
-      title: 'Administrative Assistant',
-      company: 'Christian Medical Foundation (CMF)',
-      location: 'Egypt',
-      period: 'Aug. 2023 – Present',
-      description: 'Supporting foundation operations through data management and event coordination.',
-      technologies: ['Microsoft Office', 'Data Entry', 'Report Generation', 'Event Management', 'Process Optimization'],
-      type: 'work',
-      image: '/images/CMF.jpg',
-      imageAlt: 'CMF Logo'
-    },
-    {
-      title: 'Microsoft Student Partner (MSP)',
-      company: 'Microsoft Tech Club at Ain Shams University',
-      location: 'Egypt',
-      period: 'Oct 2022 – Oct 2023',
-      description: 'Led technical workshops and mentored students in Microsoft technologies. Organized hackathons and managed team of 15+ members.',
-      technologies: ['Microsoft Azure', 'Power Platform', 'Power BI', 'GitHub', 'Leadership', 'Event Management', 'Student Mentoring', 'Technical Workshops'],
-      type: 'work',
-      image: '/images/MSP.jpg',
-      imageAlt: 'Microsoft Logo'
-    },
-    {
-      title: 'Database Administrator',
-      company: 'Christian Medical Foundation (CMF)',
-      location: 'Egypt',
-      period: 'Sept 2022 – Feb 2023',
-      description: 'Designed and implemented database system for committee management using Microsoft Access.',
-      technologies: ['Microsoft Access', 'Database Design', 'SQL', 'Data Modeling', 'Process Automation'],
-      type: 'work',
-      image: '/images/CMF.jpg',
-      imageAlt: 'CMF Logo'
-    }
+    { title: 'Software Engineer', company: 'QueenSoft', location: 'Egypt', period: 'July. 2025 – Present', description: 'Full Stack Developer building scalable web applications.', technologies: ['Next.js', 'Nest.js', 'PostgreSQL', 'TypeScript', 'React', 'Node.js'], image: '/images/QueenSoft.jpg' },
+    { title: 'Administrative Assistant', company: 'CMF', location: 'Egypt', period: 'Aug. 2023 – Present', description: 'Supporting foundation operations through data management and event coordination.', technologies: ['Microsoft Office', 'Data Entry', 'Report Generation'], image: '/images/CMF.jpg' },
+    { title: 'Microsoft Student Partner', company: 'Microsoft Tech Club', location: 'Egypt', period: 'Oct 2022 – Oct 2023', description: 'Led technical workshops and mentored students in Microsoft technologies.', technologies: ['Azure', 'Power Platform', 'Power BI', 'GitHub', 'Leadership'], image: '/images/MSP.jpg' },
+    { title: 'Database Administrator', company: 'CMF', location: 'Egypt', period: 'Sept 2022 – Feb 2023', description: 'Designed and implemented database system using Microsoft Access.', technologies: ['Access', 'Database Design', 'SQL', 'Data Modeling'], image: '/images/CMF.jpg' }
   ]
 
-  const education = [
-    {
-      title: 'Bachelor of Computer and Information Science',
-      institution: 'Ain Shams University',
-      location: 'Egypt',
-      period: 'Sept 2021 - July 2025',
-      description: 'GPA: 3.005 - Software engineering, database systems, and modern development practices.',
-      type: 'education',
-      image: '/images/CS.jpg',
-      imageAlt: 'Ain Shams University Logo'
-    }
-  ]
+  const education = [{ title: 'Bachelor of Computer and Information Science', institution: 'Ain Shams University', location: 'Egypt', period: 'Sept 2021 - July 2025', description: 'GPA: 3.005', image: '/images/CS.jpg' }]
 
   const certifications = [
-    {
-      title: 'Android Internship',
-      issuer: 'Banque Misr',
-      date: 'Aug. 2024 – Sept. 2024',
-      description: 'Professional internship in Android development.',
-      type: 'certification',
-      image: '/images/BM.jpg',
-      imageAlt: 'Banque Misr Logo'
-    },
-    {
-      title: 'Data Engineering Training',
-      issuer: 'Potenia Ain Shams University',
-      date: 'Aug. 2023 – Sept. 2023',
-      description: 'Training in data engineering concepts.',
-      type: 'certification',
-      image: '/images/POTENTIA.jpg',
-      imageAlt: 'Potenia Logo'
-    },
-    {
-      title: 'Flutter Training',
-      issuer: 'Support Ain Shams University',
-      date: 'Aug. 2023 – Sept. 2023',
-      description: 'Mobile app development with Flutter.',
-      type: 'certification',
-      image: '/images/Support.jpg',
-      imageAlt: 'Support Logo'
-    },
-    {
-      title: 'Software Engineering Training',
-      issuer: 'ALX',
-      date: 'Feb. 2023 – Apr. 2023',
-      description: 'Intensive software engineering program.',
-      type: 'certification',
-      image: '/images/ALX.jpg',
-      imageAlt: 'ALX Logo'
-    }
+    { title: 'Android Internship', issuer: 'Banque Misr', date: 'Aug. 2024', image: '/images/BM.jpg', certificateImage: '/images/Certifcation/BM.jpg' },
+    { title: 'Data Engineering Training', issuer: 'Potenia', date: 'Aug. 2023', image: '/images/POTENTIA.jpg', certificateImage: '/images/Certifcation/Potenia.png' },
+    { title: 'Flutter Training', issuer: 'Support', date: 'Aug. 2023', image: '/images/Support.jpg', certificateImage: '/images/Certifcation/Fluttersupport.jpg' },
+    { title: 'Software Engineering Training', issuer: 'ALX', date: 'Feb. 2023', image: '/images/ALX.jpg' }
   ]
 
   const courses = [
-    {
-      title: 'The Git & GitHub Bootcamp',
-      issuer: 'Udemy',
-      date: 'Aug 2025 – Sept 2025, 17 Hours',
-      description: 'Learn how to use Git and GitHub to manage your code and collaborate with others.',
-      type: 'course',
-      image: '/images/Udemy.jpg',
-      imageAlt: 'Udemy Logo'
-    },
-    {
-      title: 'Nest.js: The Complete Developer\'s Guide',
-      issuer: 'Udemy',
-      date: 'jun 2025 – July 2025, 20 Hours',
-      description: 'Learn how to build a web application from scratch using Nest.js, a powerful Node.js framework.',
-      type: 'course',
-      image: '/images/Udemy.jpg',
-      imageAlt: 'Udemy Logo'
-    },
-    {
-      title: 'Freelancer\'s Success Toolkit',
-      issuer: 'E-Youth | ITIDA',
-      date: 'Mar. 2025',
-      description: 'Training program for freelancing success.',
-      type: 'course',
-      image: '/images/ITIDA.jpg',
-      imageAlt: 'E-Youth Logo'
-    },
-    {
-      title: 'Flutter Course',
-      issuer: 'Udemy',
-      date: 'Sept. 2023 – Jan. 2024, 53 Hours',
-      description: 'Comprehensive Flutter development course covering mobile app development.',
-      type: 'course',
-      image: '/images/Udemy.jpg',
-      imageAlt: 'Udemy Logo'
-    },
-    {
-      title: 'Python 3 Ultimate Guide',
-      issuer: 'Udemy',
-      date: 'July. 2023 – Sept. 2023, 13 Hours',
-      description: 'Complete Python programming course covering fundamentals and advanced concepts.',
-      type: 'course',
-      image: '/images/Udemy.jpg',
-      imageAlt: 'Udemy Logo'
-    }
+    { title: 'AI Fluency: Framework & Foundations', issuer: 'Anthropic', date: '2025', image: '/images/anthropic.png', certificateImage: '/images/Certifcation/AI Fluency Framework & Foundations course.png', description: 'Mastered AI collaboration principles including delegation, clear communication, critical evaluation, and responsible use. Strengthened foundation in human-AI collaboration toward AI Engineering.' },
+    { title: 'Git & GitHub Bootcamp', issuer: 'Udemy', date: 'Aug 2025', image: '/images/Udemy.jpg', certificateImage: '/images/Certifcation/GitCourse.jpg' },
+    { title: 'Nest.js Complete Guide', issuer: 'Udemy', date: 'Jun 2025', image: '/images/Udemy.jpg', certificateImage: '/images/Certifcation/The Complete Developer\'s Guide in Nest.jpg' },
+    { title: 'Freelancer Toolkit', issuer: 'E-Youth | ITIDA', date: 'Mar. 2025', image: '/images/ITIDA.jpg' },
+    { title: 'Flutter Course', issuer: 'Udemy', date: 'Sept. 2023', image: '/images/Udemy.jpg' },
+    { title: 'Python 3 Guide', issuer: 'Udemy', date: 'July. 2023', image: '/images/Udemy.jpg', certificateImage: '/images/Certifcation/Python.jpg' }
   ]
 
-  return (
-    <section id="experience" ref={ref} className="py-20 relative overflow-hidden animated-bg">
-      {/* Simple Background Elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        {/* Static floating orbs */}
-        <div className="absolute top-20 right-20 w-72 h-72 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full blur-3xl" />
-        <div className="absolute bottom-20 left-20 w-96 h-96 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 rounded-full blur-3xl" />
-      </div>
+  const [selectedCertificate, setSelectedCertificate] = useState<{ image: string; title: string } | null>(null)
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <motion.div
-          style={{ opacity, scale, y }}
-          className="text-center mb-16"
-        >
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
-            Experience & <span className="text-gradient">Education</span>
+  const openModal = useCallback((image: string, title: string) => {
+    setSelectedCertificate({ image, title })
+    setIsModalOpen(true)
+  }, [])
+
+  const closeModal = useCallback(() => {
+    setIsModalOpen(false)
+    setSelectedCertificate(null)
+  }, [])
+
+  // Keyboard support
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!isModalOpen) return
+      if (e.key === 'Escape') closeModal()
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [isModalOpen, closeModal])
+
+  // Body scroll lock
+  useEffect(() => {
+    if (isModalOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'unset'
+    }
+    return () => {
+      document.body.style.overflow = 'unset'
+    }
+  }, [isModalOpen])
+
+  return (
+    <section id="experience" ref={useRef(null)} className="py-16 sm:py-20 bg-neutral-400">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-16">
+          <h2 className="text-clamp-section font-bold mb-4 text-neutral-900">
+            Experience & <span className="text-green-700">Education</span>
           </h2>
-          <p className="text-lg text-gray-400 max-w-3xl mx-auto">
+          <p className="text-lg text-neutral-700 max-w-3xl mx-auto">
             My professional journey and academic background
           </p>
-        </motion.div>
+        </div>
 
         <div className="grid lg:grid-cols-2 gap-12">
-          {/* Left Column - Education & Work Experience */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="space-y-12"
-          >
-            {/* Education */}
+          <div className="space-y-12">
             <div>
-              <div className="flex items-center mb-8">
-                <GraduationCap className="text-cyan-400 mr-3" size={24} />
-                <h3 className="text-2xl font-bold text-white">Education</h3>
+              <div className="flex items-center mb-6">
+                <GraduationCap className="text-green-700 mr-3" size={24} />
+                <h3 className="text-2xl font-bold text-neutral-900">Education</h3>
               </div>
-              
-              <div className="space-y-6">
+              <div className="space-y-4">
                 {education.map((edu, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={isInView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.4, delay: 0.3 + index * 0.1 }}
-                    whileHover={{ 
-                      scale: 1.02, 
-                      y: -5,
-                      transition: { duration: 0.2 }
-                    }}
-                    className="p-6 rounded-2xl glass-card hover:glow transition-all duration-300"
-                  >
+                  <div key={index} className="card border-l-4 border-l-green-600 p-5 sm:p-6">
                     <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 bg-gradient-to-br from-cyan-500 to-purple-500 rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden">
-                        <Image
-                          src={edu.image}
-                          alt={edu.imageAlt}
-                          width={48}
-                          height={48}
-                          className="object-cover w-full h-full"
-                          onError={(e) => {
-                            const target = e.target as HTMLImageElement;
-                            target.style.display = 'none';
-                            const fallback = target.parentElement?.querySelector('.fallback-icon') as HTMLElement;
-                            if (fallback) fallback.style.display = 'flex';
-                          }}
-                        />
-                        <div className="fallback-icon absolute inset-0 flex items-center justify-center" style={{ display: 'none' }}>
-                          <GraduationCap className="w-6 h-6 text-white" />
-                        </div>
-                      </div>
+                      <Image src={edu.image} alt="" width={56} height={56} className="w-14 h-14 sm:w-12 sm:h-12 object-cover rounded-lg" loading="lazy" />
                       <div className="flex-1">
-                        <h4 className="text-lg font-bold text-white mb-2">{edu.title}</h4>
-                        <div className="flex items-center gap-4 text-sm text-gray-400 mb-2">
-                          <div className="flex items-center gap-1">
-                            <Building size={14} />
-                            <span>{edu.institution}</span>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <MapPin size={14} />
-                            <span>{edu.location}</span>
-                          </div>
+                        <h4 className="text-base sm:text-lg font-bold text-neutral-900 mb-2">{edu.title}</h4>
+                        <div className="flex gap-3 text-sm text-neutral-600 mb-2">
+                          <Building size={14} /><span>{edu.institution}</span>
+                          <MapPin size={14} /><span>{edu.location}</span>
                         </div>
-                        <div className="flex items-center gap-1 text-sm text-gray-400 mb-3">
-                          <Calendar size={14} />
-                          <span>{edu.period}</span>
+                        <div className="flex items-center gap-1 text-sm text-neutral-600 mb-3">
+                          <Calendar size={14} /><span>{edu.period}</span>
                         </div>
-                        <p className="text-gray-300 text-sm leading-relaxed">{edu.description}</p>
+                        <p className="text-neutral-800 text-sm">{edu.description}</p>
                       </div>
                     </div>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
             </div>
 
-            {/* Work Experience */}
             <div>
-              <div className="flex items-center mb-8">
-                <Briefcase className="text-cyan-400 mr-3" size={24} />
-                <h3 className="text-2xl font-bold text-white">Work Experience</h3>
+              <div className="flex items-center mb-6">
+                <Briefcase className="text-green-700 mr-3" size={24} />
+                <h3 className="text-2xl font-bold text-neutral-900">Work Experience</h3>
               </div>
-              
-              <div className="space-y-6">
+              <div className="space-y-4">
                 {experiences.map((exp, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={isInView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.4, delay: 0.5 + index * 0.1 }}
-                    whileHover={{ 
-                      scale: 1.02, 
-                      y: -5,
-                      transition: { duration: 0.2 }
-                    }}
-                    className="p-6 rounded-2xl glass-card hover:glow transition-all duration-300"
-                  >
+                  <div key={index} className="card border-l-4 border-l-green-600 p-5 sm:p-6">
                     <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-blue-500 rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden">
-                        <Image
-                          src={exp.image}
-                          alt={exp.imageAlt}
-                          width={48}
-                          height={48}
-                          className="object-cover w-full h-full"
-                          onError={(e) => {
-                            const target = e.target as HTMLImageElement;
-                            target.style.display = 'none';
-                            const fallback = target.parentElement?.querySelector('.fallback-icon') as HTMLElement;
-                            if (fallback) fallback.style.display = 'flex';
-                          }}
-                        />
-                        <div className="fallback-icon absolute inset-0 flex items-center justify-center" style={{ display: 'none' }}>
-                          <Briefcase className="w-6 h-6 text-white" />
-                        </div>
-                      </div>
+                      <Image src={exp.image} alt="" width={56} height={56} className="w-14 h-14 sm:w-12 sm:h-12 object-cover rounded-lg" loading="lazy" />
                       <div className="flex-1">
-                        <h4 className="text-lg font-bold text-white mb-2">{exp.title}</h4>
-                        <div className="flex items-center gap-4 text-sm text-gray-400 mb-2">
-                          <div className="flex items-center gap-1">
-                            <Building size={14} />
-                            <span>{exp.company}</span>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <MapPin size={14} />
-                            <span>{exp.location}</span>
-                          </div>
+                        <h4 className="text-base sm:text-lg font-bold text-neutral-900 mb-2">{exp.title}</h4>
+                        <div className="flex gap-3 text-sm text-neutral-600 mb-2">
+                          <Building size={14} /><span>{exp.company}</span>
+                          <MapPin size={14} /><span>{exp.location}</span>
                         </div>
-                        <div className="flex items-center gap-1 text-sm text-gray-400 mb-3">
-                          <Calendar size={14} />
-                          <span>{exp.period}</span>
+                        <div className="flex items-center gap-1 text-sm text-neutral-600 mb-3">
+                          <Calendar size={14} /><span>{exp.period}</span>
                         </div>
-                        <p className="text-gray-300 text-sm leading-relaxed mb-4">{exp.description}</p>
-                        
-                        {/* Technologies */}
+                        <p className="text-neutral-800 text-sm mb-4">{exp.description}</p>
                         <div className="flex flex-wrap gap-2">
-                          {exp.technologies.map((tech, techIndex) => (
-                            <span
-                              key={techIndex}
-                              className="px-3 py-1 glass-card text-gray-300 text-xs rounded-full"
-                            >
-                              {tech}
-                            </span>
+                          {exp.technologies.map((tech) => (
+                            <span key={tech} className="px-3 py-1 bg-green-100 text-neutral-800 text-xs rounded-full">{tech}</span>
                           ))}
                         </div>
                       </div>
                     </div>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
             </div>
-          </motion.div>
+          </div>
 
-          {/* Right Column - Certifications & Courses */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.5, delay: 0.4 }}
-            className="space-y-12"
-          >
-            {/* Certifications */}
+          <div className="space-y-12">
             <div>
-              <div className="flex items-center mb-8">
-                <Award className="text-cyan-400 mr-3" size={24} />
-                <h3 className="text-2xl font-bold text-white">Certifications & Training</h3>
+              <div className="flex items-center mb-6">
+                <Award className="text-green-700 mr-3" size={24} />
+                <h3 className="text-2xl font-bold text-neutral-900">Certifications</h3>
               </div>
-              
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {certifications.map((cert, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={isInView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.4, delay: 0.6 + index * 0.1 }}
-                    whileHover={{ 
-                      scale: 1.05, 
-                      y: -3,
-                      transition: { duration: 0.2 }
-                    }}
-                    className="p-4 rounded-xl glass-card hover:glow transition-all duration-300"
-                  >
+                  <div key={index} className="card p-4">
                     <div className="flex items-start gap-3">
-                      <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden">
-                        <Image
-                          src={cert.image}
-                          alt={cert.imageAlt}
-                          width={40}
-                          height={40}
-                          className="object-cover w-full h-full"
-                          onError={(e) => {
-                            const target = e.target as HTMLImageElement;
-                            target.style.display = 'none';
-                            const fallback = target.parentElement?.querySelector('.fallback-icon') as HTMLElement;
-                            if (fallback) fallback.style.display = 'flex';
-                          }}
-                        />
-                        <div className="fallback-icon absolute inset-0 flex items-center justify-center" style={{ display: 'none' }}>
-                          <Award className="w-5 h-5 text-white" />
-                        </div>
+                      <Image src={cert.image} alt="" width={48} height={48} className="w-12 h-12 object-cover rounded-lg flex-shrink-0" loading="lazy" />
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-semibold text-neutral-900 text-sm">{cert.title}</h4>
+                        <p className="text-neutral-600 text-xs">{cert.issuer} • {cert.date}</p>
                       </div>
-                      <div className="flex-1">
-                        <h4 className="font-semibold text-white text-sm">{cert.title}</h4>
-                        <p className="text-gray-400 text-xs mb-1">{cert.issuer}</p>
-                        <p className="text-gray-500 text-xs mb-2">{cert.date}</p>
-                        <p className="text-gray-300 text-xs leading-relaxed">{cert.description}</p>
-                      </div>
+                      {cert.certificateImage && (
+                        <button
+                          onClick={() => openModal(cert.certificateImage, cert.title)}
+                          className="p-3 text-neutral-500 hover:text-green-700 flex-shrink-0 touch-target"
+                          aria-label="View certificate"
+                        >
+                          <Eye size={18} />
+                        </button>
+                      )}
                     </div>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
             </div>
 
-            {/* Courses */}
             <div>
-              <div className="flex items-center mb-8">
-                <GraduationCap className="text-cyan-400 mr-3" size={24} />
-                <h3 className="text-2xl font-bold text-white">Courses & Learning</h3>
+              <div className="flex items-center mb-6">
+                <GraduationCap className="text-green-700 mr-3" size={24} />
+                <h3 className="text-2xl font-bold text-neutral-900">Courses</h3>
               </div>
-              
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {courses.map((course, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={isInView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.4, delay: 0.8 + index * 0.1 }}
-                    whileHover={{ 
-                      scale: 1.05, 
-                      y: -3,
-                      transition: { duration: 0.2 }
-                    }}
-                    className="p-4 rounded-xl glass-card hover:glow transition-all duration-300"
-                  >
+                  <div key={index} className="card p-4">
                     <div className="flex items-start gap-3">
-                      <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-500 rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden">
-                        <Image
-                          src={course.image}
-                          alt={course.imageAlt}
-                          width={40}
-                          height={40}
-                          className="object-cover w-full h-full"
-                          onError={(e) => {
-                            const target = e.target as HTMLImageElement;
-                            target.style.display = 'none';
-                            const fallback = target.parentElement?.querySelector('.fallback-icon') as HTMLElement;
-                            if (fallback) fallback.style.display = 'flex';
-                          }}
-                        />
-                        <div className="fallback-icon absolute inset-0 flex items-center justify-center" style={{ display: 'none' }}>
-                          <GraduationCap className="w-5 h-5 text-white" />
-                        </div>
+                      {course.image && (
+                        <Image src={course.image} alt="" width={48} height={48} className="w-12 h-12 object-cover rounded-lg flex-shrink-0" loading="lazy" />
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-semibold text-neutral-900 text-sm">{course.title}</h4>
+                        <p className="text-neutral-600 text-xs">{course.issuer} • {course.date}</p>
                       </div>
-                      <div className="flex-1">
-                        <h4 className="font-semibold text-white text-sm">{course.title}</h4>
-                        <p className="text-gray-400 text-xs mb-1">{course.issuer}</p>
-                        <p className="text-gray-500 text-xs mb-2">{course.date}</p>
-                        <p className="text-gray-300 text-xs leading-relaxed">{course.description}</p>
-                      </div>
+                      {course.certificateImage && (
+                        <button
+                          onClick={() => openModal(course.certificateImage, course.title)}
+                          className="p-3 text-neutral-500 hover:text-green-700 flex-shrink-0 touch-target"
+                          aria-label="View certificate"
+                        >
+                          <Eye size={20} />
+                        </button>
+                      )}
                     </div>
-                  </motion.div>
+                    {course.description && (
+                      <p className="text-neutral-700 text-xs mt-2 line-clamp-2">{course.description}</p>
+                    )}
+                  </div>
                 ))}
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
+
+      {/* Certificate Modal */}
+      {isModalOpen && selectedCertificate && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/70" onClick={closeModal} />
+          <button onClick={closeModal} className="absolute top-4 right-4 z-[10000] p-2 bg-white hover:bg-gray-200 rounded-full">
+            <X size={24} />
+          </button>
+          <div className="relative w-full max-w-4xl max-h-[90vh] bg-white rounded-2xl shadow-2xl overflow-hidden" onClick={(e) => e.stopPropagation()}>
+            <div className="relative h-[70vh] bg-gray-100 p-4">
+              <Image
+                src={selectedCertificate.image}
+                alt={selectedCertificate.title}
+                fill
+                className="object-contain"
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   )
 }

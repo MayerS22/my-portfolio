@@ -1,316 +1,112 @@
 'use client'
 
-import { motion, useScroll, useTransform } from 'framer-motion'
-import { useInView } from 'framer-motion'
 import { useRef, useState, useMemo, useCallback } from 'react'
-import { Github } from 'lucide-react'
+import { Github, ExternalLink, Eye } from 'lucide-react'
 import Image from 'next/image'
 import ProjectDetailModal, { Project } from './ProjectDetailModal'
 
 export default function Projects() {
   const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, margin: "-100px" })
-  const [hoveredProject, setHoveredProject] = useState<number | null>(null)
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-  // Scroll trigger for the entire section
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"]
-  })
-
-  // Transform scroll progress into different animation values
-  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0])
-  const scale = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.8, 1, 1, 0.8])
-  const y = useTransform(scrollYProgress, [0, 1], [100, -100])
-
-  // Memoize hover handlers for performance
-  const handleHoverStart = useCallback((id: number) => {
-    setHoveredProject(id)
-  }, [])
-
-  const handleHoverEnd = useCallback(() => {
-    setHoveredProject(null)
-  }, [])
-
-  // Open modal with project details
   const openProjectModal = useCallback((project: Project) => {
     setSelectedProject(project)
     setIsModalOpen(true)
   }, [])
 
-  // Close modal
   const closeProjectModal = useCallback(() => {
     setIsModalOpen(false)
     setSelectedProject(null)
   }, [])
 
-  // Memoize projects data with multiple images
   const projects = useMemo(() => [
-    {
-      id: 1,
-      title: "AutoInsight - Business Intelligence Platform",
-      description: "A+ Graduation project: Advanced data analysis and machine learning platform designed to help businesses navigate challenges during layoffs and restructuring. Features predictive analytics, workforce forecasting, and real-time decision-making tools.",
-      image: "/images/AutoInsight.png",
-      images: ["/images/AutoInsight.png"],
-      technologies: ["React", "Vite", "Tailwind CSS", "Redux", "Python", "Machine Learning", "Data Analysis", "Forecasting Models", "Interactive Dashboards", "Real-time Analytics"],
-      liveUrl: "#",
-      githubUrl: "https://github.com/MayerS22/AutoInsight",
-      category: "Full-Stack"
-    },
-    {
-      id: 2,
-      title: "Taskify - Task Management App",
-      description: "Smart, simple, and stylish task management application for daily organization, deadline reminders, and personal productivity. Built with TypeScript and modern web technologies.",
-      image: "/images/Taskify.png",
-      images: ["/images/Taskify.png"],
-      technologies: ["TypeScript", "React", "Next.js", "Tailwind CSS", "SQLite", "Authentication", "Real-time Updates"],
-      liveUrl: "#",
-      githubUrl: "https://github.com/MayerS22/Taskify",
-      category: "Full-Stack"
-    },
-    {
-      id: 3,
-      title: "Speedo Transfer Mobile Application",
-      description: "Completed secure money transfer application for Banque Misr. Features include user authentication, fund transfers, transaction history, and real-time notifications. Built with Jetpack Compose, Kotlin, and MVVM architecture.",
-      image: "/images/Speedo.png",
-      images: ["/images/Speedo.png"],
-      technologies: ["Kotlin", "Jetpack Compose", "MVVM", "Android", "Firebase", "REST APIs", "Material Design", "Biometric Auth"],
-      liveUrl: "#",
-      githubUrl: "https://github.com/MayerS22/speedoo",
-      category: "Mobile"
-    },
-    {
-      id: 4,
-      title: "Checko - Smart Todo & Task Manager",
-      description: "Full-stack mobile todo application with intelligent insights and seamless collaboration. Features calendar integration, task analytics, productivity tracking, and real-time team collaboration. Beautiful intuitive interface for effortless task management.",
-      image: "/images/Checko/checko-1.jpeg",
-      images: [
-        "/images/Checko/checko-1.jpeg",
-        "/images/Checko/checko-2.jpeg",
-        "/images/Checko/checko-3.jpeg",
-        "/images/Checko/checko-4.jpeg",
-        "/images/Checko/checko-5.jpeg",
-        "/images/Checko/checko-6.jpeg",
-        "/images/Checko/checko-7.jpeg",
-        "/images/Checko/checko-8.jpeg",
-        "/images/Checko/checko-9.jpeg"
-      ],
-      technologies: ["React Native", "Firebase", "Firestore", "Authentication", "Calendar Integration", "Analytics", "Collaboration", "Push Notifications", "TypeScript"],
-      liveUrl: "#",
-      githubUrl: "https://github.com/MayerS22/Checko",
-      category: "Mobile"
-    },
-    {
-      id: 5,
-      title: "E-Commerce Mobile Application",
-      description: "Mobile e-commerce app with user authentication and real-time product data. Built with Flutter and Firebase.",
-      image: "/images/ecommerce-app.jpg",
-      images: ["/images/ecommerce-app.jpg"],
-      technologies: ["Flutter", "Firebase", "Dart", "State Management", "Cloud Firestore", "Authentication", "Payment Integration", "Push Notifications"],
-      liveUrl: "#",
-      githubUrl: "https://github.com/MayerS22/E-commerce-Mobile-App",
-      category: "Mobile"
-    },
-    {
-      id: 6,
-      title: "SafetyZone - Civil Defense Services",
-      description: "A mobile application designed to support Civil Defense services in Saudi Arabia by providing an easy and fast way for users to access safety equipment, maintenance services, and emergency solutions. Provider app for certified service providers to manage orders, schedules, and service requests. Built with Flutter, Socket.io for real-time communication, and Firebase for notifications.",
-      image: "/images/SaftyZone/SaftyZone.png",
-      images: [
-        "/images/SaftyZone/SaftyZone.png",
-        "/images/SaftyZone/HomePage.png",
-        "/images/SaftyZone/Offers.png",
-        "/images/SaftyZone/PendingScreen.png",
-        "/images/SaftyZone/chats.png",
-        "/images/SaftyZone/BasicInfo.png"
-      ],
-      technologies: ["Flutter", "Dart", "Socket.io", "Firebase", "Push Notifications", "REST APIs", "State Management", "UI/UX Design"],
-      liveUrl: "#",
-      githubUrl: "#",
-      category: "Mobile"
-    }
+    { id: 1, title: "AutoInsight", description: "Advanced data analysis and ML platform for business intelligence.", image: "/images/AutoInsight.png", images: ["/images/AutoInsight.png"], technologies: ["React", "Vite", "Python", "ML"], githubUrl: "https://github.com/MayerS22/AutoInsight", liveUrl: "#", category: "Full-Stack" },
+    { id: 2, title: "SafetyZone Consumer App", description: "Mobile app for SafetyZone consumers with real-time safety reporting, emergency services, and incident tracking.", image: "/images/safetyZoneConsumer/0.png", images: ["/images/safetyZoneConsumer/0.png", "/images/safetyZoneConsumer/1.png", "/images/safetyZoneConsumer/2.png", "/images/safetyZoneConsumer/3.png", "/images/safetyZoneConsumer/4.png", "/images/safetyZoneConsumer/5.png"], technologies: ["Flutter", "Firebase", "Dart", "REST APIs"], githubUrl: "#", liveUrl: "#", category: "Mobile" },
+    { id: 3, title: "Speedo Transfer", description: "Secure money transfer app for Banque Misr.", image: "/images/Speedo.png", images: ["/images/Speedo.png"], technologies: ["Kotlin", "Jetpack Compose", "MVVM", "Firebase"], githubUrl: "https://github.com/MayerS22/speedoo", liveUrl: "#", category: "Mobile" },
+    { id: 4, title: "Checko", description: "Full-stack mobile todo with intelligent insights.", image: "/images/Checko/checko-1.jpeg", images: ["/images/Checko/checko-1.jpeg", "/images/Checko/checko-2.jpeg"], technologies: ["React Native", "Firebase", "TypeScript"], githubUrl: "https://github.com/MayerS22/Checko", liveUrl: "#", category: "Mobile" },
+    { id: 5, title: "E-Commerce", description: "Mobile e-commerce with real-time data.", image: "/images/ecommerce-app.jpg", images: ["/images/ecommerce-app.jpg"], technologies: ["Flutter", "Firebase", "Dart"], githubUrl: "https://github.com/MayerS22/E-commerce-Mobile-App", liveUrl: "#", category: "Mobile" },
+    { id: 6, title: "SafetyZone Provider App", description: "Mobile app for SafetyZone providers with real-time incident management, emergency response coordination, and communication with dispatch center.", image: "/images/SaftyZoneprovider/SaftyZone.png", images: ["/images/SaftyZoneprovider/HomePage.png", "/images/SaftyZoneprovider/BasicInfo.png", "/images/SaftyZoneprovider/chats.png", "/images/SaftyZoneprovider/Offers.png", "/images/SaftyZoneprovider/PendingScreen.png"], technologies: ["Flutter", "Firebase", "Dart", "Socket.io"], githubUrl: "#", liveUrl: "#", category: "Mobile" },
+    { id: 7, title: "SafetyZone Consumer Website", description: "Modern consumer-facing website with real-time safety reporting and emergency services integration.", image: "/images/SaftyZone/SaftyZone.png", images: ["/images/safetyZoneWebsite/1.png", "/images/safetyZoneWebsite/2.png", "/images/safetyZoneWebsite/3.png", "/images/safetyZoneWebsite/4.png", "/images/safetyZoneWebsite/5.png"], technologies: ["Next.js", "React", "TypeScript", "Tailwind CSS"], githubUrl: "#", liveUrl: "https://safetyzoone.com/", category: "Frontend" }
   ], [])
 
-  const categories = useMemo(() => ["All", "Full-Stack", "Mobile", "Frontend", "Backend", "AI/ML"], [])
+  const categories = useMemo(() => ["All", "Full-Stack", "Mobile", "Frontend"], [])
   const [activeCategory, setActiveCategory] = useState("All")
 
   const filteredProjects = useMemo(() =>
-    activeCategory === "All"
-      ? projects
-      : projects.filter(project => project.category === activeCategory),
+    activeCategory === "All" ? projects : projects.filter(p => p.category === activeCategory),
     [activeCategory, projects]
   )
 
   return (
-    <section id="projects" ref={ref} className="py-20 relative overflow-hidden animated-bg">
-      {/* Simple Background Elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        {/* Static floating orbs */}
-        <div className="absolute top-20 left-20 w-72 h-72 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 rounded-full blur-3xl" />
-        <div className="absolute bottom-20 right-20 w-96 h-96 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full blur-3xl" />
-      </div>
-
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <motion.div
-          style={{ opacity, scale, y }}
-          className="text-center mb-16"
-        >
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
-            Featured <span className="text-gradient">Projects</span>
+    <section id="projects" ref={ref} className="py-16 sm:py-20 bg-neutral-300">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-12">
+          <h2 className="text-clamp-section font-bold mb-4 text-neutral-900">
+            Featured <span className="text-green-700">Projects</span>
           </h2>
-          <p className="text-lg text-gray-400 max-w-3xl mx-auto">
-            A showcase of my recent work, demonstrating my skills and passion for creating innovative solutions
-          </p>
-        </motion.div>
+          <p className="text-lg text-neutral-700 max-w-3xl mx-auto">A showcase of my recent work</p>
+        </div>
 
-        {/* Category Filter */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="flex flex-wrap justify-center gap-4 mb-12"
-        >
+        <div className="flex flex-wrap justify-center gap-3 mb-12">
           {categories.map((category) => (
-            <motion.button
+            <button
               key={category}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
               onClick={() => setActiveCategory(category)}
-              className={`px-6 py-2 rounded-full font-medium transition-all duration-300 ${
-                activeCategory === category
-                  ? 'glass text-white glow'
-                  : 'glass-card text-gray-300 hover:text-white hover:glow'
+              className={`px-4 py-2 rounded-lg font-medium transition-colors touch-target ${
+                activeCategory === category ? 'bg-green-600 text-white' : 'bg-neutral-200 text-neutral-800 hover:bg-neutral-300'
               }`}
             >
               {category}
-            </motion.button>
-          ))}
-        </motion.div>
-
-        {/* Projects Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredProjects.map((project, index) => (
-            <motion.div
-              key={project.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.3, delay: index * 0.05 }}
-              onHoverStart={() => handleHoverStart(project.id)}
-              onHoverEnd={handleHoverEnd}
-              whileHover={{
-                y: -5,
-                transition: { duration: 0.2 }
-              }}
-              className="group relative glass-card rounded-xl overflow-hidden hover:glow transition-all duration-300"
-            >
-              {/* Project Image */}
-              <div className="relative h-48 overflow-hidden">
-                <Image
-                  src={project.image}
-                  alt={project.title}
-                  fill
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  className="object-cover group-hover:scale-110 transition-transform duration-300"
-                  loading={index < 2 ? "eager" : "lazy"}
-                />
-
-                {/* Overlay - Fixed pointer events to allow clicking through */}
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: hoveredProject === project.id ? 1 : 0 }}
-                  transition={{ duration: 0.2 }}
-                  className="absolute inset-0 bg-black/70 flex items-center justify-center gap-4 pointer-events-none"
-                >
-                  {/* GitHub Link - pointer-events-auto to enable clicks - only show if not "#" */}
-                  {project.githubUrl !== "#" && (
-                    <a
-                      href={project.githubUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="p-3 glass rounded-full text-white hover:text-cyan-400 transition-colors pointer-events-auto hover:scale-110 active:scale-95"
-                      aria-label="View on GitHub"
-                    >
-                      <Github size={20} />
-                    </a>
-                  )}
-                </motion.div>
-              </div>
-
-              {/* Project Content */}
-              <div className="p-6">
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-sm text-cyan-400 font-medium">{project.category}</span>
-                  <button
-                    onClick={() => openProjectModal(project)}
-                    className={`text-2xl transition-transform duration-200 hover:scale-125 active:scale-95 ${hoveredProject === project.id ? 'scale-110' : ''}`}
-                    aria-label="View project details"
-                    title="View project details"
-                  >
-                    👁️
-                  </button>
-                </div>
-
-                <h3 className="text-xl font-bold text-white mb-3 group-hover:text-cyan-400 transition-colors">
-                  {project.title}
-                </h3>
-
-                <p className="text-gray-400 text-sm leading-relaxed mb-4">
-                  {project.description}
-                </p>
-
-                {/* Technologies - Removed individual animations for better performance */}
-                <div className="flex flex-wrap gap-2">
-                  {project.technologies.map((tech) => (
-                    <span
-                      key={tech}
-                      className="px-3 py-1 glass-card text-gray-300 text-xs rounded-full"
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              {/* Hover effect - Using CSS instead of motion for better performance */}
-              <div
-                className={`absolute inset-0 bg-gradient-to-r from-cyan-500 to-purple-500 pointer-events-none transition-opacity duration-200 ${hoveredProject === project.id ? 'opacity-10' : 'opacity-0'}`}
-              />
-            </motion.div>
+            </button>
           ))}
         </div>
 
-        {/* Call to Action */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 0.8 }}
-          className="text-center mt-16"
-        >
-          <p className="text-gray-400 mb-6">
-            Interested in working together? Let&apos;s discuss your next project!
-          </p>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => {
-              const element = document.querySelector('#contact');
-              if (element) element.scrollIntoView({ behavior: 'smooth' });
-            }}
-            className="glass px-8 py-3 rounded-xl font-semibold text-white hover:glow transition-all duration-300"
-          >
-            Get In Touch
-          </motion.button>
-        </motion.div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+          {filteredProjects.map((project, index) => (
+            <div key={project.id} className={`card overflow-hidden scroll-animate ${index < 3 ? `delay-${(index + 1) * 100}` : ''}`}>
+              <div className="relative h-48 bg-neutral-300">
+                <Image src={project.image} alt={project.title} fill className="object-cover" />
+                <div className="absolute top-3 left-3">
+                  <span className="px-3 py-1 bg-green-600 text-white text-xs font-medium rounded-full">{project.category}</span>
+                </div>
+              </div>
+              <div className="p-5">
+                <div className="flex items-start justify-between mb-3">
+                  <h3 className="text-lg font-bold text-neutral-900">{project.title}</h3>
+                  <button onClick={() => openProjectModal(project)} className="p-3 text-neutral-500 hover:text-green-700 touch-target" aria-label="View project details">
+                    <Eye size={20} />
+                  </button>
+                </div>
+                <p className="text-neutral-700 text-sm mb-4 line-clamp-2">{project.description}</p>
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {project.technologies.map((tech) => (
+                    <span key={tech} className="px-2 py-1 bg-neutral-200 text-neutral-800 text-xs rounded-full">{tech}</span>
+                  ))}
+                </div>
+                {(project.liveUrl && project.liveUrl !== "#") || (project.githubUrl && project.githubUrl !== "#") ? (
+                  <div className="flex gap-2">
+                    {project.liveUrl && project.liveUrl !== "#" && (
+                      <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" className="flex-1 px-3 py-2 bg-green-600 hover:bg-green-700 text-white text-xs font-medium rounded-lg transition-colors flex items-center justify-center gap-1 touch-target">
+                        <ExternalLink size={14} />
+                        Live Demo
+                      </a>
+                    )}
+                    {project.githubUrl && project.githubUrl !== "#" && (
+                      <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className="flex-1 px-3 py-2 bg-neutral-200 hover:bg-neutral-300 text-neutral-800 text-xs font-medium rounded-lg transition-colors flex items-center justify-center gap-1 touch-target">
+                        <Github size={14} />
+                        Code
+                      </a>
+                    )}
+                  </div>
+                ) : null}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
-      {/* Project Detail Modal */}
-      <ProjectDetailModal
-        project={selectedProject}
-        isOpen={isModalOpen}
-        onClose={closeProjectModal}
-      />
+      <ProjectDetailModal project={selectedProject} isOpen={isModalOpen} onClose={closeProjectModal} />
     </section>
   )
 }
