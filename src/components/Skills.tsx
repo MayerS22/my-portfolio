@@ -1,5 +1,7 @@
 'use client'
 
+import TextReveal from './TextReveal'
+
 const Skills = () => {
   const skillCategories = [
     { title: "Frontend", skills: ["React", "HTML5", "CSS3", "JavaScript", "TypeScript", "Next.js", "Tailwind CSS", "Redux"] },
@@ -12,10 +14,11 @@ const Skills = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12 sm:mb-16">
           <h2 className="text-clamp-section font-bold mb-4 text-neutral-900">
-            My <span className="text-green-700">Skills</span>
+            <TextReveal delay={0}>My</TextReveal>{' '}
+            <span className="text-green-700"><TextReveal delay={100}>Skills</TextReveal></span>
           </h2>
           <p className="text-neutral-700 text-lg max-w-3xl mx-auto">
-            A comprehensive toolkit of technologies and frameworks
+            <TextReveal delay={200}>A comprehensive toolkit of technologies and frameworks</TextReveal>
           </p>
         </div>
 
@@ -35,10 +38,9 @@ const Skills = () => {
           ))}
         </div>
 
-        <div className="lg:hidden horizontal-scroll -mx-4 px-4">
-          <div className="flex gap-4 pb-4">
+        <div className="lg:hidden space-y-4">
             {skillCategories.map((category) => (
-              <div key={category.title} className="card p-5 sm:p-6 min-w-[260px] sm:min-w-[280px]">
+              <div key={category.title} className="card p-5 sm:p-6">
                 <h3 className="text-lg font-bold text-neutral-900 mb-2">{category.title}</h3>
                 <div className="h-1 w-16 bg-green-600 rounded-full mb-4" />
                 <div className="flex flex-wrap gap-2">
@@ -49,7 +51,6 @@ const Skills = () => {
               </div>
             ))}
           </div>
-        </div>
       </div>
     </section>
   )

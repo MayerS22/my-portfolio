@@ -4,6 +4,7 @@ import { useRef, useState, useMemo, useCallback } from 'react'
 import { Github, ExternalLink, Eye } from 'lucide-react'
 import Image from 'next/image'
 import ProjectDetailModal, { Project } from './ProjectDetailModal'
+import TextReveal from './TextReveal'
 
 export default function Projects() {
   const ref = useRef(null)
@@ -27,7 +28,7 @@ export default function Projects() {
     { id: 4, title: "Checko", description: "Full-stack mobile todo with intelligent insights.", image: "/images/Checko/checko-1.jpeg", images: ["/images/Checko/checko-1.jpeg", "/images/Checko/checko-2.jpeg"], technologies: ["React Native", "Firebase", "TypeScript"], githubUrl: "https://github.com/MayerS22/Checko", liveUrl: "#", category: "Mobile" },
     { id: 5, title: "E-Commerce", description: "Mobile e-commerce with real-time data.", image: "/images/ecommerce-app.jpg", images: ["/images/ecommerce-app.jpg"], technologies: ["Flutter", "Firebase", "Dart"], githubUrl: "https://github.com/MayerS22/E-commerce-Mobile-App", liveUrl: "#", category: "Mobile" },
     { id: 6, title: "SafetyZone Provider App", description: "Mobile app for SafetyZone providers with real-time incident management, emergency response coordination, and communication with dispatch center.", image: "/images/SaftyZoneprovider/SaftyZone.png", images: ["/images/SaftyZoneprovider/HomePage.png", "/images/SaftyZoneprovider/BasicInfo.png", "/images/SaftyZoneprovider/chats.png", "/images/SaftyZoneprovider/Offers.png", "/images/SaftyZoneprovider/PendingScreen.png"], technologies: ["Flutter", "Firebase", "Dart", "Socket.io"], githubUrl: "#", liveUrl: "#", category: "Mobile" },
-    { id: 7, title: "SafetyZone Consumer Website", description: "Modern consumer-facing website with real-time safety reporting and emergency services integration.", image: "/images/SaftyZone/SaftyZone.png", images: ["/images/safetyZoneWebsite/1.png", "/images/safetyZoneWebsite/2.png", "/images/safetyZoneWebsite/3.png", "/images/safetyZoneWebsite/4.png", "/images/safetyZoneWebsite/5.png"], technologies: ["Next.js", "React", "TypeScript", "Tailwind CSS"], githubUrl: "#", liveUrl: "https://safetyzoone.com/", category: "Frontend" }
+    { id: 7, title: "SafetyZone Consumer Website", description: "Modern consumer-facing website with real-time safety reporting and emergency services integration.", image: "/images/SaftyZoneprovider/SaftyZone.png", images: ["/images/safetyZoneWebsite/1.png", "/images/safetyZoneWebsite/2.png", "/images/safetyZoneWebsite/3.png", "/images/safetyZoneWebsite/4.png", "/images/safetyZoneWebsite/5.png"], technologies: ["Next.js", "React", "TypeScript", "Tailwind CSS"], githubUrl: "#", liveUrl: "https://safetyzoone.com/", category: "Frontend" }
   ], [])
 
   const categories = useMemo(() => ["All", "Full-Stack", "Mobile", "Frontend"], [])
@@ -43,9 +44,12 @@ export default function Projects() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h2 className="text-clamp-section font-bold mb-4 text-neutral-900">
-            Featured <span className="text-green-700">Projects</span>
+            <TextReveal delay={0}>Featured</TextReveal>{' '}
+            <span className="text-green-700"><TextReveal delay={100}>Projects</TextReveal></span>
           </h2>
-          <p className="text-lg text-neutral-700 max-w-3xl mx-auto">A showcase of my recent work</p>
+          <p className="text-lg text-neutral-700 max-w-3xl mx-auto">
+            <TextReveal delay={200}>A showcase of my recent work</TextReveal>
+          </p>
         </div>
 
         <div className="flex flex-wrap justify-center gap-3 mb-12">

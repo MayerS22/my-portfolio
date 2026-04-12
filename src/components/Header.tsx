@@ -9,8 +9,8 @@ const navItems = [
   { name: 'About', href: '#about' },
   { name: 'Skills', href: '#skills' },
   { name: 'Experience', href: '#experience' },
-  { name: 'Projects', href: '#projects' },
   { name: 'Freelance', href: '#freelance' },
+  { name: 'Projects', href: '#projects' },
   { name: 'Contact', href: '#contact' },
 ]
 
@@ -28,7 +28,7 @@ export default function Header() {
 
   const handleScroll = useCallback(() => {
     setIsScrolled(window.scrollY > 50)
-    const sections = ['home', 'about', 'skills', 'experience', 'projects', 'contact']
+    const sections = ['home', 'about', 'skills', 'experience', 'freelance', 'projects', 'contact']
     const scrollPosition = window.scrollY + 100
     for (const section of sections) {
       const element = document.getElementById(section)
@@ -60,7 +60,7 @@ export default function Header() {
 
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all border-b ${
-      isScrolled ? 'bg-neutral-200/90 backdrop-blur-sm border-neutral-300' : 'bg-transparent border-transparent'
+      isScrolled ? 'bg-neutral-200/90 backdrop-blur-sm border-neutral-300' : 'bg-neutral-300/70 backdrop-blur-md border-neutral-300/50'
     }`}>
       <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">

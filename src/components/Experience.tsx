@@ -3,6 +3,7 @@
 import { useRef, useState, useCallback, useEffect } from 'react'
 import { Calendar, MapPin, Building, GraduationCap, Award, Briefcase, Eye, X } from 'lucide-react'
 import Image from 'next/image'
+import TextReveal from './TextReveal'
 
 const Experience = () => {
   const experiences = [
@@ -70,10 +71,11 @@ const Experience = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-clamp-section font-bold mb-4 text-neutral-900">
-            Experience & <span className="text-green-700">Education</span>
+            <TextReveal delay={0}>Experience &</TextReveal>{' '}
+            <span className="text-green-700"><TextReveal delay={100}>Education</TextReveal></span>
           </h2>
           <p className="text-lg text-neutral-700 max-w-3xl mx-auto">
-            My professional journey and academic background
+            <TextReveal delay={200}>My professional journey and academic background</TextReveal>
           </p>
         </div>
 
@@ -82,7 +84,9 @@ const Experience = () => {
             <div>
               <div className="flex items-center mb-6">
                 <GraduationCap className="text-green-700 mr-3" size={24} />
-                <h3 className="text-2xl font-bold text-neutral-900">Education</h3>
+                <h3 className="text-2xl font-bold text-neutral-900">
+                  <TextReveal>Education</TextReveal>
+                </h3>
               </div>
               <div className="space-y-4">
                 {education.map((edu, index) => (
@@ -109,7 +113,9 @@ const Experience = () => {
             <div>
               <div className="flex items-center mb-6">
                 <Briefcase className="text-green-700 mr-3" size={24} />
-                <h3 className="text-2xl font-bold text-neutral-900">Work Experience</h3>
+                <h3 className="text-2xl font-bold text-neutral-900">
+                  <TextReveal>Work Experience</TextReveal>
+                </h3>
               </div>
               <div className="space-y-4">
                 {experiences.map((exp, index) => (
@@ -143,7 +149,9 @@ const Experience = () => {
             <div>
               <div className="flex items-center mb-6">
                 <Award className="text-green-700 mr-3" size={24} />
-                <h3 className="text-2xl font-bold text-neutral-900">Certifications</h3>
+                <h3 className="text-2xl font-bold text-neutral-900">
+                  <TextReveal>Certifications</TextReveal>
+                </h3>
               </div>
               <div className="space-y-3">
                 {certifications.map((cert, index) => (
@@ -172,7 +180,9 @@ const Experience = () => {
             <div>
               <div className="flex items-center mb-6">
                 <GraduationCap className="text-green-700 mr-3" size={24} />
-                <h3 className="text-2xl font-bold text-neutral-900">Courses</h3>
+                <h3 className="text-2xl font-bold text-neutral-900">
+                  <TextReveal>Courses</TextReveal>
+                </h3>
               </div>
               <div className="space-y-3">
                 {courses.map((course, index) => (

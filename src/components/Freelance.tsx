@@ -3,6 +3,7 @@
 import { useRef, useState, useMemo, useCallback, useEffect } from 'react'
 import { ExternalLink, Github, Eye, X, ChevronLeft, ChevronRight } from 'lucide-react'
 import Image from 'next/image'
+import TextReveal from './TextReveal'
 
 export interface FreelanceProject {
   id: number
@@ -76,7 +77,7 @@ export default function Freelance() {
       title: "SafetyZone Consumer Website",
       client: "SafetyZone",
       description: "Modern consumer-facing website built with Next.js and React. Features real-time safety reporting, emergency services integration, and responsive design for optimal mobile experience.",
-      image: "/images/SaftyZone/SaftyZone.png",
+      image: "/images/SaftyZoneprovider/SaftyZone.png",
       images: ["/images/safetyZoneWebsite/1.png", "/images/safetyZoneWebsite/2.png", "/images/safetyZoneWebsite/3.png", "/images/safetyZoneWebsite/4.png", "/images/safetyZoneWebsite/5.png"],
       technologies: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Firebase"],
       duration: "2 months",
@@ -118,10 +119,11 @@ export default function Freelance() {
         {/* Section Header with count */}
         <div className="text-center mb-12">
           <h2 className="text-clamp-section font-bold mb-4 text-neutral-900">
-            Freelance <span className="text-green-700">Projects</span>
+            <TextReveal delay={0}>Freelance</TextReveal>{' '}
+            <span className="text-green-700"><TextReveal delay={100}>Projects</TextReveal></span>
           </h2>
           <p className="text-lg text-neutral-700 max-w-3xl mx-auto">
-            Projects I&apos;ve delivered for clients worldwide
+            <TextReveal delay={200}>Projects I&apos;ve delivered for clients worldwide</TextReveal>
           </p>
         </div>
 

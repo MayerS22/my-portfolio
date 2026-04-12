@@ -1,6 +1,7 @@
 'use client'
 
 import { Code, Users, Zap, Target, Briefcase } from 'lucide-react'
+import TextReveal from './TextReveal'
 
 const About = () => {
   const stats = [
@@ -16,16 +17,17 @@ const About = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-clamp-section font-bold mb-4 text-neutral-900">
-            About <span className="text-green-700">Me</span>
+            <TextReveal delay={0}>About</TextReveal>{' '}
+            <span className="text-green-700"><TextReveal delay={100}>Me</TextReveal></span>
           </h2>
           <p className="text-lg text-neutral-700 max-w-3xl mx-auto">
-            Passionate Full-Stack Developer with expertise in modern web technologies
+            <TextReveal delay={200}>Passionate Full-Stack Developer with expertise in modern web technologies</TextReveal>
           </p>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-6">
-            <h3 className="text-2xl md:text-3xl font-bold text-neutral-900">
+            <h3 className="text-2xl md:text-3xl font-bold text-neutral-900 scroll-animate">
               Turning Ideas Into Digital Reality
             </h3>
             <div className="space-y-4 text-neutral-800 leading-relaxed">
