@@ -1,15 +1,30 @@
 'use client'
 
-import { useRef, useState, useMemo, useCallback } from 'react'
+import { useRef, useState, useMemo, useCallback, useEffect } from 'react'
 import { Github, ExternalLink, Eye } from 'lucide-react'
 import Image from 'next/image'
 import ProjectDetailModal, { Project } from './ProjectDetailModal'
-import TextReveal from './TextReveal'
+import SplitText from './SplitText'
 
 export default function Projects() {
   const ref = useRef(null)
+  const [visible, setVisible] = useState(false)
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true)
+          observer.disconnect()
+        }
+      },
+      { threshold: 0.1 }
+    )
+    if (ref.current) observer.observe(ref.current)
+    return () => observer.disconnect()
+  }, [])
 
   const openProjectModal = useCallback((project: Project) => {
     setSelectedProject(project)
@@ -40,19 +55,29 @@ export default function Projects() {
   )
 
   return (
-    <section id="projects" ref={ref} className="py-16 sm:py-20 bg-neutral-300">
+    <section id="projects" ref={ref} className="py-16 sm:py-20">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Title */}
         <div className="text-center mb-12">
           <h2 className="text-clamp-section font-bold mb-4 text-neutral-900">
-            <TextReveal delay={0}>Featured</TextReveal>{' '}
-            <span className="text-green-700"><TextReveal delay={100}>Projects</TextReveal></span>
+            <SplitText text="Featured" charDelay={35} />{' '}
+            <span className="text-green-700"><SplitText text="Projects" charDelay={35} /></span>
           </h2>
-          <p className="text-lg text-neutral-700 max-w-3xl mx-auto">
-            <TextReveal delay={200}>A showcase of my recent work</TextReveal>
+          <p className="text-lg text-neutral-700 max-w-3xl mx-auto" style={{
+            opacity: visible ? 1 : 0,
+            transform: visible ? 'translateY(0)' : 'translateY(20px)',
+            transition: 'opacity 0.8s ease 0.3s, transform 0.8s ease 0.3s'
+          }}>
+            A showcase of my recent work
           </p>
         </div>
 
-        <div className="flex flex-wrap justify-center gap-3 mb-12">
+        {/* Category Filter */}
+        <div className="flex flex-wrap justify-center gap-3 mb-12" style={{
+          opacity: visible ? 1 : 0,
+          transform: visible ? 'translateY(0)' : 'translateY(15px)',
+          transition: 'opacity 0.5s ease 0.4s, transform 0.5s ease 0.4s'
+        }}>
           {categories.map((category) => (
             <button
               key={category}
@@ -66,9 +91,18 @@ export default function Projects() {
           ))}
         </div>
 
+        {/* Project Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {filteredProjects.map((project, index) => (
-            <div key={project.id} className={`card overflow-hidden scroll-animate ${index < 3 ? `delay-${(index + 1) * 100}` : ''}`}>
+            <div
+              key={project.id}
+              className="card overflow-hidden"
+              style={{
+                opacity: visible ? 1 : 0,
+                transform: visible ? 'translateY(0)' : 'translateY(30px)',
+                transition: `opacity 0.5s ease ${0.5 + index * 0.08}s, transform 0.5s ease ${0.5 + index * 0.08}s`
+              }}
+            >
               <div className="relative h-48 bg-neutral-300">
                 <Image src={project.image} alt={project.title} fill className="object-cover" />
                 <div className="absolute top-3 left-3">
@@ -92,14 +126,12 @@ export default function Projects() {
                   <div className="flex gap-2">
                     {project.liveUrl && project.liveUrl !== "#" && (
                       <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" className="flex-1 px-3 py-2 bg-green-600 hover:bg-green-700 text-white text-xs font-medium rounded-lg transition-colors flex items-center justify-center gap-1 touch-target">
-                        <ExternalLink size={14} />
-                        Live Demo
+                        <ExternalLink size={14} /> Live Demo
                       </a>
                     )}
                     {project.githubUrl && project.githubUrl !== "#" && (
                       <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className="flex-1 px-3 py-2 bg-neutral-200 hover:bg-neutral-300 text-neutral-800 text-xs font-medium rounded-lg transition-colors flex items-center justify-center gap-1 touch-target">
-                        <Github size={14} />
-                        Code
+                        <Github size={14} /> Code
                       </a>
                     )}
                   </div>

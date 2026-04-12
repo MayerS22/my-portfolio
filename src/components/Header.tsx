@@ -30,12 +30,14 @@ export default function Header() {
     setIsScrolled(window.scrollY > 50)
     const sections = ['home', 'about', 'skills', 'experience', 'freelance', 'projects', 'contact']
     const scrollPosition = window.scrollY + 100
-    for (const section of sections) {
-      const element = document.getElementById(section)
-      if (element) {
-        const { offsetTop, offsetHeight } = element
-        if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
-          setActiveSection(section)
+    const isAtBottom = window.innerHeight + window.scrollY >= document.body.scrollHeight - 50
+    if (isAtBottom) {
+      setActiveSection('contact')
+    } else {
+      for (let i = sections.length - 1; i >= 0; i--) {
+        const element = document.getElementById(sections[i])
+        if (element && element.offsetTop <= scrollPosition) {
+          setActiveSection(sections[i])
           break
         }
       }

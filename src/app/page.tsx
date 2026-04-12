@@ -33,7 +33,7 @@ const Freelance = dynamic(() => import('@/components/Freelance'), {
 
 export default function Home() {
   return (
-    <main className="min-h-screen relative">
+    <main className="min-h-screen relative page-gradient">
       <ScrollAnimations />
       <ScrollProgress />
       <Header />

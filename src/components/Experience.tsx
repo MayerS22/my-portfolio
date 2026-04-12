@@ -3,9 +3,26 @@
 import { useRef, useState, useCallback, useEffect } from 'react'
 import { Calendar, MapPin, Building, GraduationCap, Award, Briefcase, Eye, X } from 'lucide-react'
 import Image from 'next/image'
-import TextReveal from './TextReveal'
+import SplitText from './SplitText'
 
 const Experience = () => {
+  const [visible, setVisible] = useState(false)
+  const sectionRef = useRef<HTMLElement>(null)
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true)
+          observer.disconnect()
+        }
+      },
+      { threshold: 0.1 }
+    )
+    if (sectionRef.current) observer.observe(sectionRef.current)
+    return () => observer.disconnect()
+  }, [])
+
   const experiences = [
     { title: 'Software Engineer', company: 'QueenSoft', location: 'Egypt', period: 'July. 2025 – Present', description: 'Full Stack Developer building scalable web applications.', technologies: ['Next.js', 'Nest.js', 'PostgreSQL', 'TypeScript', 'React', 'Node.js'], image: '/images/QueenSoft.jpg' },
     { title: 'Administrative Assistant', company: 'CMF', location: 'Egypt', period: 'Aug. 2023 – Present', description: 'Supporting foundation operations through data management and event coordination.', technologies: ['Microsoft Office', 'Data Entry', 'Report Generation'], image: '/images/CMF.jpg' },
@@ -27,7 +44,7 @@ const Experience = () => {
     { title: 'Git & GitHub Bootcamp', issuer: 'Udemy', date: 'Aug 2025', image: '/images/Udemy.jpg', certificateImage: '/images/Certifcation/GitCourse.jpg' },
     { title: 'Nest.js Complete Guide', issuer: 'Udemy', date: 'Jun 2025', image: '/images/Udemy.jpg', certificateImage: '/images/Certifcation/The Complete Developer\'s Guide in Nest.jpg' },
     { title: 'Freelancer Toolkit', issuer: 'E-Youth | ITIDA', date: 'Mar. 2025', image: '/images/ITIDA.jpg' },
-    { title: 'Flutter Course', issuer: 'Udemy', date: 'Sept. 2023', image: '/images/Udemy.jpg' },
+    { title: 'Flutter Course', issuer: 'Udemy', date: 'Sept 2023', image: '/images/Udemy.jpg' },
     { title: 'Python 3 Guide', issuer: 'Udemy', date: 'July. 2023', image: '/images/Udemy.jpg', certificateImage: '/images/Certifcation/Python.jpg' }
   ]
 
@@ -44,7 +61,6 @@ const Experience = () => {
     setSelectedCertificate(null)
   }, [])
 
-  // Keyboard support
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (!isModalOpen) return
@@ -54,43 +70,53 @@ const Experience = () => {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [isModalOpen, closeModal])
 
-  // Body scroll lock
   useEffect(() => {
     if (isModalOpen) {
       document.body.style.overflow = 'hidden'
     } else {
       document.body.style.overflow = 'unset'
     }
-    return () => {
-      document.body.style.overflow = 'unset'
-    }
+    return () => { document.body.style.overflow = 'unset' }
   }, [isModalOpen])
 
   return (
-    <section id="experience" ref={useRef(null)} className="py-16 sm:py-20 bg-neutral-400">
+    <section id="experience" ref={sectionRef} className="py-16 sm:py-20">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Title */}
         <div className="text-center mb-16">
           <h2 className="text-clamp-section font-bold mb-4 text-neutral-900">
-            <TextReveal delay={0}>Experience &</TextReveal>{' '}
-            <span className="text-green-700"><TextReveal delay={100}>Education</TextReveal></span>
+            <SplitText text="Experience &" charDelay={35} />{' '}
+            <span className="text-green-700"><SplitText text="Education" charDelay={35} /></span>
           </h2>
-          <p className="text-lg text-neutral-700 max-w-3xl mx-auto">
-            <TextReveal delay={200}>My professional journey and academic background</TextReveal>
+          <p className="text-lg text-neutral-700 max-w-3xl mx-auto" style={{
+            opacity: visible ? 1 : 0,
+            transform: visible ? 'translateY(0)' : 'translateY(20px)',
+            transition: 'opacity 0.8s ease 0.3s, transform 0.8s ease 0.3s'
+          }}>
+            My professional journey and academic background
           </p>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-12">
-          <div className="space-y-12">
+          {/* Left Column */}
+          <div className="space-y-12" style={{
+            opacity: visible ? 1 : 0,
+            transform: visible ? 'translateX(0)' : 'translateX(-30px)',
+            transition: 'opacity 0.7s ease 0.4s, transform 0.7s ease 0.4s'
+          }}>
+            {/* Education */}
             <div>
               <div className="flex items-center mb-6">
                 <GraduationCap className="text-green-700 mr-3" size={24} />
-                <h3 className="text-2xl font-bold text-neutral-900">
-                  <TextReveal>Education</TextReveal>
-                </h3>
+                <h3 className="text-2xl font-bold text-neutral-900">Education</h3>
               </div>
               <div className="space-y-4">
                 {education.map((edu, index) => (
-                  <div key={index} className="card border-l-4 border-l-green-600 p-5 sm:p-6">
+                  <div key={index} className="card border-l-4 border-l-green-600 p-5 sm:p-6" style={{
+                    opacity: visible ? 1 : 0,
+                    transform: visible ? 'translateY(0)' : 'translateY(20px)',
+                    transition: `opacity 0.5s ease ${0.6 + index * 0.15}s, transform 0.5s ease ${0.6 + index * 0.15}s`
+                  }}>
                     <div className="flex items-start gap-4">
                       <Image src={edu.image} alt="" width={56} height={56} className="w-14 h-14 sm:w-12 sm:h-12 object-cover rounded-lg" loading="lazy" />
                       <div className="flex-1">
@@ -110,16 +136,19 @@ const Experience = () => {
               </div>
             </div>
 
+            {/* Work Experience */}
             <div>
               <div className="flex items-center mb-6">
                 <Briefcase className="text-green-700 mr-3" size={24} />
-                <h3 className="text-2xl font-bold text-neutral-900">
-                  <TextReveal>Work Experience</TextReveal>
-                </h3>
+                <h3 className="text-2xl font-bold text-neutral-900">Work Experience</h3>
               </div>
               <div className="space-y-4">
                 {experiences.map((exp, index) => (
-                  <div key={index} className="card border-l-4 border-l-green-600 p-5 sm:p-6">
+                  <div key={index} className="card border-l-4 border-l-green-600 p-5 sm:p-6" style={{
+                    opacity: visible ? 1 : 0,
+                    transform: visible ? 'translateY(0)' : 'translateY(20px)',
+                    transition: `opacity 0.5s ease ${0.8 + index * 0.12}s, transform 0.5s ease ${0.8 + index * 0.12}s`
+                  }}>
                     <div className="flex items-start gap-4">
                       <Image src={exp.image} alt="" width={56} height={56} className="w-14 h-14 sm:w-12 sm:h-12 object-cover rounded-lg" loading="lazy" />
                       <div className="flex-1">
@@ -145,22 +174,30 @@ const Experience = () => {
             </div>
           </div>
 
-          <div className="space-y-12">
+          {/* Right Column */}
+          <div className="space-y-12" style={{
+            opacity: visible ? 1 : 0,
+            transform: visible ? 'translateX(0)' : 'translateX(30px)',
+            transition: 'opacity 0.7s ease 0.5s, transform 0.7s ease 0.5s'
+          }}>
+            {/* Certifications */}
             <div>
               <div className="flex items-center mb-6">
                 <Award className="text-green-700 mr-3" size={24} />
-                <h3 className="text-2xl font-bold text-neutral-900">
-                  <TextReveal>Certifications</TextReveal>
-                </h3>
+                <h3 className="text-2xl font-bold text-neutral-900">Certifications</h3>
               </div>
               <div className="space-y-3">
                 {certifications.map((cert, index) => (
-                  <div key={index} className="card p-4">
+                  <div key={index} className="card p-4" style={{
+                    opacity: visible ? 1 : 0,
+                    transform: visible ? 'translateY(0)' : 'translateY(15px)',
+                    transition: `opacity 0.5s ease ${0.6 + index * 0.1}s, transform 0.5s ease ${0.6 + index * 0.1}s`
+                  }}>
                     <div className="flex items-start gap-3">
                       <Image src={cert.image} alt="" width={48} height={48} className="w-12 h-12 object-cover rounded-lg flex-shrink-0" loading="lazy" />
                       <div className="flex-1 min-w-0">
                         <h4 className="font-semibold text-neutral-900 text-sm">{cert.title}</h4>
-                        <p className="text-neutral-600 text-xs">{cert.issuer} • {cert.date}</p>
+                        <p className="text-neutral-600 text-xs">{cert.issuer} &bull; {cert.date}</p>
                       </div>
                       {cert.certificateImage && (
                         <button
@@ -177,23 +214,26 @@ const Experience = () => {
               </div>
             </div>
 
+            {/* Courses */}
             <div>
               <div className="flex items-center mb-6">
                 <GraduationCap className="text-green-700 mr-3" size={24} />
-                <h3 className="text-2xl font-bold text-neutral-900">
-                  <TextReveal>Courses</TextReveal>
-                </h3>
+                <h3 className="text-2xl font-bold text-neutral-900">Courses</h3>
               </div>
               <div className="space-y-3">
                 {courses.map((course, index) => (
-                  <div key={index} className="card p-4">
+                  <div key={index} className="card p-4" style={{
+                    opacity: visible ? 1 : 0,
+                    transform: visible ? 'translateY(0)' : 'translateY(15px)',
+                    transition: `opacity 0.5s ease ${0.9 + index * 0.08}s, transform 0.5s ease ${0.9 + index * 0.08}s`
+                  }}>
                     <div className="flex items-start gap-3">
                       {course.image && (
                         <Image src={course.image} alt="" width={48} height={48} className="w-12 h-12 object-cover rounded-lg flex-shrink-0" loading="lazy" />
                       )}
                       <div className="flex-1 min-w-0">
                         <h4 className="font-semibold text-neutral-900 text-sm">{course.title}</h4>
-                        <p className="text-neutral-600 text-xs">{course.issuer} • {course.date}</p>
+                        <p className="text-neutral-600 text-xs">{course.issuer} &bull; {course.date}</p>
                       </div>
                       {course.certificateImage && (
                         <button
@@ -225,12 +265,7 @@ const Experience = () => {
           </button>
           <div className="relative w-full max-w-4xl max-h-[90vh] bg-white rounded-2xl shadow-2xl overflow-hidden" onClick={(e) => e.stopPropagation()}>
             <div className="relative h-[70vh] bg-gray-100 p-4">
-              <Image
-                src={selectedCertificate.image}
-                alt={selectedCertificate.title}
-                fill
-                className="object-contain"
-              />
+              <Image src={selectedCertificate.image} alt={selectedCertificate.title} fill className="object-contain" />
             </div>
           </div>
         </div>

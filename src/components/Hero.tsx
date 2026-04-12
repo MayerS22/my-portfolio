@@ -41,7 +41,7 @@ export default function Hero() {
   }
 
   return (
-    <section id="home" className="min-h-screen flex items-center justify-center bg-neutral-300 relative overflow-hidden">
+    <section id="home" className="min-h-screen flex items-center justify-center relative overflow-hidden">
       {/* Background photo — faint full-width on mobile, right side on desktop */}
       <div
         className={`absolute right-0 top-0 h-full w-full lg:w-1/2 transition-all duration-1000 ease-out ${mounted ? 'translate-x-0 opacity-20 lg:opacity-100' : 'translate-x-full opacity-0'}`}
@@ -56,7 +56,7 @@ export default function Hero() {
         />
         {/* Mobile: light full overlay | Desktop: left-fade gradient only */}
         <div className="absolute inset-0 bg-neutral-300/30 lg:hidden" />
-        <div className="absolute inset-0 hidden lg:block bg-gradient-to-r from-neutral-300 via-neutral-300/30 to-transparent w-[40%]" />
+        <div className="absolute inset-0 hidden lg:block bg-gradient-to-r from-[#d4d4d8] via-[#d4d4d8]/30 to-transparent w-[40%]" />
       </div>
 
       {/* Text content */}

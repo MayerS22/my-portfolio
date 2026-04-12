@@ -18,6 +18,9 @@
   --text-primary: #09090b;
   --text-secondary: #52525b;
   --text-muted: #a1a1aa;
+
+  /* Lighter alternate section bg */
+  --section-alt: #cdcdcf;
 }
 
 * {
@@ -287,7 +290,7 @@ body {
   content: '';
   position: absolute;
   inset: 0;
-  background: #d4d4d8;
+  background: var(--section-alt);
   transform: translateX(-101%);
   transition: transform 1s cubic-bezier(0.77, 0, 0.175, 1);
 }
@@ -324,4 +327,17 @@ button, a, .card {
               background-color 0.15s ease,
               color 0.15s ease,
               border-color 0.15s ease;
+}
+
+/* Page gradient — smooth color flow across all sections */
+.page-gradient {
+  background: linear-gradient(180deg,
+    #d8d8dc 0%,
+    #b4b4ba 18%,
+    #d8d8dc 35%,
+    #b4b4ba 52%,
+    #e2e2e6 62%,
+    #d8d8dc 78%,
+    #b4b4ba 100%
+  );
 }
