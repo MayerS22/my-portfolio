@@ -1,8 +1,12 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { Menu, X, Github, Linkedin, Mail } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Menu, X, Sun, Moon } from 'lucide-react'
 import { useMounted } from '@/hooks/useMounted'
+import { useTheme } from './ThemeProvider'
+import MagneticButton from './motion/MagneticButton'
+import { cn } from '@/lib/utils'
 
 const navItems = [
   { name: 'Home', href: '#home' },
@@ -14,32 +18,23 @@ const navItems = [
   { name: 'Contact', href: '#contact' },
 ]
 
-const socialLinks = [
-  { name: 'GitHub', href: 'https://github.com/MayerS22', icon: Github },
-  { name: 'LinkedIn', href: 'https://www.linkedin.com/in/mayer-frieg-7a0368226/', icon: Linkedin },
-  { name: 'Email', href: 'mailto:mayerfrieg@outlook.com', icon: Mail },
-]
-
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false)
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isMobileOpen, setIsMobileOpen] = useState(false)
   const [activeSection, setActiveSection] = useState('home')
   const isMounted = useMounted()
+  const { theme, toggleTheme } = useTheme()
 
   const handleScroll = useCallback(() => {
-    setIsScrolled(window.scrollY > 50)
+    setIsScrolled(window.scrollY > 30)
     const sections = ['home', 'about', 'skills', 'experience', 'freelance', 'projects', 'contact']
-    const scrollPosition = window.scrollY + 100
-    const isAtBottom = window.innerHeight + window.scrollY >= document.body.scrollHeight - 50
-    if (isAtBottom) {
+    const pos = window.scrollY + 120
+    if (window.innerHeight + window.scrollY >= document.body.scrollHeight - 50) {
       setActiveSection('contact')
     } else {
       for (let i = sections.length - 1; i >= 0; i--) {
-        const element = document.getElementById(sections[i])
-        if (element && element.offsetTop <= scrollPosition) {
-          setActiveSection(sections[i])
-          break
-        }
+        const el = document.getElementById(sections[i])
+        if (el && el.offsetTop <= pos) { setActiveSection(sections[i]); break }
       }
     }
   }, [])
@@ -47,84 +42,242 @@ export default function Header() {
   useEffect(() => {
     if (!isMounted) return
     let ticking = false
-    const throttledScroll = () => {
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          handleScroll()
-          ticking = false
-        })
-        ticking = true
-      }
+    const onScroll = () => {
+      if (!ticking) { requestAnimationFrame(() => { handleScroll(); ticking = false }); ticking = true }
     }
-    window.addEventListener('scroll', throttledScroll, { passive: true })
-    return () => window.removeEventListener('scroll', throttledScroll)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
   }, [isMounted, handleScroll])
 
+  // Body scroll lock when mobile menu is open
+  useEffect(() => {
+    if (isMobileOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'unset'
+    }
+    return () => { document.body.style.overflow = 'unset' }
+  }, [isMobileOpen])
+
+  const goTo = (href: string) => {
+    setIsMobileOpen(false)
+    document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' })
+  }
+
   return (
-    <header className={`fixed top-0 left-0 right-0 z-50 transition-all border-b ${
-      isScrolled ? 'bg-neutral-200/90 backdrop-blur-sm border-neutral-300' : 'bg-neutral-300/70 backdrop-blur-md border-neutral-300/50'
-    }`}>
-      <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          <div className="text-xl font-bold text-neutral-900 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-            Mayer Frieg
+    <>
+      <motion.header
+        className={cn(
+          "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
+          isScrolled && "glass glass--header"
+        )}
+        initial={{ y: -20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+      >
+        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+          {/* Logo */}
+          <MagneticButton
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            className="group flex items-center"
+          >
+            <span
+              className="text-xl italic font-light tracking-wide"
+              style={{ fontFamily: 'var(--font-geist-mono), cursive', color: 'var(--text-primary)' }}
+            >
+              <span className="text-gradient">M</span>ayer{' '}
+              <span className="text-gradient">F</span>rieg
+            </span>
+            <motion.span
+              className="inline-block w-1.5 h-1.5 rounded-full ml-1.5 -translate-y-1.5"
+              style={{ background: 'var(--accent-primary)' }}
+              animate={{ scale: [1, 1.4, 1], opacity: [0.6, 1, 0.6] }}
+              transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+            />
+          </MagneticButton>
+
+          {/* Desktop nav */}
+          <nav className="hidden md:flex items-center gap-1">
+            {navItems.map((item) => {
+              const isActive = activeSection === item.name.toLowerCase()
+              return (
+                <MagneticButton
+                  key={item.name}
+                  onClick={() => goTo(item.href)}
+                  className={cn(
+                    "relative text-[13px] font-medium tracking-wide uppercase px-4 py-2 rounded-lg transition-colors",
+                  )}
+                >
+                  {/* Active pill background */}
+                  {isActive && (
+                    <motion.div
+                      layoutId="nav-pill"
+                      className="absolute inset-0 rounded-lg"
+                      style={{ background: 'var(--glass-bg)', border: '1px solid var(--glass-border)' }}
+                      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                    />
+                  )}
+                  {/* Hover background for non-active */}
+                  {!isActive && (
+                    <span
+                      className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                      style={{ background: 'var(--glass-bg)' }}
+                    />
+                  )}
+                  <span
+                    className="relative z-10 transition-colors duration-200"
+                    style={{ color: isActive ? 'var(--accent-primary)' : 'var(--text-muted)' }}
+                  >
+                    {item.name}
+                  </span>
+                </MagneticButton>
+              )
+            })}
+          </nav>
+
+          {/* Desktop right area */}
+          <div className="hidden md:flex items-center gap-2">
+            {/* Theme Toggle */}
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-lg transition-all duration-200 hover:scale-110"
+              style={{
+                color: 'var(--text-muted)',
+                background: 'var(--glass-bg)',
+                border: '1px solid var(--glass-border)',
+              }}
+              aria-label="Toggle theme"
+            >
+              <AnimatePresence mode="wait" initial={false}>
+                {theme === 'dark'
+                  ? (
+                    <motion.div
+                      key="sun"
+                      initial={{ rotate: -90, opacity: 0 }}
+                      animate={{ rotate: 0, opacity: 1 }}
+                      exit={{ rotate: 90, opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <Sun size={15} />
+                    </motion.div>
+                  )
+                  : (
+                    <motion.div
+                      key="moon"
+                      initial={{ rotate: -90, opacity: 0 }}
+                      animate={{ rotate: 0, opacity: 1 }}
+                      exit={{ rotate: 90, opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <Moon size={15} />
+                    </motion.div>
+                  )
+                }
+              </AnimatePresence>
+            </button>
           </div>
 
-          <div className="hidden md:flex items-center space-x-8">
-            {navItems.map((item) => (
-              <button
-                key={item.name}
-                onClick={() => document.querySelector(item.href)?.scrollIntoView({ behavior: 'smooth' })}
-                className={`text-sm font-medium transition-colors ${
-                  activeSection === item.name.toLowerCase() ? 'text-green-700' : 'text-neutral-700 hover:text-neutral-900'
-                }`}
-              >
-                {item.name}
-              </button>
-            ))}
-          </div>
-
-          <div className="hidden md:flex items-center space-x-2">
-            {socialLinks.map((social) => (
-              <a key={social.name} href={social.href} target="_blank" rel="noopener noreferrer" className="p-3 text-neutral-600 hover:text-green-700 rounded-lg hover:bg-neutral-300 transition-colors touch-target">
-                <social.icon size={20} />
-              </a>
-            ))}
-          </div>
-
-          <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="md:hidden p-3 text-neutral-700 hover:bg-neutral-300 rounded-lg touch-target">
-            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          {/* Mobile toggle */}
+          <button
+            onClick={() => setIsMobileOpen(!isMobileOpen)}
+            className={cn(
+              "md:hidden p-2 rounded-lg touch-target transition-all duration-200",
+              isScrolled && "glass"
+            )}
+            style={{ color: 'var(--text-secondary)' }}
+            aria-label="Menu"
+          >
+            <AnimatePresence mode="wait" initial={false}>
+              {isMobileOpen
+                ? (
+                  <motion.div
+                    key="x"
+                    initial={{ rotate: -90, opacity: 0 }}
+                    animate={{ rotate: 0, opacity: 1 }}
+                    exit={{ rotate: 90, opacity: 0 }}
+                    transition={{ duration: 0.15 }}
+                  >
+                    <X size={20} />
+                  </motion.div>
+                )
+                : (
+                  <motion.div
+                    key="menu"
+                    initial={{ rotate: -90, opacity: 0 }}
+                    animate={{ rotate: 0, opacity: 1 }}
+                    exit={{ rotate: 90, opacity: 0 }}
+                    transition={{ duration: 0.15 }}
+                  >
+                    <Menu size={20} />
+                  </motion.div>
+                )
+              }
+            </AnimatePresence>
           </button>
         </div>
+      </motion.header>
 
-        {isMobileMenuOpen && (
-          <div className="md:hidden bg-neutral-200 border-t border-neutral-300 py-4">
-            <div className="space-y-2">
-              {navItems.map((item) => (
-                <button
-                  key={item.name}
-                  onClick={() => {
-                    setIsMobileMenuOpen(false)
-                    document.querySelector(item.href)?.scrollIntoView({ behavior: 'smooth' })
-                  }}
-                  className={`block w-full text-left px-4 py-3 rounded-lg text-sm font-medium touch-target ${
-                    activeSection === item.name.toLowerCase() ? 'bg-green-100 text-green-700' : 'text-neutral-700 hover:bg-neutral-300'
-                  }`}
-                >
-                  {item.name}
-                </button>
-              ))}
+      {/* Mobile fullscreen menu */}
+      <AnimatePresence>
+        {isMobileOpen && (
+          <motion.div
+            className="fixed inset-0 z-40 md:hidden flex flex-col"
+            style={{ background: 'var(--bg-primary)' }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            {/* Gradient accent glow */}
+            <div
+              className="absolute inset-0 pointer-events-none"
+              style={{ background: 'var(--gradient-mesh)' }}
+            />
+
+            {/* Nav links */}
+            <div className="flex-1 flex flex-col items-center justify-center gap-2 relative z-10">
+              {navItems.map((item, i) => {
+                const isActive = activeSection === item.name.toLowerCase()
+                return (
+                  <motion.button
+                    key={item.name}
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ delay: i * 0.07, duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+                    onClick={() => goTo(item.href)}
+                    className="text-2xl font-semibold py-2 px-6 rounded-lg transition-colors relative"
+                    style={{ color: isActive ? 'var(--accent-primary)' : 'var(--text-secondary)' }}
+                  >
+                    {isActive && (
+                      <span
+                        className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 rounded-full"
+                        style={{ background: 'var(--accent-gradient)' }}
+                      />
+                    )}
+                    {item.name}
+                  </motion.button>
+                )
+              })}
             </div>
-            <div className="flex items-center space-x-4 px-4 pt-4 border-t border-neutral-300 mt-4">
-              {socialLinks.map((social) => (
-                <a key={social.name} href={social.href} target="_blank" rel="noopener noreferrer" className="p-3 text-neutral-600 hover:text-green-700 touch-target">
-                  <social.icon size={24} />
-                </a>
-              ))}
+
+            {/* Bottom controls */}
+            <div className="relative z-10 flex items-center justify-center gap-3 pb-12">
+              <button
+                onClick={toggleTheme}
+                className="p-3 rounded-lg transition-colors"
+                style={{
+                  color: 'var(--text-muted)',
+                  background: 'var(--glass-bg)',
+                  border: '1px solid var(--glass-border)',
+                }}
+              >
+                {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+              </button>
             </div>
-          </div>
+          </motion.div>
         )}
-      </nav>
-    </header>
+      </AnimatePresence>
+    </>
   )
 }

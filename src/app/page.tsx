@@ -6,46 +6,45 @@ import Hero from '@/components/Hero'
 import About from '@/components/About'
 import Skills from '@/components/Skills'
 import Contact from '@/components/Contact'
-import Footer from '@/components/Footer'
-import ScrollAnimations from '@/components/ScrollAnimations'
+import ThemeProvider from '@/components/ThemeProvider'
+import PageLoader from '@/components/PageLoader'
 
-const ScrollProgress = dynamic(() => import('@/components/ScrollProgress'), {
-  ssr: false,
-  loading: () => null
-})
+const ScrollProgress = dynamic(() => import('@/components/ScrollProgress'), { ssr: false, loading: () => null })
+const BackToTop = dynamic(() => import('@/components/BackToTop'), { ssr: false, loading: () => null })
+const Experience = dynamic(() => import('@/components/Experience'), { loading: () => <div className="h-96 rounded-lg animate-pulse" style={{ background: 'var(--bg-secondary)' }} /> })
+const Projects = dynamic(() => import('@/components/Projects'), { loading: () => <div className="h-96 rounded-lg animate-pulse" style={{ background: 'var(--bg-secondary)' }} /> })
+const Freelance = dynamic(() => import('@/components/Freelance'), { loading: () => <div className="h-96 rounded-lg animate-pulse" style={{ background: 'var(--bg-secondary)' }} /> })
+const CommandPalette = dynamic(() => import('@/components/CommandPalette'), { ssr: false, loading: () => null })
 
-const BackToTop = dynamic(() => import('@/components/BackToTop'), {
-  ssr: false,
-  loading: () => null
-})
 
-const Experience = dynamic(() => import('@/components/Experience'), {
-  loading: () => <div className="h-96 bg-neutral-800/20 rounded-lg animate-pulse" />
-})
-
-const Projects = dynamic(() => import('@/components/Projects'), {
-  loading: () => <div className="h-96 bg-neutral-800/20 rounded-lg animate-pulse" />
-})
-
-const Freelance = dynamic(() => import('@/components/Freelance'), {
-  loading: () => <div className="h-96 bg-neutral-800/20 rounded-lg animate-pulse" />
-})
+function Divider() {
+  return <div className="section-divider" />
+}
 
 export default function Home() {
   return (
-    <main className="min-h-screen relative page-gradient">
-      <ScrollAnimations />
-      <ScrollProgress />
-      <Header />
-      <Hero />
-      <About />
-      <Skills />
-      <Experience />
-      <Freelance />
-      <Projects />
-      <Contact />
-      <Footer />
-      <BackToTop />
-    </main>
+    <ThemeProvider>
+      <PageLoader>
+        <main id="main" className="min-h-screen relative">
+          <CommandPalette />
+          <ScrollProgress />
+          <Header />
+          <Hero />
+          <Divider />
+          <div className="section-bg-alt"><About /></div>
+          <Divider />
+          <Skills />
+          <Divider />
+          <div className="section-bg-alt"><Experience /></div>
+          <Divider />
+          <Freelance />
+          <Divider />
+          <div className="section-bg-alt"><Projects /></div>
+          <Divider />
+          <div className="section-bg-alt"><Contact /></div>
+          <BackToTop />
+        </main>
+      </PageLoader>
+    </ThemeProvider>
   )
 }

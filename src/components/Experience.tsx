@@ -1,51 +1,43 @@
 'use client'
 
-import { useRef, useState, useCallback, useEffect } from 'react'
-import { Calendar, MapPin, Building, GraduationCap, Award, Briefcase, Eye, X } from 'lucide-react'
+import { useRef, useState, useCallback } from 'react'
+import { motion, useInView } from 'framer-motion'
+import { Calendar, MapPin, Building, GraduationCap, Award, Briefcase, Eye, BookOpen } from 'lucide-react'
 import Image from 'next/image'
 import SplitText from './SplitText'
+import AnimatedModal from './motion/AnimatedModal'
+import { fadeInUp, staggerContainer, staggerItem } from '@/lib/animations'
 
 const Experience = () => {
-  const [visible, setVisible] = useState(false)
   const sectionRef = useRef<HTMLElement>(null)
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true)
-          observer.disconnect()
-        }
-      },
-      { threshold: 0.1 }
-    )
-    if (sectionRef.current) observer.observe(sectionRef.current)
-    return () => observer.disconnect()
-  }, [])
+  const isInView = useInView(sectionRef, { once: true, margin: '-80px' })
+  const timelineRef = useRef<HTMLDivElement>(null)
+  const timelineInView = useInView(timelineRef, { once: true, margin: '-50px' })
 
   const experiences = [
-    { title: 'Software Engineer', company: 'QueenSoft', location: 'Egypt', period: 'July. 2025 – Present', description: 'Full Stack Developer building scalable web applications.', technologies: ['Next.js', 'Nest.js', 'PostgreSQL', 'TypeScript', 'React', 'Node.js'], image: '/images/QueenSoft.jpg' },
-    { title: 'Administrative Assistant', company: 'CMF', location: 'Egypt', period: 'Aug. 2023 – Present', description: 'Supporting foundation operations through data management and event coordination.', technologies: ['Microsoft Office', 'Data Entry', 'Report Generation'], image: '/images/CMF.jpg' },
-    { title: 'Microsoft Student Partner', company: 'Microsoft Tech Club', location: 'Egypt', period: 'Oct 2022 – Oct 2023', description: 'Led technical workshops and mentored students in Microsoft technologies.', technologies: ['Azure', 'Power Platform', 'Power BI', 'GitHub', 'Leadership'], image: '/images/MSP.jpg' },
-    { title: 'Database Administrator', company: 'CMF', location: 'Egypt', period: 'Sept 2022 – Feb 2023', description: 'Designed and implemented database system using Microsoft Access.', technologies: ['Access', 'Database Design', 'SQL', 'Data Modeling'], image: '/images/CMF.jpg' }
+    { title: 'Software Engineer', company: 'QueenSoft', location: 'Egypt', period: 'July 2025 – Present', description: 'Full Stack Developer building scalable web applications.', technologies: ['Next.js', 'Nest.js', 'PostgreSQL', 'TypeScript', 'React', 'Node.js'], image: '/images/QueenSoft.jpg', isCurrent: true },
+    { title: 'Administrative Assistant', company: 'CMF', location: 'Egypt', period: 'Aug 2023 – Present', description: 'Supporting foundation operations through data management and event coordination.', technologies: ['Microsoft Office', 'Data Entry', 'Report Generation'], image: '/images/CMF.jpg', isCurrent: false },
+    { title: 'Microsoft Student Partner', company: 'Microsoft Tech Club', location: 'Egypt', period: 'Oct 2022 – Oct 2023', description: 'Led technical workshops and mentored students in Microsoft technologies.', technologies: ['Azure', 'Power Platform', 'Power BI', 'GitHub', 'Leadership'], image: '/images/MSP.jpg', isCurrent: false },
+    { title: 'Database Administrator', company: 'CMF', location: 'Egypt', period: 'Sept 2022 – Feb 2023', description: 'Designed and implemented database system using Microsoft Access.', technologies: ['Access', 'Database Design', 'SQL', 'Data Modeling'], image: '/images/CMF.jpg', isCurrent: false }
   ]
 
-  const education = [{ title: 'Bachelor of Computer and Information Science', institution: 'Ain Shams University', location: 'Egypt', period: 'Sept 2021 - July 2025', description: 'GPA: 3.005', image: '/images/CS.jpg' }]
+  const education = [{ title: 'Bachelor of Computer and Information Science', institution: 'Ain Shams University', location: 'Egypt', period: 'Sept 2021 – July 2025', description: 'GPA: 3.005', image: '/images/CS.jpg' }]
 
   const certifications = [
-    { title: 'Android Internship', issuer: 'Banque Misr', date: 'Aug. 2024', image: '/images/BM.jpg', certificateImage: '/images/Certifcation/BM.jpg' },
-    { title: 'Data Engineering Training', issuer: 'Potenia', date: 'Aug. 2023', image: '/images/POTENTIA.jpg', certificateImage: '/images/Certifcation/Potenia.png' },
-    { title: 'Flutter Training', issuer: 'Support', date: 'Aug. 2023', image: '/images/Support.jpg', certificateImage: '/images/Certifcation/Fluttersupport.jpg' },
-    { title: 'Software Engineering Training', issuer: 'ALX', date: 'Feb. 2023', image: '/images/ALX.jpg' }
+    { title: 'Android Internship', issuer: 'Banque Misr', date: 'Aug 2024', image: '/images/BM.jpg', certificateImage: '/images/Certifcation/BM.jpg' },
+    { title: 'Data Engineering Training', issuer: 'Potenia', date: 'Aug 2023', image: '/images/POTENTIA.jpg', certificateImage: '/images/Certifcation/Potenia.png' },
+    { title: 'Flutter Training', issuer: 'Support', date: 'Aug 2023', image: '/images/Support.jpg', certificateImage: '/images/Certifcation/Fluttersupport.jpg' },
+    { title: 'Software Engineering Training', issuer: 'ALX', date: 'Feb 2023', image: '/images/ALX.jpg' }
   ]
 
   const courses = [
-    { title: 'AI Fluency: Framework & Foundations', issuer: 'Anthropic', date: '2025', image: '/images/anthropic.png', certificateImage: '/images/Certifcation/AI Fluency Framework & Foundations course.png', description: 'Mastered AI collaboration principles including delegation, clear communication, critical evaluation, and responsible use. Strengthened foundation in human-AI collaboration toward AI Engineering.' },
+    { title: 'Claude Code in Action', issuer: 'Anthropic', date: 'Apr 2025', image: '/images/anthropic.png', certificateImage: '/images/Certifcation/claude code in action.png', description: 'Practical course on leveraging Claude Code for real-world software development workflows.' },
+    { title: 'AI Fluency: Framework & Foundations', issuer: 'Anthropic', date: '2025', image: '/images/anthropic.png', certificateImage: '/images/Certifcation/AI Fluency Framework & Foundations course.png', description: 'Mastered AI collaboration principles including delegation, clear communication, critical evaluation, and responsible use.' },
     { title: 'Git & GitHub Bootcamp', issuer: 'Udemy', date: 'Aug 2025', image: '/images/Udemy.jpg', certificateImage: '/images/Certifcation/GitCourse.jpg' },
-    { title: 'Nest.js Complete Guide', issuer: 'Udemy', date: 'Jun 2025', image: '/images/Udemy.jpg', certificateImage: '/images/Certifcation/The Complete Developer\'s Guide in Nest.jpg' },
-    { title: 'Freelancer Toolkit', issuer: 'E-Youth | ITIDA', date: 'Mar. 2025', image: '/images/ITIDA.jpg' },
+    { title: 'Nest.js Complete Guide', issuer: 'Udemy', date: 'Jun 2025', image: '/images/Udemy.jpg', certificateImage: "/images/Certifcation/The Complete Developer's Guide in Nest.jpg" },
+    { title: 'Freelancer Toolkit', issuer: 'E-Youth | ITIDA', date: 'Mar 2025', image: '/images/ITIDA.jpg' },
     { title: 'Flutter Course', issuer: 'Udemy', date: 'Sept 2023', image: '/images/Udemy.jpg' },
-    { title: 'Python 3 Guide', issuer: 'Udemy', date: 'July. 2023', image: '/images/Udemy.jpg', certificateImage: '/images/Certifcation/Python.jpg' }
+    { title: 'Python 3 Guide', issuer: 'Udemy', date: 'July 2023', image: '/images/Udemy.jpg', certificateImage: '/images/Certifcation/Python.jpg' }
   ]
 
   const [selectedCertificate, setSelectedCertificate] = useState<{ image: string; title: string } | null>(null)
@@ -61,215 +53,345 @@ const Experience = () => {
     setSelectedCertificate(null)
   }, [])
 
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (!isModalOpen) return
-      if (e.key === 'Escape') closeModal()
-    }
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [isModalOpen, closeModal])
-
-  useEffect(() => {
-    if (isModalOpen) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = 'unset'
-    }
-    return () => { document.body.style.overflow = 'unset' }
-  }, [isModalOpen])
-
   return (
-    <section id="experience" ref={sectionRef} className="py-16 sm:py-20">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Title */}
-        <div className="text-center mb-16">
-          <h2 className="text-clamp-section font-bold mb-4 text-neutral-900">
+    <section id="experience" ref={sectionRef} className="py-16 sm:py-24 relative overflow-hidden">
+      {/* Background glow */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute w-[350px] h-[350px] rounded-full blur-[120px] opacity-[0.05]" style={{ background: 'var(--accent-primary)', top: '20%', left: '-5%' }} />
+        <div className="absolute w-[300px] h-[300px] rounded-full blur-[100px] opacity-[0.04]" style={{ background: 'var(--accent-secondary)', bottom: '15%', right: '-5%' }} />
+      </div>
+
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        {/* Section Header */}
+        <motion.div
+          className="text-center mb-14"
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.7 }}
+        >
+          <motion.span
+            className="inline-block text-xs font-semibold uppercase tracking-[0.2em] mb-4 px-4 py-1.5 rounded-full"
+            style={{ color: 'var(--accent-primary)', background: 'var(--glass-bg)', border: '1px solid var(--glass-border)' }}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={isInView ? { opacity: 1, scale: 1 } : {}}
+            transition={{ delay: 0.1, duration: 0.5 }}
+          >
+            My journey
+          </motion.span>
+          <h2 className="text-clamp-section font-bold mb-4" style={{ color: 'var(--text-primary)' }}>
             <SplitText text="Experience &" charDelay={35} />{' '}
-            <span className="text-green-700"><SplitText text="Education" charDelay={35} /></span>
+            <span className="text-gradient"><SplitText text="Education" charDelay={35} /></span>
           </h2>
-          <p className="text-lg text-neutral-700 max-w-3xl mx-auto" style={{
-            opacity: visible ? 1 : 0,
-            transform: visible ? 'translateY(0)' : 'translateY(20px)',
-            transition: 'opacity 0.8s ease 0.3s, transform 0.8s ease 0.3s'
-          }}>
+          <motion.p
+            className="text-lg max-w-3xl mx-auto"
+            style={{ color: 'var(--text-secondary)' }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ delay: 0.3, duration: 0.8 }}
+          >
             My professional journey and academic background
-          </p>
-        </div>
+          </motion.p>
+        </motion.div>
 
-        <div className="grid lg:grid-cols-2 gap-12">
-          {/* Left Column */}
-          <div className="space-y-12" style={{
-            opacity: visible ? 1 : 0,
-            transform: visible ? 'translateX(0)' : 'translateX(-30px)',
-            transition: 'opacity 0.7s ease 0.4s, transform 0.7s ease 0.4s'
-          }}>
-            {/* Education */}
-            <div>
-              <div className="flex items-center mb-6">
-                <GraduationCap className="text-green-700 mr-3" size={24} />
-                <h3 className="text-2xl font-bold text-neutral-900">Education</h3>
-              </div>
-              <div className="space-y-4">
-                {education.map((edu, index) => (
-                  <div key={index} className="card border-l-4 border-l-green-600 p-5 sm:p-6" style={{
-                    opacity: visible ? 1 : 0,
-                    transform: visible ? 'translateY(0)' : 'translateY(20px)',
-                    transition: `opacity 0.5s ease ${0.6 + index * 0.15}s, transform 0.5s ease ${0.6 + index * 0.15}s`
-                  }}>
-                    <div className="flex items-start gap-4">
-                      <Image src={edu.image} alt="" width={56} height={56} className="w-14 h-14 sm:w-12 sm:h-12 object-cover rounded-lg" loading="lazy" />
-                      <div className="flex-1">
-                        <h4 className="text-base sm:text-lg font-bold text-neutral-900 mb-2">{edu.title}</h4>
-                        <div className="flex gap-3 text-sm text-neutral-600 mb-2">
-                          <Building size={14} /><span>{edu.institution}</span>
-                          <MapPin size={14} /><span>{edu.location}</span>
-                        </div>
-                        <div className="flex items-center gap-1 text-sm text-neutral-600 mb-3">
-                          <Calendar size={14} /><span>{edu.period}</span>
-                        </div>
-                        <p className="text-neutral-800 text-sm">{edu.description}</p>
-                      </div>
+        <div className="max-w-5xl mx-auto">
+          {/* Education — Featured Card */}
+          {education.map((edu, index) => (
+            <motion.div
+              key={index}
+              className="glass rounded-2xl overflow-hidden mb-16 relative"
+              initial={{ opacity: 0, y: 40, scale: 0.97 }}
+              animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
+              transition={{ delay: 0.3, duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
+            >
+              {/* Gradient top line */}
+              <div className="h-1 gradient-border-animated" style={{ borderRadius: 0 }} />
+
+              <div className="p-5 sm:p-8">
+                <div className="flex flex-col sm:flex-row items-start gap-5 sm:gap-6">
+                  {/* University image */}
+                  <div className="flex-shrink-0">
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden" style={{ border: '1px solid var(--glass-border)' }}>
+                      <Image src={edu.image} alt={edu.institution} width={80} height={80} className="w-full h-full object-cover" />
                     </div>
                   </div>
-                ))}
-              </div>
-            </div>
 
-            {/* Work Experience */}
-            <div>
-              <div className="flex items-center mb-6">
-                <Briefcase className="text-green-700 mr-3" size={24} />
-                <h3 className="text-2xl font-bold text-neutral-900">Work Experience</h3>
+                  <div className="flex-1 min-w-0">
+                    {/* Label */}
+                    <div className="flex items-center gap-2 mb-2">
+                      <GraduationCap size={14} style={{ color: 'var(--accent-primary)' }} />
+                      <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--accent-primary)' }}>Education</span>
+                    </div>
+
+                    <h3 className="text-lg sm:text-xl font-bold mb-2" style={{ color: 'var(--text-primary)' }}>
+                      {edu.title}
+                    </h3>
+
+                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm mb-3" style={{ color: 'var(--text-secondary)' }}>
+                      <span className="flex items-center gap-1.5">
+                        <Building size={14} />
+                        {edu.institution}
+                      </span>
+                      <span className="flex items-center gap-1.5">
+                        <MapPin size={14} />
+                        {edu.location}
+                      </span>
+                      <span className="flex items-center gap-1.5">
+                        <Calendar size={14} />
+                        {edu.period}
+                      </span>
+                    </div>
+
+                    <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium" style={{ background: 'rgba(99, 102, 241, 0.1)', color: 'var(--accent-primary)' }}>
+                      {edu.description}
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div className="space-y-4">
+            </motion.div>
+          ))}
+
+          {/* Work Experience — Vertical Timeline */}
+          <div ref={timelineRef} className="mb-16">
+            {/* Sub-header */}
+            <motion.div
+              className="flex items-center gap-3 mb-8"
+              initial={{ opacity: 0, x: -20 }}
+              animate={timelineInView ? { opacity: 1, x: 0 } : {}}
+              transition={{ duration: 0.5 }}
+            >
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: 'var(--accent-gradient)' }}>
+                <Briefcase className="text-white" size={16} />
+              </div>
+              <h3 className="text-xl sm:text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>Work Experience</h3>
+              <div className="flex-1 h-px ml-2" style={{ background: 'var(--glass-border)' }} />
+            </motion.div>
+
+            {/* Timeline */}
+            <div className="relative pl-8 sm:pl-12">
+              {/* Animated vertical line */}
+              <motion.div
+                className="absolute left-3 sm:left-5 top-2 bottom-2 w-px origin-top"
+                style={{ background: 'var(--glass-border)' }}
+                initial={{ scaleY: 0 }}
+                animate={timelineInView ? { scaleY: 1 } : {}}
+                transition={{ duration: 1.2, ease: [0.25, 0.46, 0.45, 0.94], delay: 0.2 }}
+              />
+
+              {/* Experience items */}
+              <div className="space-y-8">
                 {experiences.map((exp, index) => (
-                  <div key={index} className="card border-l-4 border-l-green-600 p-5 sm:p-6" style={{
-                    opacity: visible ? 1 : 0,
-                    transform: visible ? 'translateY(0)' : 'translateY(20px)',
-                    transition: `opacity 0.5s ease ${0.8 + index * 0.12}s, transform 0.5s ease ${0.8 + index * 0.12}s`
-                  }}>
-                    <div className="flex items-start gap-4">
-                      <Image src={exp.image} alt="" width={56} height={56} className="w-14 h-14 sm:w-12 sm:h-12 object-cover rounded-lg" loading="lazy" />
-                      <div className="flex-1">
-                        <h4 className="text-base sm:text-lg font-bold text-neutral-900 mb-2">{exp.title}</h4>
-                        <div className="flex gap-3 text-sm text-neutral-600 mb-2">
-                          <Building size={14} /><span>{exp.company}</span>
-                          <MapPin size={14} /><span>{exp.location}</span>
-                        </div>
-                        <div className="flex items-center gap-1 text-sm text-neutral-600 mb-3">
-                          <Calendar size={14} /><span>{exp.period}</span>
-                        </div>
-                        <p className="text-neutral-800 text-sm mb-4">{exp.description}</p>
-                        <div className="flex flex-wrap gap-2">
-                          {exp.technologies.map((tech) => (
-                            <span key={tech} className="px-3 py-1 bg-green-100 text-neutral-800 text-xs rounded-full">{tech}</span>
-                          ))}
+                  <motion.div
+                    key={index}
+                    className="relative"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={timelineInView ? { opacity: 1, x: 0 } : {}}
+                    transition={{ delay: 0.4 + index * 0.15, duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+                  >
+                    {/* Timeline dot */}
+                    <div className="absolute -left-8 sm:-left-12 top-5 flex items-center justify-center" style={{ width: '26px', height: '26px', marginLeft: '-5px' }}>
+                      {exp.isCurrent ? (
+                        <span className="relative flex h-3.5 w-3.5">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" style={{ background: '#22c55e' }} />
+                          <span className="relative inline-flex rounded-full h-3.5 w-3.5" style={{ background: '#22c55e' }} />
+                        </span>
+                      ) : (
+                        <span className="flex h-3 w-3 rounded-full" style={{ border: '2px solid var(--accent-primary)', background: 'var(--bg-secondary)' }} />
+                      )}
+                    </div>
+
+                    {/* Card */}
+                    <motion.div
+                      className="rounded-xl p-4 sm:p-5 transition-all duration-300"
+                      style={{ background: 'var(--bg-secondary)', border: '1px solid var(--glass-border)' }}
+                      whileHover={{ y: -2, borderColor: 'var(--accent-primary)', boxShadow: '0 8px 25px rgba(99, 102, 241, 0.08)' }}
+                    >
+                      <div className="flex items-start gap-3 sm:gap-4">
+                        <Image
+                          src={exp.image}
+                          alt={exp.company}
+                          width={40}
+                          height={40}
+                          className="w-10 h-10 rounded-lg object-cover flex-shrink-0"
+                          style={{ border: '1px solid var(--glass-border)' }}
+                          loading="lazy"
+                        />
+                        <div className="flex-1 min-w-0">
+                          <div className="flex flex-wrap items-center gap-2 mb-1">
+                            <h4 className="text-base sm:text-lg font-bold" style={{ color: 'var(--text-primary)' }}>{exp.title}</h4>
+                            {exp.isCurrent && (
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider rounded-full" style={{ background: 'rgba(34, 197, 94, 0.1)', color: '#22c55e' }}>
+                                Current
+                              </span>
+                            )}
+                          </div>
+                          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm mb-2" style={{ color: 'var(--text-secondary)' }}>
+                            <span className="flex items-center gap-1">
+                              <Building size={13} />
+                              {exp.company}
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <MapPin size={13} />
+                              {exp.location}
+                            </span>
+                          </div>
+                          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs mb-3" style={{ background: 'var(--glass-bg)', border: '1px solid var(--glass-border)', color: 'var(--text-muted)' }}>
+                            <Calendar size={12} />
+                            {exp.period}
+                          </div>
+                          <p className="text-sm mb-3" style={{ color: 'var(--text-secondary)' }}>{exp.description}</p>
+                          <div className="flex flex-wrap gap-1.5">
+                            {exp.technologies.map((tech) => (
+                              <span
+                                key={tech}
+                                className="px-2.5 py-1 text-xs rounded-full"
+                                style={{ background: 'rgba(99, 102, 241, 0.1)', color: 'var(--accent-primary)' }}
+                              >
+                                {tech}
+                              </span>
+                            ))}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </div>
+                    </motion.div>
+                  </motion.div>
                 ))}
               </div>
             </div>
           </div>
 
-          {/* Right Column */}
-          <div className="space-y-12" style={{
-            opacity: visible ? 1 : 0,
-            transform: visible ? 'translateX(0)' : 'translateX(30px)',
-            transition: 'opacity 0.7s ease 0.5s, transform 0.7s ease 0.5s'
-          }}>
-            {/* Certifications */}
-            <div>
-              <div className="flex items-center mb-6">
-                <Award className="text-green-700 mr-3" size={24} />
-                <h3 className="text-2xl font-bold text-neutral-900">Certifications</h3>
+          {/* Certifications */}
+          <motion.div
+            className="mb-12"
+            variants={staggerContainer}
+            initial="hidden"
+            animate={isInView ? 'visible' : 'hidden'}
+          >
+            <motion.div
+              className="flex items-center gap-3 mb-6"
+              variants={fadeInUp}
+            >
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: 'var(--accent-gradient)' }}>
+                <Award className="text-white" size={16} />
               </div>
-              <div className="space-y-3">
-                {certifications.map((cert, index) => (
-                  <div key={index} className="card p-4" style={{
-                    opacity: visible ? 1 : 0,
-                    transform: visible ? 'translateY(0)' : 'translateY(15px)',
-                    transition: `opacity 0.5s ease ${0.6 + index * 0.1}s, transform 0.5s ease ${0.6 + index * 0.1}s`
-                  }}>
-                    <div className="flex items-start gap-3">
-                      <Image src={cert.image} alt="" width={48} height={48} className="w-12 h-12 object-cover rounded-lg flex-shrink-0" loading="lazy" />
-                      <div className="flex-1 min-w-0">
-                        <h4 className="font-semibold text-neutral-900 text-sm">{cert.title}</h4>
-                        <p className="text-neutral-600 text-xs">{cert.issuer} &bull; {cert.date}</p>
-                      </div>
-                      {cert.certificateImage && (
-                        <button
-                          onClick={() => openModal(cert.certificateImage, cert.title)}
-                          className="p-3 text-neutral-500 hover:text-green-700 flex-shrink-0 touch-target"
-                          aria-label="View certificate"
-                        >
-                          <Eye size={18} />
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+              <h3 className="text-xl sm:text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>Certifications</h3>
+              <div className="flex-1 h-px ml-2" style={{ background: 'var(--glass-border)' }} />
+            </motion.div>
 
-            {/* Courses */}
-            <div>
-              <div className="flex items-center mb-6">
-                <GraduationCap className="text-green-700 mr-3" size={24} />
-                <h3 className="text-2xl font-bold text-neutral-900">Courses</h3>
-              </div>
-              <div className="space-y-3">
-                {courses.map((course, index) => (
-                  <div key={index} className="card p-4" style={{
-                    opacity: visible ? 1 : 0,
-                    transform: visible ? 'translateY(0)' : 'translateY(15px)',
-                    transition: `opacity 0.5s ease ${0.9 + index * 0.08}s, transform 0.5s ease ${0.9 + index * 0.08}s`
-                  }}>
-                    <div className="flex items-start gap-3">
-                      {course.image && (
-                        <Image src={course.image} alt="" width={48} height={48} className="w-12 h-12 object-cover rounded-lg flex-shrink-0" loading="lazy" />
-                      )}
-                      <div className="flex-1 min-w-0">
-                        <h4 className="font-semibold text-neutral-900 text-sm">{course.title}</h4>
-                        <p className="text-neutral-600 text-xs">{course.issuer} &bull; {course.date}</p>
-                      </div>
-                      {course.certificateImage && (
-                        <button
-                          onClick={() => openModal(course.certificateImage, course.title)}
-                          className="p-3 text-neutral-500 hover:text-green-700 flex-shrink-0 touch-target"
-                          aria-label="View certificate"
-                        >
-                          <Eye size={20} />
-                        </button>
-                      )}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+              {certifications.map((cert, index) => (
+                <motion.div
+                  key={index}
+                  className="rounded-xl p-4 transition-all duration-300 group"
+                  style={{ background: 'var(--bg-secondary)', border: '1px solid var(--glass-border)' }}
+                  variants={staggerItem}
+                  whileHover={{ y: -2, borderColor: 'var(--accent-primary)', boxShadow: '0 6px 20px rgba(99, 102, 241, 0.08)' }}
+                >
+                  <div className="flex items-start gap-3">
+                    <Image
+                      src={cert.image}
+                      alt={cert.issuer}
+                      width={36}
+                      height={36}
+                      className="w-9 h-9 rounded-lg object-cover flex-shrink-0"
+                      style={{ border: '1px solid var(--glass-border)' }}
+                      loading="lazy"
+                    />
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-semibold text-sm leading-snug" style={{ color: 'var(--text-primary)' }}>{cert.title}</h4>
+                      <p className="text-xs mt-0.5" style={{ color: 'var(--text-muted)' }}>{cert.issuer} &bull; {cert.date}</p>
                     </div>
-                    {course.description && (
-                      <p className="text-neutral-700 text-xs mt-2 line-clamp-2">{course.description}</p>
+                    {cert.certificateImage && (
+                      <button
+                        onClick={() => openModal(cert.certificateImage, cert.title)}
+                        className="p-2 flex-shrink-0 touch-target rounded-lg transition-colors opacity-50 group-hover:opacity-100"
+                        style={{ color: 'var(--text-muted)' }}
+                        aria-label="View certificate"
+                      >
+                        <Eye size={16} />
+                      </button>
                     )}
                   </div>
-                ))}
-              </div>
+                </motion.div>
+              ))}
             </div>
-          </div>
+          </motion.div>
+
+          {/* Courses */}
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            animate={isInView ? 'visible' : 'hidden'}
+          >
+            <motion.div
+              className="flex items-center gap-3 mb-6"
+              variants={fadeInUp}
+            >
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: 'var(--accent-gradient)' }}>
+                <BookOpen className="text-white" size={16} />
+              </div>
+              <h3 className="text-xl sm:text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>Courses</h3>
+              <div className="flex-1 h-px ml-2" style={{ background: 'var(--glass-border)' }} />
+            </motion.div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {courses.map((course, index) => (
+                <motion.div
+                  key={index}
+                  className="rounded-xl p-4 transition-all duration-300 group"
+                  style={{ background: 'var(--bg-secondary)', border: '1px solid var(--glass-border)' }}
+                  variants={staggerItem}
+                  whileHover={{ y: -2, borderColor: 'var(--accent-primary)', boxShadow: '0 6px 20px rgba(99, 102, 241, 0.08)' }}
+                >
+                  <div className="flex items-start gap-3">
+                    {course.image && (
+                      <Image
+                        src={course.image}
+                        alt={course.issuer}
+                        width={36}
+                        height={36}
+                        className="w-9 h-9 rounded-lg object-cover flex-shrink-0"
+                        style={{ border: '1px solid var(--glass-border)' }}
+                        loading="lazy"
+                      />
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-semibold text-sm leading-snug" style={{ color: 'var(--text-primary)' }}>{course.title}</h4>
+                      <p className="text-xs mt-0.5" style={{ color: 'var(--text-muted)' }}>{course.issuer} &bull; {course.date}</p>
+                    </div>
+                    {course.certificateImage && (
+                      <button
+                        onClick={() => openModal(course.certificateImage, course.title)}
+                        className="p-2 flex-shrink-0 touch-target rounded-lg transition-colors opacity-50 group-hover:opacity-100"
+                        style={{ color: 'var(--text-muted)' }}
+                        aria-label="View certificate"
+                      >
+                        <Eye size={16} />
+                      </button>
+                    )}
+                  </div>
+                  {course.description && (
+                    <p className="text-xs mt-2.5 line-clamp-2" style={{ color: 'var(--text-muted)' }}>{course.description}</p>
+                  )}
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
         </div>
       </div>
 
       {/* Certificate Modal */}
-      {isModalOpen && selectedCertificate && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-black/70" onClick={closeModal} />
-          <button onClick={closeModal} className="absolute top-4 right-4 z-[10000] p-2 bg-white hover:bg-gray-200 rounded-full">
-            <X size={24} />
-          </button>
-          <div className="relative w-full max-w-4xl max-h-[90vh] bg-white rounded-2xl shadow-2xl overflow-hidden" onClick={(e) => e.stopPropagation()}>
-            <div className="relative h-[70vh] bg-gray-100 p-4">
+      <AnimatedModal isOpen={isModalOpen} onClose={closeModal} className="max-w-4xl">
+        {selectedCertificate && (
+          <div className="rounded-2xl overflow-hidden" style={{ background: 'var(--bg-secondary)' }}>
+            <div className="relative h-[70vh] p-4" style={{ background: 'var(--bg-tertiary)' }}>
               <Image src={selectedCertificate.image} alt={selectedCertificate.title} fill className="object-contain" />
             </div>
+            <div className="p-4 text-center">
+              <h3 className="font-semibold" style={{ color: 'var(--text-primary)' }}>{selectedCertificate.title}</h3>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </AnimatedModal>
     </section>
   )
 }

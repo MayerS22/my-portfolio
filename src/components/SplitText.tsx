@@ -1,47 +1,40 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { motion, useInView, useReducedMotion } from 'framer-motion'
+import { useRef } from 'react'
 
-type SplitTextProps = {
+interface SplitTextProps {
   text: string
-  className?: string
   charDelay?: number
+  className?: string
 }
 
-export default function SplitText({ text, className = '', charDelay = 50 }: SplitTextProps) {
-  const [isVisible, setIsVisible] = useState(false)
-  const ref = useRef<HTMLDivElement>(null)
+export default function SplitText({ text, charDelay = 30, className }: SplitTextProps) {
+  const ref = useRef(null)
+  const isInView = useInView(ref, { once: true })
+  const shouldReduceMotion = useReducedMotion()
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true)
-          observer.disconnect()
-        }
-      },
-      { threshold: 0.1 }
-    )
-
-    if (ref.current) observer.observe(ref.current)
-    return () => observer.disconnect()
-  }, [])
+  if (shouldReduceMotion) {
+    return <span className={className}>{text}</span>
+  }
 
   return (
-    <div ref={ref} className={`inline-block ${className}`}>
+    <span ref={ref} className={className}>
       {text.split('').map((char, i) => (
-        <span
+        <motion.span
           key={i}
-          className="inline-block"
-          style={{
-            opacity: isVisible ? 1 : 0,
-            transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
-            transition: `opacity 0.5s ease ${i * charDelay}ms, transform 0.5s ease ${i * charDelay}ms`
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          transition={{
+            duration: 0.4,
+            delay: i * (charDelay / 1000),
+            ease: [0.25, 0.46, 0.45, 0.94],
           }}
+          style={{ display: 'inline-block' }}
         >
           {char === ' ' ? '\u00A0' : char}
-        </span>
+        </motion.span>
       ))}
-    </div>
+    </span>
   )
 }

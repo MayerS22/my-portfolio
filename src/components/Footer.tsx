@@ -1,39 +1,38 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { motion, useInView } from 'framer-motion'
+import { useRef } from 'react'
+import { ArrowUp } from 'lucide-react'
 
 export default function Footer() {
-  const [visible, setVisible] = useState(false)
   const ref = useRef<HTMLElement>(null)
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true)
-          observer.disconnect()
-        }
-      },
-      { threshold: 0.5 }
-    )
-    if (ref.current) observer.observe(ref.current)
-    return () => observer.disconnect()
-  }, [])
+  const isInView = useInView(ref, { once: true })
 
   return (
-    <footer ref={ref} className="py-6">
-      <div
-        className="container mx-auto px-4 sm:px-6 lg:px-8 text-center"
-        style={{
-          opacity: visible ? 1 : 0,
-          transform: visible ? 'translateY(0)' : 'translateY(10px)',
-          transition: 'opacity 0.6s ease, transform 0.6s ease'
-        }}
+    <footer ref={ref} className="py-8 border-t" style={{ borderColor: 'var(--glass-border)' }}>
+      <motion.div
+        className="container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4"
+        initial={{ opacity: 0, y: 10 }}
+        animate={isInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.6 }}
       >
-        <p className="text-neutral-600 text-sm">
-          Designed & Built with passion
+        <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
+          &copy; {new Date().getFullYear()} Mayer Frieg. Designed & Built with passion.
         </p>
-      </div>
+        <div className="flex items-center gap-4">
+          <span className="text-xs" style={{ color: 'var(--text-muted)' }}>
+            Next.js, React, Framer Motion
+          </span>
+          <button
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            className="p-2 rounded-lg transition-colors hover:text-accent"
+            style={{ color: 'var(--text-muted)' }}
+            aria-label="Back to top"
+          >
+            <ArrowUp size={18} />
+          </button>
+        </div>
+      </motion.div>
     </footer>
   )
 }

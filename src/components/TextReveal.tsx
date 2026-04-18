@@ -1,43 +1,37 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { motion, useInView, useReducedMotion } from 'framer-motion'
+import { useRef, type ReactNode } from 'react'
 
-type TextRevealProps = {
-  children: React.ReactNode
-  className?: string
+interface TextRevealProps {
+  children: ReactNode
   delay?: number
+  className?: string
 }
 
-export default function TextReveal({ children, className = '', delay = 0 }: TextRevealProps) {
-  const [isVisible, setIsVisible] = useState(false)
-  const ref = useRef<HTMLSpanElement>(null)
+export default function TextReveal({ children, delay = 0, className }: TextRevealProps) {
+  const ref = useRef(null)
+  const isInView = useInView(ref, { once: true })
+  const shouldReduceMotion = useReducedMotion()
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setTimeout(() => setIsVisible(true), delay)
-          observer.disconnect()
-        }
-      },
-      { threshold: 0.1 }
-    )
-
-    if (ref.current) observer.observe(ref.current)
-    return () => observer.disconnect()
-  }, [delay])
+  if (shouldReduceMotion) {
+    return <span className={className}>{children}</span>
+  }
 
   return (
-    <span
-      ref={ref}
-      className={`inline-block overflow-hidden ${className}`}
-      style={{
-        opacity: isVisible ? 1 : 0,
-        transform: isVisible ? 'translateY(0)' : 'translateY(100%)',
-        transition: 'opacity 0.8s ease, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)'
-      }}
-    >
-      {children}
+    <span ref={ref} className={className} style={{ overflow: 'hidden', display: 'inline-block' }}>
+      <motion.span
+        style={{ display: 'inline-block' }}
+        initial={{ y: '100%', opacity: 0 }}
+        animate={isInView ? { y: 0, opacity: 1 } : { y: '100%', opacity: 0 }}
+        transition={{
+          duration: 0.8,
+          delay,
+          ease: [0.77, 0, 0.175, 1],
+        }}
+      >
+        {children}
+      </motion.span>
     </span>
   )
 }
