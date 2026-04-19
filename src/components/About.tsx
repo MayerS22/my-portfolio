@@ -12,16 +12,19 @@ function AnimatedCounter({ target, suffix = '' }: { target: number; suffix?: str
 
   useEffect(() => {
     if (!isInView) return
-    const duration = 1500
-    const start = performance.now()
-    const animate = (now: number) => {
-      const elapsed = now - start
-      const progress = Math.min(elapsed / duration, 1)
+    const duration = 800
+    // Update in ~8 steps instead of every frame
+    const steps = 8
+    const stepTime = duration / steps
+    let step = 0
+    const timer = setInterval(() => {
+      step++
+      const progress = Math.min(step / steps, 1)
       const eased = 1 - Math.pow(1 - progress, 3)
       setCount(Math.round(eased * target))
-      if (progress < 1) requestAnimationFrame(animate)
-    }
-    requestAnimationFrame(animate)
+      if (step >= steps) clearInterval(timer)
+    }, stepTime)
+    return () => clearInterval(timer)
   }, [isInView, target])
 
   return <div ref={ref}>{count}{suffix}</div>
@@ -51,11 +54,8 @@ const About = () => {
 
   return (
     <section id="about" ref={sectionRef} className="py-20 sm:py-28 relative overflow-hidden">
-      {/* Static background glow */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute w-[400px] h-[400px] rounded-full blur-[120px] opacity-[0.06]" style={{ background: 'var(--accent-primary)', top: '10%', right: '-5%' }} />
-        <div className="absolute w-[300px] h-[300px] rounded-full blur-[100px] opacity-[0.04]" style={{ background: 'var(--accent-secondary)', bottom: '10%', left: '-5%' }} />
-      </div>
+      {/* Subtle gradient background — no heavy blur */}
+      <div className="absolute inset-0 pointer-events-none gradient-mesh" />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Heading */}
@@ -91,11 +91,8 @@ const About = () => {
           transition={{ delay: 0.3, duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
           <div className="glass rounded-2xl overflow-hidden relative">
-            {/* Animated gradient top line */}
-            <div className="h-1 gradient-border-animated" style={{ borderRadius: 0 }} />
-
-            {/* Inner glow */}
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[300px] h-[200px] rounded-full blur-[80px] opacity-[0.06]" style={{ background: 'var(--accent-primary)' }} />
+            {/* Gradient top line */}
+            <div className="h-1" style={{ background: 'var(--accent-gradient)' }} />
 
             <div className="relative p-6 sm:p-10">
               {/* Bio */}
@@ -134,7 +131,6 @@ const About = () => {
               >
                 <div className="flex items-center gap-2.5">
                   <span className="relative flex h-2.5 w-2.5">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" style={{ background: '#22c55e' }} />
                     <span className="relative inline-flex rounded-full h-2.5 w-2.5" style={{ background: '#22c55e' }} />
                   </span>
                   <span className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>Currently building at QueenSoft</span>

@@ -18,21 +18,24 @@ export default function SplitText({ text, charDelay = 30, className }: SplitText
     return <span className={className}>{text}</span>
   }
 
+  // Split by word instead of per-character — far fewer animated elements
+  const words = text.split(' ')
+
   return (
     <span ref={ref} className={className}>
-      {text.split('').map((char, i) => (
+      {words.map((word, i) => (
         <motion.span
           key={i}
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          className="inline-block"
+          initial={{ opacity: 0, y: 15 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
           transition={{
-            duration: 0.4,
+            duration: 0.35,
             delay: i * (charDelay / 1000),
             ease: [0.25, 0.46, 0.45, 0.94],
           }}
-          style={{ display: 'inline-block' }}
         >
-          {char === ' ' ? '\u00A0' : char}
+          {word}{i < words.length - 1 ? '\u00A0' : ''}
         </motion.span>
       ))}
     </span>

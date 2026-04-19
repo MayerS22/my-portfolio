@@ -192,8 +192,8 @@ body {
 /* Glass effect — real glassmorphism */
 .glass {
   background: var(--glass-bg);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--glass-border);
   box-shadow: var(--glass-shadow);
 }
@@ -288,7 +288,7 @@ body {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .glass {
     backdrop-filter: none;
     -webkit-backdrop-filter: none;

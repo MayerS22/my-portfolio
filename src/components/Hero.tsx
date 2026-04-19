@@ -55,7 +55,6 @@ export default function Hero() {
             style={{ background: 'var(--glass-bg)', border: '1px solid var(--glass-border)', color: 'var(--text-secondary)' }}
           >
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" style={{ background: '#22c55e' }} />
               <span className="relative inline-flex rounded-full h-2 w-2" style={{ background: '#22c55e' }} />
             </span>
             Available for new opportunities
@@ -189,11 +188,8 @@ export default function Hero() {
             transition={{ duration: 1, ease: [0.25, 0.46, 0.45, 0.94], delay: 0.4 }}
             className="relative group"
           >
-            {/* Glow */}
-            <div className="absolute -inset-6 rounded-3xl blur-[60px] opacity-20 group-hover:opacity-35 transition-opacity duration-500" style={{ background: 'var(--accent-gradient)' }} />
-
             {/* Gradient border */}
-            <div className="relative rounded-2xl p-[2px] gradient-border-animated">
+            <div className="relative rounded-2xl p-[2px]" style={{ background: 'var(--accent-gradient)' }}>
               <div className="relative w-[300px] h-[360px] sm:w-[360px] sm:h-[420px] lg:w-[420px] lg:h-[500px] rounded-2xl overflow-hidden">
                 <Image
                   src="/Me.jpeg"

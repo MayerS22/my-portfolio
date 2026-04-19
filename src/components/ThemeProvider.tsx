@@ -39,7 +39,7 @@ export default function ThemeProvider({ children }: { children: ReactNode }) {
 
   // Prevent flash of wrong theme
   if (!mounted) {
-    return <div style={{ visibility: 'hidden' }}>{children}</div>
+    return null
   }
 
   return (

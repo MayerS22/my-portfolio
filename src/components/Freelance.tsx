@@ -123,7 +123,7 @@ export default function Freelance() {
               transition={{ delay: 0.1 + index * 0.1, duration: 0.4 }}
               whileHover={{ borderColor: 'var(--accent-primary)', y: -3, boxShadow: '0 16px 48px rgba(99, 102, 241, 0.12)' }}
             >
-              <div className="flex flex-col md:flex-row">
+              <div className={`flex flex-col md:flex-row ${index % 2 !== 0 ? 'md:flex-row-reverse' : ''}`}>
                 {/* Left column — screenshot */}
                 <div className="relative w-full md:w-1/2 h-56 sm:h-64 md:h-auto md:min-h-[280px] overflow-hidden flex-shrink-0" style={{ background: 'var(--bg-tertiary)' }}>
                   <Image

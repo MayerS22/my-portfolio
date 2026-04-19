@@ -180,8 +180,8 @@ const Contact = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all"
-                style={{ background: 'var(--glass-bg)', border: '1px solid var(--glass-border)', color: 'var(--text-secondary)' }}
-                whileHover={{ y: -2, borderColor: 'var(--accent-primary)', color: 'var(--accent-primary)', boxShadow: '0 6px 20px rgba(99, 102, 241, 0.1)' }}
+                style={{ background: 'var(--accent-gradient)', color: 'white' }}
+                whileHover={{ y: -2, boxShadow: '0 6px 20px rgba(139, 92, 246, 0.3)' }}
                 whileTap={{ scale: 0.97 }}
                 aria-label={social.label}
               >

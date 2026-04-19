@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, Sun, Moon } from 'lucide-react'
 import { useMounted } from '@/hooks/useMounted'
 import { useTheme } from './ThemeProvider'
-import MagneticButton from './motion/MagneticButton'
 import { cn } from '@/lib/utils'
 
 const navItems = [
@@ -49,7 +48,6 @@ export default function Header() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [isMounted, handleScroll])
 
-  // Body scroll lock when mobile menu is open
   useEffect(() => {
     if (isMobileOpen) {
       document.body.style.overflow = 'hidden'
@@ -73,11 +71,11 @@ export default function Header() {
         )}
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+        transition={{ duration: 0.5 }}
       >
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           {/* Logo */}
-          <MagneticButton
+          <button
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
             className="group flex items-center"
           >
@@ -88,27 +86,22 @@ export default function Header() {
               <span className="text-gradient">M</span>ayer{' '}
               <span className="text-gradient">F</span>rieg
             </span>
-            <motion.span
+            <span
               className="inline-block w-1.5 h-1.5 rounded-full ml-1.5 -translate-y-1.5"
               style={{ background: 'var(--accent-primary)' }}
-              animate={{ scale: [1, 1.4, 1], opacity: [0.6, 1, 0.6] }}
-              transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
             />
-          </MagneticButton>
+          </button>
 
           {/* Desktop nav */}
           <nav className="hidden md:flex items-center gap-1">
             {navItems.map((item) => {
               const isActive = activeSection === item.name.toLowerCase()
               return (
-                <MagneticButton
+                <button
                   key={item.name}
                   onClick={() => goTo(item.href)}
-                  className={cn(
-                    "relative text-[13px] font-medium tracking-wide uppercase px-4 py-2 rounded-lg transition-colors",
-                  )}
+                  className="relative text-[13px] font-medium tracking-wide uppercase px-4 py-2 rounded-lg transition-colors"
                 >
-                  {/* Active pill background */}
                   {isActive && (
                     <motion.div
                       layoutId="nav-pill"
@@ -117,27 +110,19 @@ export default function Header() {
                       transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                     />
                   )}
-                  {/* Hover background for non-active */}
-                  {!isActive && (
-                    <span
-                      className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-                      style={{ background: 'var(--glass-bg)' }}
-                    />
-                  )}
                   <span
                     className="relative z-10 transition-colors duration-200"
                     style={{ color: isActive ? 'var(--accent-primary)' : 'var(--text-muted)' }}
                   >
                     {item.name}
                   </span>
-                </MagneticButton>
+                </button>
               )
             })}
           </nav>
 
           {/* Desktop right area */}
           <div className="hidden md:flex items-center gap-2">
-            {/* Theme Toggle */}
             <button
               onClick={toggleTheme}
               className="p-2 rounded-lg transition-all duration-200 hover:scale-110"
@@ -228,13 +213,10 @@ export default function Header() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
           >
-            {/* Gradient accent glow */}
             <div
               className="absolute inset-0 pointer-events-none"
               style={{ background: 'var(--gradient-mesh)' }}
             />
-
-            {/* Nav links */}
             <div className="flex-1 flex flex-col items-center justify-center gap-2 relative z-10">
               {navItems.map((item, i) => {
                 const isActive = activeSection === item.name.toLowerCase()
@@ -244,7 +226,7 @@ export default function Header() {
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    transition={{ delay: i * 0.07, duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+                    transition={{ delay: i * 0.05, duration: 0.3 }}
                     onClick={() => goTo(item.href)}
                     className="text-2xl font-semibold py-2 px-6 rounded-lg transition-colors relative"
                     style={{ color: isActive ? 'var(--accent-primary)' : 'var(--text-secondary)' }}
@@ -260,8 +242,6 @@ export default function Header() {
                 )
               })}
             </div>
-
-            {/* Bottom controls */}
             <div className="relative z-10 flex items-center justify-center gap-3 pb-12">
               <button
                 onClick={toggleTheme}

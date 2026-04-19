@@ -11,14 +11,12 @@ import { fadeInUp, staggerContainer, staggerItem } from '@/lib/animations'
 const Experience = () => {
   const sectionRef = useRef<HTMLElement>(null)
   const isInView = useInView(sectionRef, { once: true, margin: '-80px' })
-  const timelineRef = useRef<HTMLDivElement>(null)
-  const timelineInView = useInView(timelineRef, { once: true, margin: '-50px' })
 
   const experiences = [
-    { title: 'Software Engineer', company: 'QueenSoft', location: 'Egypt', period: 'July 2025 – Present', description: 'Full Stack Developer building scalable web applications.', technologies: ['Next.js', 'Nest.js', 'PostgreSQL', 'TypeScript', 'React', 'Node.js'], image: '/images/QueenSoft.jpg', isCurrent: true },
-    { title: 'Administrative Assistant', company: 'CMF', location: 'Egypt', period: 'Aug 2023 – Present', description: 'Supporting foundation operations through data management and event coordination.', technologies: ['Microsoft Office', 'Data Entry', 'Report Generation'], image: '/images/CMF.jpg', isCurrent: false },
-    { title: 'Microsoft Student Partner', company: 'Microsoft Tech Club', location: 'Egypt', period: 'Oct 2022 – Oct 2023', description: 'Led technical workshops and mentored students in Microsoft technologies.', technologies: ['Azure', 'Power Platform', 'Power BI', 'GitHub', 'Leadership'], image: '/images/MSP.jpg', isCurrent: false },
-    { title: 'Database Administrator', company: 'CMF', location: 'Egypt', period: 'Sept 2022 – Feb 2023', description: 'Designed and implemented database system using Microsoft Access.', technologies: ['Access', 'Database Design', 'SQL', 'Data Modeling'], image: '/images/CMF.jpg', isCurrent: false }
+    { title: 'Software Engineer', company: 'QueenSoft', location: 'Egypt', period: 'July 2025 – Present', year: '2025', description: 'Full Stack Developer building scalable web applications.', technologies: ['Next.js', 'Nest.js', 'PostgreSQL', 'TypeScript', 'React', 'Node.js'], image: '/images/QueenSoft.jpg', isCurrent: true },
+    { title: 'Administrative Assistant', company: 'CMF', location: 'Egypt', period: 'Aug 2023 – Present', year: '2023', description: 'Supporting foundation operations through data management and event coordination.', technologies: ['Microsoft Office', 'Data Entry', 'Report Generation'], image: '/images/CMF.jpg', isCurrent: false },
+    { title: 'Microsoft Student Partner', company: 'Microsoft Tech Club', location: 'Egypt', period: 'Oct 2022 – Oct 2023', year: '2022', description: 'Led technical workshops and mentored students in Microsoft technologies.', technologies: ['Azure', 'Power Platform', 'Power BI', 'GitHub', 'Leadership'], image: '/images/MSP.jpg', isCurrent: false },
+    { title: 'Database Administrator', company: 'CMF', location: 'Egypt', period: 'Sept 2022 – Feb 2023', year: '2022', description: 'Designed and implemented database system using Microsoft Access.', technologies: ['Access', 'Database Design', 'SQL', 'Data Modeling'], image: '/images/CMF.jpg', isCurrent: false }
   ]
 
   const education = [{ title: 'Bachelor of Computer and Information Science', institution: 'Ain Shams University', location: 'Egypt', period: 'Sept 2021 – July 2025', description: 'GPA: 3.005', image: '/images/CS.jpg' }]
@@ -55,39 +53,35 @@ const Experience = () => {
 
   return (
     <section id="experience" ref={sectionRef} className="py-16 sm:py-24 relative overflow-hidden">
-      {/* Background glow */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute w-[350px] h-[350px] rounded-full blur-[120px] opacity-[0.05]" style={{ background: 'var(--accent-primary)', top: '20%', left: '-5%' }} />
-        <div className="absolute w-[300px] h-[300px] rounded-full blur-[100px] opacity-[0.04]" style={{ background: 'var(--accent-secondary)', bottom: '15%', right: '-5%' }} />
-      </div>
+      <div className="absolute inset-0 pointer-events-none gradient-mesh" />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
         <motion.div
           className="text-center mb-14"
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 25 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7 }}
+          transition={{ duration: 0.5 }}
         >
           <motion.span
             className="inline-block text-xs font-semibold uppercase tracking-[0.2em] mb-4 px-4 py-1.5 rounded-full"
             style={{ color: 'var(--accent-primary)', background: 'var(--glass-bg)', border: '1px solid var(--glass-border)' }}
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={isInView ? { opacity: 1, scale: 1 } : {}}
-            transition={{ delay: 0.1, duration: 0.5 }}
+            initial={{ opacity: 0 }}
+            animate={isInView ? { opacity: 1 } : {}}
+            transition={{ delay: 0.05, duration: 0.3 }}
           >
             My journey
           </motion.span>
           <h2 className="text-clamp-section font-bold mb-4" style={{ color: 'var(--text-primary)' }}>
-            <SplitText text="Experience &" charDelay={35} />{' '}
-            <span className="text-gradient"><SplitText text="Education" charDelay={35} /></span>
+            <SplitText text="Experience &" charDelay={25} />{' '}
+            <span className="text-gradient"><SplitText text="Education" charDelay={25} /></span>
           </h2>
           <motion.p
-            className="text-lg max-w-3xl mx-auto"
+            className="text-lg max-w-2xl mx-auto"
             style={{ color: 'var(--text-secondary)' }}
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ delay: 0.3, duration: 0.8 }}
+            transition={{ delay: 0.15, duration: 0.4 }}
           >
             My professional journey and academic background
           </motion.p>
@@ -98,49 +92,29 @@ const Experience = () => {
           {education.map((edu, index) => (
             <motion.div
               key={index}
-              className="glass rounded-2xl overflow-hidden mb-16 relative"
-              initial={{ opacity: 0, y: 40, scale: 0.97 }}
-              animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
-              transition={{ delay: 0.3, duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
+              className="rounded-2xl overflow-hidden mb-14"
+              style={{ background: 'var(--bg-secondary)', border: '1px solid var(--glass-border)' }}
+              initial={{ opacity: 0, y: 25 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ delay: 0.2, duration: 0.5 }}
             >
-              {/* Gradient top line */}
-              <div className="h-1 gradient-border-animated" style={{ borderRadius: 0 }} />
-
-              <div className="p-5 sm:p-8">
-                <div className="flex flex-col sm:flex-row items-start gap-5 sm:gap-6">
-                  {/* University image */}
-                  <div className="flex-shrink-0">
-                    <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden" style={{ border: '1px solid var(--glass-border)' }}>
-                      <Image src={edu.image} alt={edu.institution} width={80} height={80} className="w-full h-full object-cover" />
-                    </div>
+              <div className="h-1" style={{ background: 'var(--accent-gradient)' }} />
+              <div className="p-5 sm:p-7">
+                <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-5">
+                  <div className="flex-shrink-0 w-14 h-14 sm:w-16 sm:h-16 rounded-xl overflow-hidden" style={{ border: '1px solid var(--glass-border)' }}>
+                    <Image src={edu.image} alt={edu.institution} width={64} height={64} className="w-full h-full object-cover" />
                   </div>
-
                   <div className="flex-1 min-w-0">
-                    {/* Label */}
                     <div className="flex items-center gap-2 mb-2">
                       <GraduationCap size={14} style={{ color: 'var(--accent-primary)' }} />
                       <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--accent-primary)' }}>Education</span>
                     </div>
-
-                    <h3 className="text-lg sm:text-xl font-bold mb-2" style={{ color: 'var(--text-primary)' }}>
-                      {edu.title}
-                    </h3>
-
+                    <h3 className="text-lg sm:text-xl font-bold mb-2" style={{ color: 'var(--text-primary)' }}>{edu.title}</h3>
                     <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm mb-3" style={{ color: 'var(--text-secondary)' }}>
-                      <span className="flex items-center gap-1.5">
-                        <Building size={14} />
-                        {edu.institution}
-                      </span>
-                      <span className="flex items-center gap-1.5">
-                        <MapPin size={14} />
-                        {edu.location}
-                      </span>
-                      <span className="flex items-center gap-1.5">
-                        <Calendar size={14} />
-                        {edu.period}
-                      </span>
+                      <span className="flex items-center gap-1.5"><Building size={14} />{edu.institution}</span>
+                      <span className="flex items-center gap-1.5"><MapPin size={14} />{edu.location}</span>
+                      <span className="flex items-center gap-1.5"><Calendar size={14} />{edu.period}</span>
                     </div>
-
                     <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium" style={{ background: 'rgba(99, 102, 241, 0.1)', color: 'var(--accent-primary)' }}>
                       {edu.description}
                     </div>
@@ -150,14 +124,13 @@ const Experience = () => {
             </motion.div>
           ))}
 
-          {/* Work Experience — Vertical Timeline */}
-          <div ref={timelineRef} className="mb-16">
-            {/* Sub-header */}
+          {/* Work Experience — Simple dot + line timeline */}
+          <div className="mb-14">
             <motion.div
               className="flex items-center gap-3 mb-8"
-              initial={{ opacity: 0, x: -20 }}
-              animate={timelineInView ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 0.5 }}
+              initial={{ opacity: 0, x: -15 }}
+              animate={isInView ? { opacity: 1, x: 0 } : {}}
+              transition={{ delay: 0.3, duration: 0.4 }}
             >
               <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: 'var(--accent-gradient)' }}>
                 <Briefcase className="text-white" size={16} />
@@ -166,93 +139,53 @@ const Experience = () => {
               <div className="flex-1 h-px ml-2" style={{ background: 'var(--glass-border)' }} />
             </motion.div>
 
-            {/* Timeline */}
-            <div className="relative pl-8 sm:pl-12">
-              {/* Animated vertical line */}
-              <motion.div
-                className="absolute left-3 sm:left-5 top-2 bottom-2 w-px origin-top"
-                style={{ background: 'var(--glass-border)' }}
-                initial={{ scaleY: 0 }}
-                animate={timelineInView ? { scaleY: 1 } : {}}
-                transition={{ duration: 1.2, ease: [0.25, 0.46, 0.45, 0.94], delay: 0.2 }}
-              />
+            <div className="relative pl-6">
+              {/* Vertical line */}
+              <div className="absolute left-[7px] top-2 bottom-2 w-px" style={{ background: 'var(--glass-border)' }} />
 
-              {/* Experience items */}
-              <div className="space-y-8">
+              <div className="space-y-6">
                 {experiences.map((exp, index) => (
                   <motion.div
                     key={index}
                     className="relative"
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={timelineInView ? { opacity: 1, x: 0 } : {}}
-                    transition={{ delay: 0.4 + index * 0.15, duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+                    initial={{ opacity: 0, x: -15 }}
+                    animate={isInView ? { opacity: 1, x: 0 } : {}}
+                    transition={{ delay: 0.35 + index * 0.1, duration: 0.4 }}
                   >
-                    {/* Timeline dot */}
-                    <div className="absolute -left-8 sm:-left-12 top-5 flex items-center justify-center" style={{ width: '26px', height: '26px', marginLeft: '-5px' }}>
-                      {exp.isCurrent ? (
-                        <span className="relative flex h-3.5 w-3.5">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" style={{ background: '#22c55e' }} />
-                          <span className="relative inline-flex rounded-full h-3.5 w-3.5" style={{ background: '#22c55e' }} />
-                        </span>
-                      ) : (
-                        <span className="flex h-3 w-3 rounded-full" style={{ border: '2px solid var(--accent-primary)', background: 'var(--bg-secondary)' }} />
-                      )}
+                    {/* Dot */}
+                    <div className="absolute -left-6 top-5 w-[15px] h-[15px] flex items-center justify-center">
+                      <div className="w-2.5 h-2.5 rounded-full" style={{ background: exp.isCurrent ? '#22c55e' : 'var(--accent-primary)' }} />
                     </div>
 
                     {/* Card */}
-                    <motion.div
-                      className="rounded-xl p-4 sm:p-5 transition-all duration-300"
+                    <div
+                      className="rounded-xl p-5 sm:p-6 transition-all duration-300"
                       style={{ background: 'var(--bg-secondary)', border: '1px solid var(--glass-border)' }}
-                      whileHover={{ y: -2, borderColor: 'var(--accent-primary)', boxShadow: '0 8px 25px rgba(99, 102, 241, 0.08)' }}
+                      onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--accent-primary)'; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 25px rgba(99, 102, 241, 0.08)' }}
+                      onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--glass-border)'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none' }}
                     >
-                      <div className="flex items-start gap-3 sm:gap-4">
-                        <Image
-                          src={exp.image}
-                          alt={exp.company}
-                          width={40}
-                          height={40}
-                          className="w-10 h-10 rounded-lg object-cover flex-shrink-0"
-                          style={{ border: '1px solid var(--glass-border)' }}
-                          loading="lazy"
-                        />
+                      <div className="flex items-start gap-3">
+                        <Image src={exp.image} alt={exp.company} width={40} height={40} className="w-10 h-10 rounded-lg object-cover flex-shrink-0" style={{ border: '1px solid var(--glass-border)' }} loading="lazy" />
                         <div className="flex-1 min-w-0">
                           <div className="flex flex-wrap items-center gap-2 mb-1">
                             <h4 className="text-base sm:text-lg font-bold" style={{ color: 'var(--text-primary)' }}>{exp.title}</h4>
-                            {exp.isCurrent && (
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider rounded-full" style={{ background: 'rgba(34, 197, 94, 0.1)', color: '#22c55e' }}>
-                                Current
-                              </span>
-                            )}
-                          </div>
-                          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm mb-2" style={{ color: 'var(--text-secondary)' }}>
-                            <span className="flex items-center gap-1">
-                              <Building size={13} />
-                              {exp.company}
-                            </span>
-                            <span className="flex items-center gap-1">
-                              <MapPin size={13} />
-                              {exp.location}
+                            <span className="px-2.5 py-0.5 text-xs font-semibold rounded-full" style={{ background: exp.isCurrent ? 'rgba(34, 197, 94, 0.1)' : 'var(--glass-bg)', color: exp.isCurrent ? '#22c55e' : 'var(--text-muted)', border: exp.isCurrent ? 'none' : '1px solid var(--glass-border)' }}>
+                              {exp.period}
                             </span>
                           </div>
-                          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs mb-3" style={{ background: 'var(--glass-bg)', border: '1px solid var(--glass-border)', color: 'var(--text-muted)' }}>
-                            <Calendar size={12} />
-                            {exp.period}
+                          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm mb-3" style={{ color: 'var(--text-secondary)' }}>
+                            <span className="flex items-center gap-1"><Building size={13} />{exp.company}</span>
+                            <span className="flex items-center gap-1"><MapPin size={13} />{exp.location}</span>
                           </div>
                           <p className="text-sm mb-3" style={{ color: 'var(--text-secondary)' }}>{exp.description}</p>
                           <div className="flex flex-wrap gap-1.5">
                             {exp.technologies.map((tech) => (
-                              <span
-                                key={tech}
-                                className="px-2.5 py-1 text-xs rounded-full"
-                                style={{ background: 'rgba(99, 102, 241, 0.1)', color: 'var(--accent-primary)' }}
-                              >
-                                {tech}
-                              </span>
+                              <span key={tech} className="px-2.5 py-1 text-xs rounded-md" style={{ background: 'rgba(99, 102, 241, 0.1)', color: 'var(--accent-primary)' }}>{tech}</span>
                             ))}
                           </div>
                         </div>
                       </div>
-                    </motion.div>
+                    </div>
                   </motion.div>
                 ))}
               </div>
@@ -266,10 +199,7 @@ const Experience = () => {
             initial="hidden"
             animate={isInView ? 'visible' : 'hidden'}
           >
-            <motion.div
-              className="flex items-center gap-3 mb-6"
-              variants={fadeInUp}
-            >
+            <motion.div className="flex items-center gap-3 mb-6" variants={fadeInUp}>
               <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: 'var(--accent-gradient)' }}>
                 <Award className="text-white" size={16} />
               </div>
@@ -287,26 +217,13 @@ const Experience = () => {
                   whileHover={{ y: -2, borderColor: 'var(--accent-primary)', boxShadow: '0 6px 20px rgba(99, 102, 241, 0.08)' }}
                 >
                   <div className="flex items-start gap-3">
-                    <Image
-                      src={cert.image}
-                      alt={cert.issuer}
-                      width={36}
-                      height={36}
-                      className="w-9 h-9 rounded-lg object-cover flex-shrink-0"
-                      style={{ border: '1px solid var(--glass-border)' }}
-                      loading="lazy"
-                    />
+                    <Image src={cert.image} alt={cert.issuer} width={36} height={36} className="w-9 h-9 rounded-lg object-cover flex-shrink-0" style={{ border: '1px solid var(--glass-border)' }} loading="lazy" />
                     <div className="flex-1 min-w-0">
                       <h4 className="font-semibold text-sm leading-snug" style={{ color: 'var(--text-primary)' }}>{cert.title}</h4>
                       <p className="text-xs mt-0.5" style={{ color: 'var(--text-muted)' }}>{cert.issuer} &bull; {cert.date}</p>
                     </div>
                     {cert.certificateImage && (
-                      <button
-                        onClick={() => openModal(cert.certificateImage, cert.title)}
-                        className="p-2 flex-shrink-0 touch-target rounded-lg transition-colors opacity-50 group-hover:opacity-100"
-                        style={{ color: 'var(--text-muted)' }}
-                        aria-label="View certificate"
-                      >
+                      <button onClick={() => openModal(cert.certificateImage, cert.title)} className="p-2 flex-shrink-0 touch-target rounded-lg transition-colors opacity-50 group-hover:opacity-100" style={{ color: 'var(--text-muted)' }} aria-label="View certificate">
                         <Eye size={16} />
                       </button>
                     )}
@@ -322,10 +239,7 @@ const Experience = () => {
             initial="hidden"
             animate={isInView ? 'visible' : 'hidden'}
           >
-            <motion.div
-              className="flex items-center gap-3 mb-6"
-              variants={fadeInUp}
-            >
+            <motion.div className="flex items-center gap-3 mb-6" variants={fadeInUp}>
               <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: 'var(--accent-gradient)' }}>
                 <BookOpen className="text-white" size={16} />
               </div>
@@ -344,27 +258,14 @@ const Experience = () => {
                 >
                   <div className="flex items-start gap-3">
                     {course.image && (
-                      <Image
-                        src={course.image}
-                        alt={course.issuer}
-                        width={36}
-                        height={36}
-                        className="w-9 h-9 rounded-lg object-cover flex-shrink-0"
-                        style={{ border: '1px solid var(--glass-border)' }}
-                        loading="lazy"
-                      />
+                      <Image src={course.image} alt={course.issuer} width={36} height={36} className="w-9 h-9 rounded-lg object-cover flex-shrink-0" style={{ border: '1px solid var(--glass-border)' }} loading="lazy" />
                     )}
                     <div className="flex-1 min-w-0">
                       <h4 className="font-semibold text-sm leading-snug" style={{ color: 'var(--text-primary)' }}>{course.title}</h4>
                       <p className="text-xs mt-0.5" style={{ color: 'var(--text-muted)' }}>{course.issuer} &bull; {course.date}</p>
                     </div>
                     {course.certificateImage && (
-                      <button
-                        onClick={() => openModal(course.certificateImage, course.title)}
-                        className="p-2 flex-shrink-0 touch-target rounded-lg transition-colors opacity-50 group-hover:opacity-100"
-                        style={{ color: 'var(--text-muted)' }}
-                        aria-label="View certificate"
-                      >
+                      <button onClick={() => openModal(course.certificateImage, course.title)} className="p-2 flex-shrink-0 touch-target rounded-lg transition-colors opacity-50 group-hover:opacity-100" style={{ color: 'var(--text-muted)' }} aria-label="View certificate">
                         <Eye size={16} />
                       </button>
                     )}

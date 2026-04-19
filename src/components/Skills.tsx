@@ -43,43 +43,6 @@ const skillCategories = [
   },
 ]
 
-function FlipCard({ name, emoji, color, delay }: { name: string, emoji: string, color: string, delay: number }) {
-  return (
-    <motion.div
-      className="perspective-[600px]"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ delay }}
-    >
-      <motion.div
-        className="relative w-full preserve-3d"
-        initial={{ rotateY: 90 }}
-        animate={{ rotateY: 0 }}
-        transition={{ delay: delay + 0.1, duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
-        whileHover={{
-          y: -4,
-          scale: 1.04,
-          transition: { duration: 0.2 },
-        }}
-        style={{ transformStyle: 'preserve-3d' }}
-      >
-        <div
-          className="flex items-center gap-3 px-4 py-3.5 rounded-xl cursor-default select-none"
-          style={{
-            background: 'var(--glass-bg)',
-            border: '1px solid var(--glass-border)',
-          }}
-          onMouseEnter={(e) => { e.currentTarget.style.borderColor = color; e.currentTarget.style.boxShadow = `0 6px 20px ${color}18` }}
-          onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--glass-border)'; e.currentTarget.style.boxShadow = 'none' }}
-        >
-          <span className="text-lg flex-shrink-0">{emoji}</span>
-          <span className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>{name}</span>
-        </div>
-      </motion.div>
-    </motion.div>
-  )
-}
-
 export default function Skills() {
   const sectionRef = useRef<HTMLElement>(null)
   const isInView = useInView(sectionRef, { once: true, margin: '-80px' })
@@ -92,7 +55,7 @@ export default function Skills() {
           className="text-center mb-14"
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7 }}
+          transition={{ duration: 0.5 }}
         >
           <span
             className="inline-block text-xs font-semibold uppercase tracking-[0.2em] mb-4 px-4 py-1.5 rounded-full"
@@ -101,8 +64,8 @@ export default function Skills() {
             What I work with
           </span>
           <h2 className="text-clamp-section font-bold mb-4" style={{ color: 'var(--text-primary)' }}>
-            <SplitText text="My" charDelay={40} />{' '}
-            <span className="text-gradient"><SplitText text="Skills" charDelay={40} /></span>
+            <SplitText text="My" charDelay={30} />{' '}
+            <span className="text-gradient"><SplitText text="Skills" charDelay={30} /></span>
           </h2>
           <p className="text-lg" style={{ color: 'var(--text-secondary)' }}>
             A comprehensive toolkit of technologies and frameworks
@@ -114,9 +77,9 @@ export default function Skills() {
           {skillCategories.map((category, catIndex) => (
             <motion.div
               key={category.title}
-              initial={{ opacity: 0, y: 25 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 0.2 + catIndex * 0.12, duration: 0.6 }}
+              transition={{ delay: 0.15 + catIndex * 0.1, duration: 0.5 }}
             >
               {/* Category header */}
               <div className="flex items-center gap-3 mb-5">
@@ -133,16 +96,28 @@ export default function Skills() {
                 <div className="flex-1 h-px ml-2" style={{ background: 'var(--glass-border)' }} />
               </div>
 
-              {/* Skill cards with flip */}
+              {/* Skill cards — simple fade-in, no 3D flip */}
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
                 {category.skills.map((skill, i) => (
-                  <FlipCard
+                  <motion.div
                     key={skill.name}
-                    name={skill.name}
-                    emoji={skill.emoji}
-                    color={category.color}
-                    delay={0.3 + catIndex * 0.12 + i * 0.05}
-                  />
+                    className="flex items-center gap-3 px-4 py-3.5 rounded-xl cursor-default select-none"
+                    style={{
+                      background: 'var(--glass-bg)',
+                      border: '1px solid var(--glass-border)',
+                    }}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={isInView ? { opacity: 1, y: 0 } : {}}
+                    transition={{ delay: 0.2 + catIndex * 0.1 + i * 0.03, duration: 0.3 }}
+                    whileHover={{
+                      y: -3,
+                      borderColor: category.color,
+                      transition: { duration: 0.15 },
+                    }}
+                  >
+                    <span className="text-lg flex-shrink-0">{skill.emoji}</span>
+                    <span className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>{skill.name}</span>
+                  </motion.div>
                 ))}
               </div>
             </motion.div>
