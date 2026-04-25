@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, Sun, Moon } from 'lucide-react'
 import { useMounted } from '@/hooks/useMounted'
 import { useTheme } from './ThemeProvider'
+import { useLenis } from '@/providers/SmoothScrollProvider'
 import { cn } from '@/lib/utils'
 
 const navItems = [
@@ -23,6 +24,7 @@ export default function Header() {
   const [activeSection, setActiveSection] = useState('home')
   const isMounted = useMounted()
   const { theme, toggleTheme } = useTheme()
+  const lenis = useLenis()
 
   const handleScroll = useCallback(() => {
     setIsScrolled(window.scrollY > 30)
@@ -59,7 +61,11 @@ export default function Header() {
 
   const goTo = (href: string) => {
     setIsMobileOpen(false)
-    document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' })
+    if (lenis) {
+      lenis.scrollTo(href)
+    } else {
+      document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' })
+    }
   }
 
   return (
@@ -76,7 +82,7 @@ export default function Header() {
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           {/* Logo */}
           <button
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            onClick={() => lenis ? lenis.scrollTo(0) : window.scrollTo({ top: 0, behavior: 'smooth' })}
             className="group flex items-center"
           >
             <span

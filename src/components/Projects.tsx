@@ -6,6 +6,7 @@ import { Github, ExternalLink, Eye } from 'lucide-react'
 import Image from 'next/image'
 import ProjectDetailModal, { Project } from './ProjectDetailModal'
 import SplitText from './SplitText'
+import TiltCard from './motion/TiltCard'
 
 export default function Projects() {
   const ref = useRef(null)
@@ -102,17 +103,17 @@ export default function Projects() {
           {filteredProjects.map((project, index) => {
             const isFirst = index === 0 && activeCategory === "All"
             return (
-              <motion.div
-                key={project.id}
-                className={`relative rounded-2xl overflow-hidden group cursor-pointer ${isFirst ? 'sm:col-span-2 lg:col-span-2' : ''}`}
-                style={{ background: 'var(--bg-tertiary)' }}
-                initial={{ opacity: 0, y: 40, scale: 0.97 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ delay: index * 0.08, duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-                whileHover={{ scale: 1.015, boxShadow: '0 20px 60px rgba(99, 102, 241, 0.15)' }}
-                layout
-                onClick={() => openProjectModal(project)}
-              >
+              <TiltCard key={project.id} className={`[perspective:1000px] ${isFirst ? 'sm:col-span-2 lg:col-span-2' : ''}`}>
+                  <motion.div
+                    className="relative rounded-2xl overflow-hidden group cursor-pointer"
+                    style={{ background: 'var(--bg-tertiary)' }}
+                    initial={{ opacity: 0, y: 40, scale: 0.97 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    transition={{ delay: index * 0.08, duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+                    whileHover={{ scale: 1.015, boxShadow: '0 20px 60px rgba(99, 102, 241, 0.15)' }}
+                    layout
+                    onClick={() => openProjectModal(project)}
+                  >
                 {/* Background image */}
                 <div className={`relative overflow-hidden ${isFirst ? 'h-64 sm:h-80 lg:h-96' : 'h-64 sm:h-72'}`}>
                   <Image
@@ -201,6 +202,7 @@ export default function Projects() {
                   </div>
                 </div>
               </motion.div>
+              </TiltCard>
             )
           })}
         </div>

@@ -6,6 +6,7 @@ import { Calendar, MapPin, Building, GraduationCap, Award, Briefcase, Eye, BookO
 import Image from 'next/image'
 import SplitText from './SplitText'
 import AnimatedModal from './motion/AnimatedModal'
+import TiltCard from './motion/TiltCard'
 import { fadeInUp, staggerContainer, staggerItem } from '@/lib/animations'
 
 const Experience = () => {
@@ -29,6 +30,7 @@ const Experience = () => {
   ]
 
   const courses = [
+    { title: 'Claude 101', issuer: 'Anthropic', date: 'Apr 2025', image: '/images/anthropic.png', certificateImage: '/images/Certifcation/claude 101.png', description: 'Introductory course covering the fundamentals of Claude, prompt engineering, and effective AI interaction.' },
     { title: 'Claude Code in Action', issuer: 'Anthropic', date: 'Apr 2025', image: '/images/anthropic.png', certificateImage: '/images/Certifcation/claude code in action.png', description: 'Practical course on leveraging Claude Code for real-world software development workflows.' },
     { title: 'AI Fluency: Framework & Foundations', issuer: 'Anthropic', date: '2025', image: '/images/anthropic.png', certificateImage: '/images/Certifcation/AI Fluency Framework & Foundations course.png', description: 'Mastered AI collaboration principles including delegation, clear communication, critical evaluation, and responsible use.' },
     { title: 'Git & GitHub Bootcamp', issuer: 'Udemy', date: 'Aug 2025', image: '/images/Udemy.jpg', certificateImage: '/images/Certifcation/GitCourse.jpg' },
@@ -158,12 +160,11 @@ const Experience = () => {
                     </div>
 
                     {/* Card */}
-                    <div
-                      className="rounded-xl p-5 sm:p-6 transition-all duration-300"
-                      style={{ background: 'var(--bg-secondary)', border: '1px solid var(--glass-border)' }}
-                      onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--accent-primary)'; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 25px rgba(99, 102, 241, 0.08)' }}
-                      onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--glass-border)'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none' }}
-                    >
+                    <TiltCard>
+                      <div
+                        className="rounded-xl p-5 sm:p-6 transition-all duration-300"
+                        style={{ background: 'var(--bg-secondary)', border: '1px solid var(--glass-border)' }}
+                      >
                       <div className="flex items-start gap-3">
                         <Image src={exp.image} alt={exp.company} width={40} height={40} className="w-10 h-10 rounded-lg object-cover flex-shrink-0" style={{ border: '1px solid var(--glass-border)' }} loading="lazy" />
                         <div className="flex-1 min-w-0">
@@ -186,6 +187,7 @@ const Experience = () => {
                         </div>
                       </div>
                     </div>
+                    </TiltCard>
                   </motion.div>
                 ))}
               </div>
@@ -209,13 +211,13 @@ const Experience = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
               {certifications.map((cert, index) => (
-                <motion.div
-                  key={index}
-                  className="rounded-xl p-4 transition-all duration-300 group"
-                  style={{ background: 'var(--bg-secondary)', border: '1px solid var(--glass-border)' }}
-                  variants={staggerItem}
-                  whileHover={{ y: -2, borderColor: 'var(--accent-primary)', boxShadow: '0 6px 20px rgba(99, 102, 241, 0.08)' }}
-                >
+                <TiltCard key={index}>
+                  <motion.div
+                    className="rounded-xl p-4 transition-all duration-300 group"
+                    style={{ background: 'var(--bg-secondary)', border: '1px solid var(--glass-border)' }}
+                    variants={staggerItem}
+                    whileHover={{ y: -2, borderColor: 'var(--accent-primary)', boxShadow: '0 6px 20px rgba(99, 102, 241, 0.08)' }}
+                  >
                   <div className="flex items-start gap-3">
                     <Image src={cert.image} alt={cert.issuer} width={36} height={36} className="w-9 h-9 rounded-lg object-cover flex-shrink-0" style={{ border: '1px solid var(--glass-border)' }} loading="lazy" />
                     <div className="flex-1 min-w-0">
@@ -228,7 +230,8 @@ const Experience = () => {
                       </button>
                     )}
                   </div>
-                </motion.div>
+                  </motion.div>
+                </TiltCard>
               ))}
             </div>
           </motion.div>
@@ -249,13 +252,13 @@ const Experience = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {courses.map((course, index) => (
-                <motion.div
-                  key={index}
-                  className="rounded-xl p-4 transition-all duration-300 group"
-                  style={{ background: 'var(--bg-secondary)', border: '1px solid var(--glass-border)' }}
-                  variants={staggerItem}
-                  whileHover={{ y: -2, borderColor: 'var(--accent-primary)', boxShadow: '0 6px 20px rgba(99, 102, 241, 0.08)' }}
-                >
+                <TiltCard key={index}>
+                  <motion.div
+                    className="rounded-xl p-4 transition-all duration-300 group"
+                    style={{ background: 'var(--bg-secondary)', border: '1px solid var(--glass-border)' }}
+                    variants={staggerItem}
+                    whileHover={{ y: -2, borderColor: 'var(--accent-primary)', boxShadow: '0 6px 20px rgba(99, 102, 241, 0.08)' }}
+                  >
                   <div className="flex items-start gap-3">
                     {course.image && (
                       <Image src={course.image} alt={course.issuer} width={36} height={36} className="w-9 h-9 rounded-lg object-cover flex-shrink-0" style={{ border: '1px solid var(--glass-border)' }} loading="lazy" />
@@ -273,7 +276,8 @@ const Experience = () => {
                   {course.description && (
                     <p className="text-xs mt-2.5 line-clamp-2" style={{ color: 'var(--text-muted)' }}>{course.description}</p>
                   )}
-                </motion.div>
+                  </motion.div>
+                </TiltCard>
               ))}
             </div>
           </motion.div>

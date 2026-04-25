@@ -5,6 +5,7 @@ import { motion, useInView, AnimatePresence } from 'framer-motion'
 import { ExternalLink, Eye, X, ChevronLeft, ChevronRight, ArrowRight, Clock } from 'lucide-react'
 import Image from 'next/image'
 import SplitText from './SplitText'
+import TiltCard from './motion/TiltCard'
 
 export interface FreelanceProject {
   id: number
@@ -114,15 +115,15 @@ export default function Freelance() {
         {/* Two-column split cards: image left, details right */}
         <div className="max-w-6xl mx-auto space-y-6">
           {projects.map((project, index) => (
-            <motion.div
-              key={project.id}
-              className="rounded-2xl overflow-hidden"
-              style={{ background: 'var(--bg-secondary)', border: '1px solid var(--glass-border)' }}
-              initial={{ opacity: 0, y: 25 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 0.1 + index * 0.1, duration: 0.4 }}
-              whileHover={{ borderColor: 'var(--accent-primary)', y: -3, boxShadow: '0 16px 48px rgba(99, 102, 241, 0.12)' }}
-            >
+            <TiltCard key={project.id}>
+              <motion.div
+                className="rounded-2xl overflow-hidden"
+                style={{ background: 'var(--bg-secondary)', border: '1px solid var(--glass-border)' }}
+                initial={{ opacity: 0, y: 25 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ delay: 0.1 + index * 0.1, duration: 0.4 }}
+                whileHover={{ borderColor: 'var(--accent-primary)', y: -3, boxShadow: '0 16px 48px rgba(99, 102, 241, 0.12)' }}
+              >
               <div className={`flex flex-col md:flex-row ${index % 2 !== 0 ? 'md:flex-row-reverse' : ''}`}>
                 {/* Left column — screenshot */}
                 <div className="relative w-full md:w-1/2 h-56 sm:h-64 md:h-auto md:min-h-[280px] overflow-hidden flex-shrink-0" style={{ background: 'var(--bg-tertiary)' }}>
@@ -200,7 +201,8 @@ export default function Freelance() {
                   </div>
                 </div>
               </div>
-            </motion.div>
+              </motion.div>
+            </TiltCard>
           ))}
         </div>
 

@@ -1,17 +1,30 @@
 'use client'
 
-import { useState, useEffect, useMemo } from 'react'
-import { motion } from 'framer-motion'
+import { useState, useEffect, useMemo, useRef } from 'react'
+import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion'
 import { Mail, Github, Linkedin, ArrowRight, MapPin } from 'lucide-react'
 import Image from 'next/image'
+import MagneticButton from '@/components/motion/MagneticButton'
 
 export default function Hero() {
   const [mounted, setMounted] = useState(false)
   const [currentText, setCurrentText] = useState('')
   const [isDeleting, setIsDeleting] = useState(false)
   const [textIndex, setTextIndex] = useState(0)
+  const sectionRef = useRef<HTMLElement>(null)
+  const prefersReducedMotion = useReducedMotion()
 
   const texts = useMemo(() => ['Full Stack Developer', 'React Specialist', 'Node.js Expert', 'Problem Solver'], [])
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start start', 'end start'],
+  })
+
+  const textY = useTransform(scrollYProgress, [0, 1], [0, -150])
+  const photoY = useTransform(scrollYProgress, [0, 1], [0, -60])
+  const photoScale = useTransform(scrollYProgress, [0, 1], [1, 0.92])
+  const sectionOpacity = useTransform(scrollYProgress, [0, 0.6], [1, 0])
 
   useEffect(() => {
     const typeSpeed = isDeleting ? 30 : 60
@@ -35,17 +48,21 @@ export default function Hero() {
 
   useEffect(() => { setMounted(true) }, [])
 
-  if (!mounted) return <section id="home" className="min-h-screen" />
-
   return (
-    <section id="home" className="relative min-h-screen flex items-center overflow-hidden">
+    <section id="home" ref={sectionRef} className="relative min-h-screen flex items-center overflow-hidden">
       {/* Subtle static gradient */}
       <div className="absolute inset-0 pointer-events-none gradient-mesh" />
 
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8 items-center pt-20 pb-10 lg:pt-0 lg:pb-0">
+      {!mounted && <div className="min-h-screen" />}
+
+      {mounted && (
+      <motion.div
+        className="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8 items-center pt-20 pb-10 lg:pt-0 lg:pb-0"
+        style={prefersReducedMotion ? {} : { opacity: sectionOpacity }}
+      >
 
         {/* ═══ LEFT: Text Content ═══ */}
-        <div className="order-2 lg:order-1">
+        <motion.div className="order-2 lg:order-1" style={prefersReducedMotion ? {} : { y: textY }}>
           {/* Badge */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -131,24 +148,20 @@ export default function Hero() {
             transition={{ duration: 0.5, delay: 1.5 }}
             className="flex flex-col sm:flex-row gap-4 mb-10"
           >
-            <motion.a
+            <MagneticButton
               href="#projects"
               className="px-8 py-3.5 rounded-xl font-semibold text-white flex items-center justify-center gap-2 text-sm"
               style={{ background: 'var(--accent-gradient)' }}
-              whileHover={{ scale: 1.04, boxShadow: '0 8px 30px rgba(99, 102, 241, 0.35)' }}
-              whileTap={{ scale: 0.97 }}
             >
               View My Work <ArrowRight size={16} />
-            </motion.a>
-            <motion.a
+            </MagneticButton>
+            <MagneticButton
               href="#contact"
               className="px-8 py-3.5 rounded-xl font-semibold flex items-center justify-center gap-2 text-sm"
               style={{ background: 'var(--glass-bg)', border: '1px solid var(--glass-border)', color: 'var(--text-primary)' }}
-              whileHover={{ scale: 1.04 }}
-              whileTap={{ scale: 0.97 }}
             >
               Get In Touch
-            </motion.a>
+            </MagneticButton>
           </motion.div>
 
           {/* Social links */}
@@ -178,7 +191,7 @@ export default function Hero() {
               </motion.a>
             ))}
           </motion.div>
-        </div>
+        </motion.div>
 
         {/* ═══ RIGHT: Photo ═══ */}
         <div className="order-1 lg:order-2 flex justify-center lg:justify-end">
@@ -187,6 +200,7 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, ease: [0.25, 0.46, 0.45, 0.94], delay: 0.4 }}
             className="relative group"
+            style={prefersReducedMotion ? {} : { y: photoY, scale: photoScale }}
           >
             {/* Gradient border */}
             <div className="relative rounded-2xl p-[2px]" style={{ background: 'var(--accent-gradient)' }}>
@@ -247,7 +261,8 @@ export default function Hero() {
             </motion.div>
           </motion.div>
         </div>
-      </div>
+      </motion.div>
+      )}
     </section>
   )
 }

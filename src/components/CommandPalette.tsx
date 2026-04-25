@@ -2,13 +2,13 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Search, Home, User, Code, Briefcase, Palette, Folder, Mail, FileText, Sun, Moon, Github, Linkedin, Printer, X } from 'lucide-react'
+import { Search, Home, User, Code, Briefcase, Palette, Folder, Mail, FileText, Sun, Moon, Github, Linkedin, Printer, X, type LucideIcon } from 'lucide-react'
 import { useTheme } from './ThemeProvider'
 
 interface Command {
   id: string
   label: string
-  icon: React.ElementType
+  icon: LucideIcon
   action: () => void
   keywords: string[]
 }

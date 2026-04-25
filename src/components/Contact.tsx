@@ -4,6 +4,7 @@ import { useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
 import { Phone, MapPin, Github, Linkedin, Printer, ArrowUpRight, Send, Download } from 'lucide-react'
 import SplitText from './SplitText'
+import MagneticButton from './motion/MagneticButton'
 import { confettiBurst } from '@/lib/confetti'
 
 const Contact = () => {
@@ -174,21 +175,16 @@ const Contact = () => {
               { href: 'https://github.com/MayerS22', icon: Github, label: 'GitHub' },
               { href: 'https://www.linkedin.com/in/mayer-frieg-7a0368226/', icon: Linkedin, label: 'LinkedIn' },
             ].map((social) => (
-              <motion.a
+              <MagneticButton
                 key={social.label}
                 href={social.href}
-                target="_blank"
-                rel="noopener noreferrer"
                 className="group flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all"
                 style={{ background: 'var(--accent-gradient)', color: 'white' }}
-                whileHover={{ y: -2, boxShadow: '0 6px 20px rgba(139, 92, 246, 0.3)' }}
-                whileTap={{ scale: 0.97 }}
-                aria-label={social.label}
               >
                 <social.icon size={16} />
                 <span className="hidden sm:inline">{social.label}</span>
                 <ArrowUpRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" />
-              </motion.a>
+              </MagneticButton>
             ))}
           </motion.div>
         </div>

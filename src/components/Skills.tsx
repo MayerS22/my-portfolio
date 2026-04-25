@@ -3,6 +3,7 @@
 import { useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
 import SplitText from './SplitText'
+import TiltCard from './motion/TiltCard'
 
 const skillCategories = [
   {
@@ -99,25 +100,26 @@ export default function Skills() {
               {/* Skill cards — simple fade-in, no 3D flip */}
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
                 {category.skills.map((skill, i) => (
-                  <motion.div
-                    key={skill.name}
-                    className="flex items-center gap-3 px-4 py-3.5 rounded-xl cursor-default select-none"
-                    style={{
-                      background: 'var(--glass-bg)',
-                      border: '1px solid var(--glass-border)',
-                    }}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={isInView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ delay: 0.2 + catIndex * 0.1 + i * 0.03, duration: 0.3 }}
-                    whileHover={{
-                      y: -3,
-                      borderColor: category.color,
-                      transition: { duration: 0.15 },
-                    }}
-                  >
-                    <span className="text-lg flex-shrink-0">{skill.emoji}</span>
-                    <span className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>{skill.name}</span>
-                  </motion.div>
+                  <TiltCard key={skill.name}>
+                    <motion.div
+                      className="flex items-center gap-3 px-4 py-3.5 rounded-xl cursor-default select-none"
+                      style={{
+                        background: 'var(--glass-bg)',
+                        border: '1px solid var(--glass-border)',
+                      }}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={isInView ? { opacity: 1, y: 0 } : {}}
+                      transition={{ delay: 0.2 + catIndex * 0.1 + i * 0.03, duration: 0.3 }}
+                      whileHover={{
+                        y: -3,
+                        borderColor: category.color,
+                        transition: { duration: 0.15 },
+                      }}
+                    >
+                      <span className="text-lg flex-shrink-0">{skill.emoji}</span>
+                      <span className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>{skill.name}</span>
+                    </motion.div>
+                  </TiltCard>
                 ))}
               </div>
             </motion.div>
