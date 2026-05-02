@@ -1,13 +1,12 @@
 'use client'
 
-import { useRef, useState, useCallback } from 'react'
+import { useRef, useState, useCallback, useMemo } from 'react'
 import { motion, useInView } from 'framer-motion'
-import { Calendar, MapPin, Building, GraduationCap, Award, Briefcase, Eye, BookOpen } from 'lucide-react'
+import { Calendar, MapPin, Building, GraduationCap, Award, Briefcase, Eye, ChevronDown } from 'lucide-react'
 import Image from 'next/image'
 import SplitText from './SplitText'
 import AnimatedModal from './motion/AnimatedModal'
 import TiltCard from './motion/TiltCard'
-import { fadeInUp, staggerContainer, staggerItem } from '@/lib/animations'
 
 const Experience = () => {
   const sectionRef = useRef<HTMLElement>(null)
@@ -15,12 +14,12 @@ const Experience = () => {
 
   const experiences = [
     { title: 'Software Engineer', company: 'QueenSoft', location: 'Egypt', period: 'July 2025 – Present', year: '2025', description: 'Full Stack Developer building scalable web applications.', technologies: ['Next.js', 'Nest.js', 'PostgreSQL', 'TypeScript', 'React', 'Node.js'], image: '/images/QueenSoft.jpg', isCurrent: true },
-    { title: 'Administrative Assistant', company: 'CMF', location: 'Egypt', period: 'Aug 2023 – Present', year: '2023', description: 'Supporting foundation operations through data management and event coordination.', technologies: ['Microsoft Office', 'Data Entry', 'Report Generation'], image: '/images/CMF.jpg', isCurrent: false },
+    { title: 'Assistant to Foundation Manager', company: 'CMF', location: 'Egypt', period: 'Aug 2024 – Mar 2026', year: '2024', description: 'Supported the foundation manager with reports, meetings, and event organization.', technologies: ['Microsoft Office', 'Reports', 'Event Organization'], image: '/images/CMF.jpg', isCurrent: false },
     { title: 'Microsoft Student Partner', company: 'Microsoft Tech Club', location: 'Egypt', period: 'Oct 2022 – Oct 2023', year: '2022', description: 'Led technical workshops and mentored students in Microsoft technologies.', technologies: ['Azure', 'Power Platform', 'Power BI', 'GitHub', 'Leadership'], image: '/images/MSP.jpg', isCurrent: false },
     { title: 'Database Administrator', company: 'CMF', location: 'Egypt', period: 'Sept 2022 – Feb 2023', year: '2022', description: 'Designed and implemented database system using Microsoft Access.', technologies: ['Access', 'Database Design', 'SQL', 'Data Modeling'], image: '/images/CMF.jpg', isCurrent: false }
   ]
 
-  const education = [{ title: 'Bachelor of Computer and Information Science', institution: 'Ain Shams University', location: 'Egypt', period: 'Sept 2021 – July 2025', description: 'GPA: 3.005', image: '/images/CS.jpg' }]
+  const education = [{ title: 'Bachelor of Computer and Information Science', institution: 'Ain Shams University', location: 'Egypt', period: 'Sept 2021 – July 2025', description: 'GPA: 3.005 | Graduation Project: A+', image: '/images/CS.jpg' }]
 
   const certifications = [
     { title: 'Android Internship', issuer: 'Banque Misr', date: 'Aug 2024', image: '/images/BM.jpg', certificateImage: '/images/Certifcation/BM.jpg' },
@@ -30,6 +29,7 @@ const Experience = () => {
   ]
 
   const courses = [
+    { title: 'Claude Code 101', issuer: 'Anthropic', date: 'May 2025', image: '/images/anthropic.png', certificateImage: '/images/Certifcation/Claude Code 101 .png', description: 'Learned the fundamentals of Claude Code CLI, including agentic coding, tool use, and AI-assisted development workflows.' },
     { title: 'Claude 101', issuer: 'Anthropic', date: 'Apr 2025', image: '/images/anthropic.png', certificateImage: '/images/Certifcation/claude 101.png', description: 'Introductory course covering the fundamentals of Claude, prompt engineering, and effective AI interaction.' },
     { title: 'Claude Code in Action', issuer: 'Anthropic', date: 'Apr 2025', image: '/images/anthropic.png', certificateImage: '/images/Certifcation/claude code in action.png', description: 'Practical course on leveraging Claude Code for real-world software development workflows.' },
     { title: 'AI Fluency: Framework & Foundations', issuer: 'Anthropic', date: '2025', image: '/images/anthropic.png', certificateImage: '/images/Certifcation/AI Fluency Framework & Foundations course.png', description: 'Mastered AI collaboration principles including delegation, clear communication, critical evaluation, and responsible use.' },
@@ -39,6 +39,33 @@ const Experience = () => {
     { title: 'Flutter Course', issuer: 'Udemy', date: 'Sept 2023', image: '/images/Udemy.jpg' },
     { title: 'Python 3 Guide', issuer: 'Udemy', date: 'July 2023', image: '/images/Udemy.jpg', certificateImage: '/images/Certifcation/Python.jpg' }
   ]
+
+  const allItems = useMemo(() => [
+    ...certifications.map(c => ({ ...c, type: 'certification' as const })),
+    ...courses.map(c => ({ ...c, type: 'course' as const })),
+  ], [certifications, courses])
+
+  const issuerGroups = useMemo(() => {
+    const map = new Map<string, { issuer: string; image: string; items: typeof allItems }>()
+    for (const item of allItems) {
+      if (!map.has(item.issuer)) {
+        map.set(item.issuer, { issuer: item.issuer, image: item.image, items: [] })
+      }
+      map.get(item.issuer)!.items.push(item)
+    }
+    return Array.from(map.values())
+  }, [allItems])
+
+  const [expandedIssuers, setExpandedIssuers] = useState<Set<string>>(() => new Set(issuerGroups.map(g => g.issuer)))
+
+  const toggleIssuer = useCallback((issuer: string) => {
+    setExpandedIssuers(prev => {
+      const next = new Set(prev)
+      if (next.has(issuer)) next.delete(issuer)
+      else next.add(issuer)
+      return next
+    })
+  }, [])
 
   const [selectedCertificate, setSelectedCertificate] = useState<{ image: string; title: string } | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -194,91 +221,81 @@ const Experience = () => {
             </div>
           </div>
 
-          {/* Certifications */}
+          {/* Certifications & Courses — Grouped by Issuer */}
           <motion.div
-            className="mb-12"
-            variants={staggerContainer}
-            initial="hidden"
-            animate={isInView ? 'visible' : 'hidden'}
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ delay: 0.4, duration: 0.5 }}
           >
-            <motion.div className="flex items-center gap-3 mb-6" variants={fadeInUp}>
+            <div className="flex items-center gap-3 mb-6">
               <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: 'var(--accent-gradient)' }}>
                 <Award className="text-white" size={16} />
               </div>
-              <h3 className="text-xl sm:text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>Certifications</h3>
+              <h3 className="text-xl sm:text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>Certifications & Courses</h3>
               <div className="flex-1 h-px ml-2" style={{ background: 'var(--glass-border)' }} />
-            </motion.div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-              {certifications.map((cert, index) => (
-                <TiltCard key={index}>
-                  <motion.div
-                    className="rounded-xl p-4 transition-all duration-300 group"
-                    style={{ background: 'var(--bg-secondary)', border: '1px solid var(--glass-border)' }}
-                    variants={staggerItem}
-                    whileHover={{ y: -2, borderColor: 'var(--accent-primary)', boxShadow: '0 6px 20px rgba(99, 102, 241, 0.08)' }}
-                  >
-                  <div className="flex items-start gap-3">
-                    <Image src={cert.image} alt={cert.issuer} width={36} height={36} className="w-9 h-9 rounded-lg object-cover flex-shrink-0" style={{ border: '1px solid var(--glass-border)' }} loading="lazy" />
-                    <div className="flex-1 min-w-0">
-                      <h4 className="font-semibold text-sm leading-snug" style={{ color: 'var(--text-primary)' }}>{cert.title}</h4>
-                      <p className="text-xs mt-0.5" style={{ color: 'var(--text-muted)' }}>{cert.issuer} &bull; {cert.date}</p>
-                    </div>
-                    {cert.certificateImage && (
-                      <button onClick={() => openModal(cert.certificateImage, cert.title)} className="p-2 flex-shrink-0 touch-target rounded-lg transition-colors opacity-50 group-hover:opacity-100" style={{ color: 'var(--text-muted)' }} aria-label="View certificate">
-                        <Eye size={16} />
-                      </button>
-                    )}
-                  </div>
-                  </motion.div>
-                </TiltCard>
-              ))}
             </div>
-          </motion.div>
 
-          {/* Courses */}
-          <motion.div
-            variants={staggerContainer}
-            initial="hidden"
-            animate={isInView ? 'visible' : 'hidden'}
-          >
-            <motion.div className="flex items-center gap-3 mb-6" variants={fadeInUp}>
-              <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: 'var(--accent-gradient)' }}>
-                <BookOpen className="text-white" size={16} />
-              </div>
-              <h3 className="text-xl sm:text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>Courses</h3>
-              <div className="flex-1 h-px ml-2" style={{ background: 'var(--glass-border)' }} />
-            </motion.div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              {courses.map((course, index) => (
-                <TiltCard key={index}>
-                  <motion.div
-                    className="rounded-xl p-4 transition-all duration-300 group"
+            <div className="space-y-3">
+              {issuerGroups.map((group) => {
+                const isExpanded = expandedIssuers.has(group.issuer)
+                return (
+                  <div
+                    key={group.issuer}
+                    className="rounded-xl overflow-hidden transition-all duration-300"
                     style={{ background: 'var(--bg-secondary)', border: '1px solid var(--glass-border)' }}
-                    variants={staggerItem}
-                    whileHover={{ y: -2, borderColor: 'var(--accent-primary)', boxShadow: '0 6px 20px rgba(99, 102, 241, 0.08)' }}
                   >
-                  <div className="flex items-start gap-3">
-                    {course.image && (
-                      <Image src={course.image} alt={course.issuer} width={36} height={36} className="w-9 h-9 rounded-lg object-cover flex-shrink-0" style={{ border: '1px solid var(--glass-border)' }} loading="lazy" />
-                    )}
-                    <div className="flex-1 min-w-0">
-                      <h4 className="font-semibold text-sm leading-snug" style={{ color: 'var(--text-primary)' }}>{course.title}</h4>
-                      <p className="text-xs mt-0.5" style={{ color: 'var(--text-muted)' }}>{course.issuer} &bull; {course.date}</p>
-                    </div>
-                    {course.certificateImage && (
-                      <button onClick={() => openModal(course.certificateImage, course.title)} className="p-2 flex-shrink-0 touch-target rounded-lg transition-colors opacity-50 group-hover:opacity-100" style={{ color: 'var(--text-muted)' }} aria-label="View certificate">
-                        <Eye size={16} />
-                      </button>
+                    <button
+                      onClick={() => toggleIssuer(group.issuer)}
+                      className="w-full flex items-center gap-3 p-4 text-left"
+                    >
+                      <Image src={group.image} alt={group.issuer} width={32} height={32} className="w-8 h-8 rounded-lg object-cover flex-shrink-0" style={{ border: '1px solid var(--glass-border)' }} loading="lazy" />
+                      <span className="font-semibold text-sm flex-1" style={{ color: 'var(--text-primary)' }}>{group.issuer}</span>
+                      <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: 'var(--glass-bg)', color: 'var(--text-muted)', border: '1px solid var(--glass-border)' }}>
+                        {group.items.length} {group.items.length === 1 ? 'item' : 'items'}
+                      </span>
+                      <ChevronDown
+                        size={16}
+                        style={{ color: 'var(--text-muted)', transition: 'transform 0.2s', transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)' }}
+                      />
+                    </button>
+
+                    {isExpanded && (
+                      <div className="border-t" style={{ borderColor: 'var(--glass-border)' }}>
+                        {group.items.map((item, idx) => (
+                          <div
+                            key={idx}
+                            className="flex items-start gap-3 px-4 py-3 transition-colors duration-200 group"
+                            style={{ borderTop: idx > 0 ? '1px solid var(--glass-border)' : 'none' }}
+                          >
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2">
+                                <h4 className="font-medium text-sm" style={{ color: 'var(--text-primary)' }}>{item.title}</h4>
+                                <span className="text-xs px-1.5 py-0.5 rounded" style={{ background: item.type === 'certification' ? 'rgba(34, 197, 94, 0.1)' : 'rgba(99, 102, 241, 0.1)', color: item.type === 'certification' ? '#22c55e' : 'var(--accent-primary)', fontSize: '10px' }}>
+                                  {item.type === 'certification' ? 'CERT' : 'COURSE'}
+                                </span>
+                              </div>
+                              <span className="text-xs" style={{ color: 'var(--text-muted)' }}>{item.date}</span>
+                              {'description' in item && item.description && (
+                                <p className="text-xs mt-1 line-clamp-2" style={{ color: 'var(--text-muted)' }}>{item.description}</p>
+                              )}
+                            </div>
+                            {item.certificateImage && (
+                              <button
+                                onClick={() => openModal(item.certificateImage, item.title)}
+                                className="p-2 flex-shrink-0 touch-target rounded-lg transition-all opacity-40 group-hover:opacity-100"
+                                style={{ color: 'var(--accent-primary)' }}
+                                aria-label="View certificate"
+                              >
+                                <Eye size={16} />
+                              </button>
+                            )}
+                          </div>
+                        ))}
+                      </div>
                     )}
                   </div>
-                  {course.description && (
-                    <p className="text-xs mt-2.5 line-clamp-2" style={{ color: 'var(--text-muted)' }}>{course.description}</p>
-                  )}
-                  </motion.div>
-                </TiltCard>
-              ))}
+                )
+              })}
             </div>
           </motion.div>
         </div>

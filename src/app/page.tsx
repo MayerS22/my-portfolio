@@ -8,7 +8,6 @@ import Skills from '@/components/Skills'
 import Contact from '@/components/Contact'
 import ThemeProvider from '@/components/ThemeProvider'
 import PageLoader from '@/components/PageLoader'
-import GSAPProvider from '@/providers/GSAPProvider'
 import SmoothScrollProvider from '@/providers/SmoothScrollProvider'
 
 const ScrollProgress = dynamic(() => import('@/components/ScrollProgress'), { ssr: false, loading: () => null })
@@ -26,31 +25,29 @@ function Divider() {
 export default function Home() {
   return (
     <ThemeProvider>
-      <GSAPProvider>
-        <SmoothScrollProvider>
-          <PageLoader>
-            <main id="main" className="min-h-screen relative">
-              <CommandPalette />
-              <ScrollProgress />
-              <Header />
-              <Hero />
-              <Divider />
-              <div className="section-bg-alt"><About /></div>
-              <Divider />
-              <Skills />
-              <Divider />
-              <div className="section-bg-alt"><Experience /></div>
-              <Divider />
-              <Freelance />
-              <Divider />
-              <div className="section-bg-alt"><Projects /></div>
-              <Divider />
-              <div className="section-bg-alt"><Contact /></div>
-              <BackToTop />
-            </main>
-          </PageLoader>
-        </SmoothScrollProvider>
-      </GSAPProvider>
+      <SmoothScrollProvider>
+        <PageLoader>
+          <main id="main" className="min-h-screen relative">
+            <CommandPalette />
+            <ScrollProgress />
+            <Header />
+            <Hero />
+            <Divider />
+            <div className="section-bg-alt"><About /></div>
+            <Divider />
+            <Skills />
+            <Divider />
+            <div className="section-bg-alt"><Experience /></div>
+            <Divider />
+            <Freelance />
+            <Divider />
+            <div className="section-bg-alt"><Projects /></div>
+            <Divider />
+            <div className="section-bg-alt"><Contact /></div>
+            <BackToTop />
+          </main>
+        </PageLoader>
+      </SmoothScrollProvider>
     </ThemeProvider>
   )
 }

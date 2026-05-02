@@ -31,6 +31,7 @@ const skillCategories = [
       { name: 'C++', emoji: '⚡' },
       { name: 'Firebase', emoji: '🔥' },
       { name: 'REST APIs', emoji: '🔗' },
+      { name: 'Java', emoji: '☕' },
     ],
   },
   {
@@ -40,6 +41,7 @@ const skillCategories = [
       { name: 'PostgreSQL', emoji: '🐘' },
       { name: 'MongoDB', emoji: '🍃' },
       { name: 'SQL', emoji: '🗃️' },
+      { name: 'Redis', emoji: '🔴' },
     ],
   },
 ]

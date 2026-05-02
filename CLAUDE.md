@@ -135,7 +135,7 @@ Section backgrounds alternate: Hero (300) → About (400) → Skills (300) → E
 | Icon | Value | Label |
 |------|-------|-------|
 | Code | 1+ | Years Experience |
-| Users | 7+ | Featured Projects |
+| Users | 9+ | Featured Projects |
 | Briefcase | 3 | Live Freelance |
 | Zap | 100% | Client Satisfaction |
 | Target | 24/7 | Support Available |
@@ -144,22 +144,22 @@ Section backgrounds alternate: Hero (300) → About (400) → Skills (300) → E
 
 **Frontend:** React, HTML5, CSS3, JavaScript, TypeScript, Next.js, Tailwind CSS, Redux
 
-**Backend:** Node.js, Python, C++, Express.js, Firebase, Nest.js, REST APIs, GraphQL
+**Backend:** Node.js, Python, C++, Express.js, Firebase, Nest.js, REST APIs, GraphQL, Java
 
-**Database & Cloud:** SQL, Power BI, Data Engineering, PostgreSQL, MongoDB, Cloud Services
+**Database & Cloud:** SQL, Power BI, Data Engineering, PostgreSQL, MongoDB, Cloud Services, Redis
 
 ### Work Experience
 
 | Title | Company | Period | Technologies |
 |-------|---------|--------|-------------|
 | Software Engineer | QueenSoft | July 2025 – Present | Next.js, Nest.js, PostgreSQL, TypeScript, React, Node.js |
-| Administrative Assistant | CMF | Aug 2023 – Present | Microsoft Office, Data Entry, Report Generation |
+| Assistant to Foundation Manager | CMF | Aug 2024 – Mar 2026 | Microsoft Office, Reports, Event Organization |
 | Microsoft Student Partner | Microsoft Tech Club | Oct 2022 – Oct 2023 | Azure, Power Platform, Power BI, GitHub, Leadership |
 | Database Administrator | CMF | Sept 2022 – Feb 2023 | Access, Database Design, SQL, Data Modeling |
 
 ### Education
 
-- **Bachelor of Computer and Information Science** — Ain Shams University, Egypt (Sept 2021 – July 2025), GPA: 3.005
+- **Bachelor of Computer and Information Science** — Ain Shams University, Egypt (Sept 2021 – July 2025), GPA: 3.005, Graduation Project: A+
 
 ### Certifications
 
@@ -174,6 +174,9 @@ Section backgrounds alternate: Hero (300) → About (400) → Skills (300) → E
 
 | Title | Issuer | Date | Certificate Image |
 |-------|--------|------|-------------------|
+| Claude Code 101 | Anthropic | May 2025 | `/images/Certifcation/Claude Code 101 .png` |
+| Claude 101 | Anthropic | Apr 2025 | `/images/Certifcation/claude 101.png` |
+| Claude Code in Action | Anthropic | Apr 2025 | `/images/Certifcation/claude code in action.png` |
 | AI Fluency: Framework & Foundations | Anthropic | 2025 | `/images/Certifcation/AI Fluency Framework & Foundations course.png` |
 | Git & GitHub Bootcamp | Udemy | Aug 2025 | `/images/Certifcation/GitCourse.jpg` |
 | Nest.js Complete Guide | Udemy | Jun 2025 | `/images/Certifcation/The Complete Developer's Guide in Nest.jpg` |
@@ -200,6 +203,8 @@ Section backgrounds alternate: Hero (300) → About (400) → Skills (300) → E
 | 5 | E-Commerce | Mobile | Flutter, Firebase, Dart | github.com/MayerS22/E-commerce-Mobile-App |
 | 6 | SafetyZone Provider App | Mobile | Flutter, Firebase, Dart, Socket.io | — |
 | 7 | SafetyZone Consumer Website | Frontend | Next.js, React, TypeScript, Tailwind CSS | — (live: safetyzoone.com) |
+| 8 | Grace App | Full-Stack | React, Node.js, Redis, TypeScript, PostgreSQL | — (live: joingrace.ai) |
+| 9 | Taskify | Full-Stack | React, Node.js, JavaScript, REST APIs | — |
 
 ### Social Links
 

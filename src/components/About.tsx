@@ -36,7 +36,7 @@ const About = () => {
 
   const stats = [
     { icon: Code, value: 1, suffix: '+', label: 'Years Experience', color: 'var(--accent-primary)' },
-    { icon: Users, value: 7, suffix: '+', label: 'Featured Projects', color: 'var(--accent-secondary)' },
+    { icon: Users, value: 9, suffix: '+', label: 'Featured Projects', color: 'var(--accent-secondary)' },
     { icon: Briefcase, value: 3, suffix: '', label: 'Live Freelance', color: '#22c55e' },
     { icon: Award, value: 100, suffix: '%', label: 'Client Satisfaction', color: '#f59e0b' },
   ]
