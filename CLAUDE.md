@@ -178,6 +178,9 @@ Section backgrounds alternate: Hero (300) → About (400) → Skills (300) → E
 | Claude 101 | Anthropic | Apr 2025 | `/images/Certifcation/claude 101.png` |
 | Claude Code in Action | Anthropic | Apr 2025 | `/images/Certifcation/claude code in action.png` |
 | AI Fluency: Framework & Foundations | Anthropic | 2025 | `/images/Certifcation/AI Fluency Framework & Foundations course.png` |
+| Introduction to Claude Cowork | Anthropic | 2025 | `/images/Certifcation/Claude coworker.png` |
+| Introduction to Sub-Agents | Anthropic | 2025 | `/images/Certifcation/Introducation to Sub-Agents.png` |
+| Introduction to Agent Skills | Anthropic | 2025 | `/images/Certifcation/Introduction to agent skills.png` |
 | Git & GitHub Bootcamp | Udemy | Aug 2025 | `/images/Certifcation/GitCourse.jpg` |
 | Nest.js Complete Guide | Udemy | Jun 2025 | `/images/Certifcation/The Complete Developer's Guide in Nest.jpg` |
 | Freelancer Toolkit | E-Youth \| ITIDA | Mar 2025 | — |
