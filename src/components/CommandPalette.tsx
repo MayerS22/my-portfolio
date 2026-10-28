@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Search, Home, User, Code, Briefcase, Palette, Folder, Mail, FileText, Sun, Moon, Github, Linkedin, Printer, X, type LucideIcon } from 'lucide-react'
 import { useTheme } from './ThemeProvider'
+import { useFocusTrap } from '@/hooks/useFocusTrap'
 
 interface Command {
   id: string
@@ -24,7 +25,10 @@ export default function CommandPalette() {
   const [search, setSearch] = useState('')
   const [selectedIndex, setSelectedIndex] = useState(0)
   const inputRef = useRef<HTMLInputElement>(null)
+  const dialogRef = useRef<HTMLDivElement>(null)
   const { toggleTheme, theme } = useTheme()
+
+  useFocusTrap(dialogRef, isOpen)
 
   const commands: Command[] = [
     { id: 'home', label: 'Go to Home', icon: Home, action: () => document.querySelector('#home')?.scrollIntoView({ behavior: 'smooth' }), keywords: ['home', 'top'] },
@@ -112,6 +116,10 @@ export default function CommandPalette() {
           <motion.div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => { setIsOpen(false); setSearch('') }} />
 
           <motion.div
+            ref={dialogRef}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Command palette"
             className="relative z-10 w-full max-w-lg rounded-2xl overflow-hidden shadow-2xl"
             style={{ background: 'var(--bg-secondary)', border: '1px solid var(--glass-border)' }}
             initial={{ scale: 0.95, y: -20 }}
@@ -125,6 +133,11 @@ export default function CommandPalette() {
               <input
                 ref={inputRef}
                 type="text"
+                role="combobox"
+                aria-expanded="true"
+                aria-controls="cmd-list"
+                aria-autocomplete="list"
+                aria-activedescendant={filtered[selectedIndex] ? `cmd-${filtered[selectedIndex].id}` : undefined}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 onKeyDown={handleKeyNav}
@@ -138,7 +151,7 @@ export default function CommandPalette() {
             </div>
 
             {/* Results */}
-            <div className="max-h-72 overflow-y-auto py-2">
+            <div role="listbox" id="cmd-list" aria-label="Commands" className="max-h-72 overflow-y-auto py-2">
               {filtered.length === 0 ? (
                 <div className="px-4 py-8 text-center text-sm" style={{ color: 'var(--text-muted)' }}>
                   No results found
@@ -147,6 +160,9 @@ export default function CommandPalette() {
                 filtered.map((cmd, index) => (
                   <button
                     key={cmd.id}
+                    id={`cmd-${cmd.id}`}
+                    role="option"
+                    aria-selected={index === selectedIndex}
                     onClick={() => executeCommand(cmd)}
                     onMouseEnter={() => setSelectedIndex(index)}
                     className="w-full flex items-center gap-3 px-4 py-2.5 text-left text-sm transition-colors"

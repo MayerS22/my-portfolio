@@ -33,7 +33,7 @@ export default function BackToTop() {
           exit={{ opacity: 0, scale: 0.8 }}
           onClick={() => lenis ? lenis.scrollTo(0) : window.scrollTo({ top: 0, behavior: 'smooth' })}
           className="fixed bottom-8 right-8 z-50 p-3 rounded-full back-to-top no-print"
-          style={{ background: 'var(--accent-gradient)', color: 'white', boxShadow: '0 4px 20px rgba(99, 102, 241, 0.3)' }}
+          style={{ background: 'var(--accent-gradient)', color: 'white', boxShadow: '0 8px 30px -8px color-mix(in srgb, var(--accent-primary) 50%, transparent)' }}
           whileHover={{ scale: 1.1, y: -2 }}
           whileTap={{ scale: 0.9 }}
           aria-label="Back to top"

@@ -110,7 +110,7 @@ export default function ProjectDetailModal({ project, isOpen, onClose }: Project
                 <h3 className="text-sm font-bold mb-2" style={{ color: 'var(--text-primary)' }}>Technologies</h3>
                 <div className="flex flex-wrap gap-2">
                   {project.technologies.map((tech) => (
-                    <span key={tech} className="px-2 py-1 text-xs rounded" style={{ background: 'rgba(99, 102, 241, 0.1)', color: 'var(--accent-primary)' }}>{tech}</span>
+                    <span key={tech} className="px-2 py-1 text-xs rounded" style={{ background: 'color-mix(in srgb, var(--accent-primary) 12%, transparent)', color: 'var(--accent-primary)' }}>{tech}</span>
                   ))}
                 </div>
               </div>
