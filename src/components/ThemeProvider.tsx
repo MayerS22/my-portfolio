@@ -21,9 +21,13 @@ export default function ThemeProvider({ children }: { children: ReactNode }) {
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    // The inline FOUC script in layout.tsx has already set data-theme before paint.
+    // Read that resolved value so React state matches the DOM, then mark mounted.
     const stored = localStorage.getItem('theme') as Theme | null
     const systemDark = matchMedia('(prefers-color-scheme: dark)').matches
-    setTheme(stored ?? (systemDark ? 'dark' : 'light'))
+    const resolved = stored ?? (systemDark ? 'dark' : 'light')
+    setTheme(resolved)
+    document.documentElement.setAttribute('data-theme', resolved)
     setMounted(true)
   }, [])
 
@@ -34,14 +38,11 @@ export default function ThemeProvider({ children }: { children: ReactNode }) {
   }, [theme, mounted])
 
   const toggleTheme = useCallback(() => {
-    setTheme(prev => prev === 'dark' ? 'light' : 'dark')
+    setTheme(prev => (prev === 'dark' ? 'light' : 'dark'))
   }, [])
 
-  // Prevent flash of wrong theme
-  if (!mounted) {
-    return null
-  }
-
+  // Always render children — the PageLoader now paints on first render instead of
+  // a blank body pre-hydration. (Previous `return null` defeated the loader.)
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
       {children}
