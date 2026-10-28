@@ -16,13 +16,13 @@ const skillCategories = [
     title: 'Backend',
     icon: Server,
     color: 'var(--accent-secondary)',
-    skills: ['Node.js', 'Nest.js', 'Express.js', 'Python', 'C++', 'Firebase', 'REST APIs', 'Java'],
+    skills: ['Node.js', 'Nest.js', 'Express.js', 'Python', 'REST APIs', 'GraphQL', 'Socket.io', 'Firebase'],
   },
   {
-    title: 'Database & Cloud',
+    title: 'Data, Cloud & AI',
     icon: Database,
     color: 'var(--live)',
-    skills: ['PostgreSQL', 'MongoDB', 'SQL', 'Redis'],
+    skills: ['PostgreSQL', 'MongoDB', 'Redis', 'Google Cloud', 'Docker', 'OpenAI API', 'Gemini API', 'CI/CD'],
   },
 ]
 
