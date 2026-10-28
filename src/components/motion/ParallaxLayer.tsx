@@ -1,7 +1,7 @@
 'use client'
 
 import { useRef, type ReactNode } from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion'
 
 interface ParallaxLayerProps {
   children?: ReactNode
@@ -11,6 +11,7 @@ interface ParallaxLayerProps {
 
 export default function ParallaxLayer({ children, speed = 0.5, className }: ParallaxLayerProps) {
   const ref = useRef<HTMLDivElement>(null)
+  const prefersReducedMotion = useReducedMotion()
 
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -20,8 +21,9 @@ export default function ParallaxLayer({ children, speed = 0.5, className }: Para
   const y = useTransform(scrollYProgress, [0, 1], [0, speed * -200])
 
   return (
-    <motion.div ref={ref} style={{ y }} className={className}>
+    <motion.div ref={ref} style={prefersReducedMotion ? undefined : { y }} className={className}>
       {children}
     </motion.div>
   )
 }
+

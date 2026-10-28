@@ -19,7 +19,7 @@ export default function PageLoader({ children }: { children: ReactNode }) {
             Mayer{' '}
             <span className="text-gradient">Frieg</span>
           </h1>
-          <div className="h-0.5 mt-3 mx-auto bg-gradient-to-r from-indigo-500 to-violet-500" style={{ width: 120 }} />
+          <div className="h-0.5 mt-3 mx-auto" style={{ width: 120, background: 'var(--accent-gradient)' }} />
         </div>
       </div>
     )

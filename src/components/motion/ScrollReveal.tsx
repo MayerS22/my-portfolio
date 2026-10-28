@@ -1,7 +1,7 @@
 'use client'
 
 import { useRef, type ReactNode } from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion'
 
 interface ScrollRevealProps {
   children: ReactNode
@@ -19,6 +19,7 @@ export default function ScrollReveal({
   distance = 40,
 }: ScrollRevealProps) {
   const ref = useRef<HTMLDivElement>(null)
+  const prefersReducedMotion = useReducedMotion()
 
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -41,9 +42,10 @@ export default function ScrollReveal({
     <motion.div
       ref={ref}
       className={className}
-      style={{ opacity, x: rawX, y: rawY, transitionDelay: `${delay}s` }}
+      style={prefersReducedMotion ? undefined : { opacity, x: rawX, y: rawY, transitionDelay: `${delay}s` }}
     >
       {children}
     </motion.div>
   )
 }
+

@@ -1,7 +1,7 @@
 'use client'
 
 import { useRef, type ReactNode } from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion'
 
 interface ScrollScaleRevealProps {
   children: ReactNode
@@ -11,6 +11,7 @@ interface ScrollScaleRevealProps {
 
 export default function ScrollScaleReveal({ children, className, rotateX: rotateXAmount = 8 }: ScrollScaleRevealProps) {
   const ref = useRef<HTMLDivElement>(null)
+  const prefersReducedMotion = useReducedMotion()
 
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -25,9 +26,10 @@ export default function ScrollScaleReveal({ children, className, rotateX: rotate
     <motion.div
       ref={ref}
       className={className}
-      style={{ opacity, scale, rotateX, perspective: 800, transformStyle: 'preserve-3d' }}
+      style={prefersReducedMotion ? { perspective: 800 } : { opacity, scale, rotateX, perspective: 800, transformStyle: 'preserve-3d' }}
     >
       {children}
     </motion.div>
   )
 }
+
