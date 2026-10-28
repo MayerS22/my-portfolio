@@ -76,7 +76,7 @@ const Contact = () => {
 
             {/* CV card */}
             <motion.a
-              href="/images/Cv/Mayer Soliman CV.pdf"
+              href="/images/Cv/Mayer Frieg CV.pdf"
               target="_blank"
               rel="noopener noreferrer"
               className="group card p-6 sm:p-8 relative overflow-hidden"
@@ -105,7 +105,7 @@ const Contact = () => {
           {/* Info cards row */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-8">
             <motion.a
-              href="tel:+20188244283"
+              href="tel:+201288244283"
               className="group flex items-center gap-4 p-5 card"
               initial={{ opacity: 0, y: 15 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -117,7 +117,7 @@ const Contact = () => {
               </div>
               <div className="min-w-0">
                 <p className="text-xs font-medium mb-0.5" style={{ color: 'var(--text-muted)' }}>Phone</p>
-                <p className="text-sm font-semibold truncate" style={{ color: 'var(--text-primary)' }}>+20 188 244 283</p>
+                <p className="text-sm font-semibold truncate" style={{ color: 'var(--text-primary)' }}>+20 128 824 4283</p>
               </div>
             </motion.a>
 

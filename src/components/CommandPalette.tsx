@@ -38,7 +38,7 @@ export default function CommandPalette() {
     { id: 'freelance', label: 'Go to Freelance', icon: Palette, action: () => document.querySelector('#freelance')?.scrollIntoView({ behavior: 'smooth' }), keywords: ['freelance', 'client'] },
     { id: 'projects', label: 'Go to Projects', icon: Folder, action: () => document.querySelector('#projects')?.scrollIntoView({ behavior: 'smooth' }), keywords: ['projects', 'portfolio'] },
     { id: 'contact', label: 'Go to Contact', icon: Mail, action: () => document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' }), keywords: ['contact', 'email'] },
-    { id: 'cv', label: 'View CV', icon: FileText, action: () => window.open('/images/Cv/Mayer Soliman CV.pdf'), keywords: ['cv', 'resume', 'download'] },
+    { id: 'cv', label: 'View CV', icon: FileText, action: () => window.open('/images/Cv/Mayer Frieg CV.pdf'), keywords: ['cv', 'resume', 'download'] },
     { id: 'theme', label: `Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`, icon: theme === 'dark' ? Sun : Moon, action: toggleTheme, keywords: ['theme', 'dark', 'light', 'mode'] },
     { id: 'github', label: 'Open GitHub', icon: Github, action: () => window.open('https://github.com/MayerS22'), keywords: ['github', 'code'] },
     { id: 'linkedin', label: 'Open LinkedIn', icon: Linkedin, action: () => window.open('https://www.linkedin.com/in/mayer-frieg-7a0368226/'), keywords: ['linkedin', 'social'] },
