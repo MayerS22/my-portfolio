@@ -97,7 +97,7 @@ export default function Hero() {
             className="max-w-xl space-y-3"
           >
             <p className="font-display text-xl sm:text-2xl font-medium" style={{ color: 'var(--text-primary)' }}>
-              Full-Stack Developer
+              Software Engineer – Full Stack
             </p>
             <p className="text-base sm:text-lg leading-relaxed" style={{ color: 'var(--text-muted)' }}>
               Building scalable web &amp; mobile experiences with modern technologies —

@@ -20,7 +20,7 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "Mayer Frieg - Full Stack Developer",
+  title: "Mayer Frieg - Software Engineer – Full Stack",
   description: "Professional full-stack developer specializing in modern web technologies. Creating exceptional digital experiences with React, Next.js, Node.js, and more.",
   keywords: "full stack developer, web developer, react, nextjs, typescript, nodejs, portfolio, mayer frieg",
   authors: [{ name: "Mayer Frieg" }],
@@ -29,13 +29,13 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://mayerfrieg.dev",
-    title: "Mayer Frieg - Full Stack Developer",
+    title: "Mayer Frieg - Software Engineer – Full Stack",
     description: "Professional full-stack developer specializing in modern web technologies.",
     siteName: "Mayer Frieg Portfolio",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Mayer Frieg - Full Stack Developer",
+    title: "Mayer Frieg - Software Engineer – Full Stack",
     description: "Professional full-stack developer specializing in modern web technologies.",
     creator: "@mayerfrieg",
   },
