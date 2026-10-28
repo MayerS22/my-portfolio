@@ -1,9 +1,10 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, Sun, Moon } from 'lucide-react'
 import { useMounted } from '@/hooks/useMounted'
+import { useFocusTrap } from '@/hooks/useFocusTrap'
 import { useTheme } from './ThemeProvider'
 import { useLenis } from '@/providers/SmoothScrollProvider'
 import { cn } from '@/lib/utils'
@@ -25,6 +26,9 @@ export default function Header() {
   const isMounted = useMounted()
   const { theme, toggleTheme } = useTheme()
   const lenis = useLenis()
+  const menuRef = useRef<HTMLDivElement>(null)
+
+  useFocusTrap(menuRef, isMobileOpen)
 
   const handleScroll = useCallback(() => {
     setIsScrolled(window.scrollY > 30)
@@ -59,6 +63,14 @@ export default function Header() {
     return () => { document.body.style.overflow = 'unset' }
   }, [isMobileOpen])
 
+  // Close mobile menu on Escape
+  useEffect(() => {
+    if (!isMobileOpen) return
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setIsMobileOpen(false) }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [isMobileOpen])
+
   const goTo = (href: string) => {
     setIsMobileOpen(false)
     if (lenis) {
@@ -66,6 +78,13 @@ export default function Header() {
     } else {
       document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' })
     }
+  }
+
+  // Allow modifier-clicks (new tab / new window) to behave natively
+  const onNavClick = (e: React.MouseEvent, href: string) => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return
+    e.preventDefault()
+    goTo(href)
   }
 
   return (
@@ -81,9 +100,11 @@ export default function Header() {
       >
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           {/* Logo */}
-          <button
-            onClick={() => lenis ? lenis.scrollTo(0) : window.scrollTo({ top: 0, behavior: 'smooth' })}
+          <a
+            href="#home"
+            onClick={(e) => onNavClick(e, '#home')}
             className="group flex items-center"
+            aria-label="Mayer Frieg — back to top"
           >
             <span
               className="text-xl italic font-light tracking-wide"
@@ -96,16 +117,18 @@ export default function Header() {
               className="inline-block w-1.5 h-1.5 rounded-full ml-1.5 -translate-y-1.5"
               style={{ background: 'var(--accent-primary)' }}
             />
-          </button>
+          </a>
 
           {/* Desktop nav */}
-          <nav className="hidden md:flex items-center gap-1">
+          <nav className="hidden md:flex items-center gap-1" aria-label="Primary">
             {navItems.map((item) => {
               const isActive = activeSection === item.name.toLowerCase()
               return (
-                <button
+                <a
                   key={item.name}
-                  onClick={() => goTo(item.href)}
+                  href={item.href}
+                  aria-current={isActive ? 'true' : undefined}
+                  onClick={(e) => onNavClick(e, item.href)}
                   className="relative text-[13px] font-medium tracking-wide uppercase px-4 py-2 rounded-lg transition-colors"
                 >
                   {isActive && (
@@ -122,7 +145,7 @@ export default function Header() {
                   >
                     {item.name}
                   </span>
-                </button>
+                </a>
               )
             })}
           </nav>
@@ -137,7 +160,8 @@ export default function Header() {
                 background: 'var(--glass-bg)',
                 border: '1px solid var(--glass-border)',
               }}
-              aria-label="Toggle theme"
+              aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
+              aria-pressed={theme === 'dark'}
             >
               <AnimatePresence mode="wait" initial={false}>
                 {theme === 'dark'
@@ -176,7 +200,9 @@ export default function Header() {
               isScrolled && "glass"
             )}
             style={{ color: 'var(--text-secondary)' }}
-            aria-label="Menu"
+            aria-label={isMobileOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={isMobileOpen}
+            aria-controls="mobile-menu"
           >
             <AnimatePresence mode="wait" initial={false}>
               {isMobileOpen
@@ -212,6 +238,11 @@ export default function Header() {
       <AnimatePresence>
         {isMobileOpen && (
           <motion.div
+            ref={menuRef}
+            id="mobile-menu"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Site navigation"
             className="fixed inset-0 z-40 md:hidden flex flex-col"
             style={{ background: 'var(--bg-primary)' }}
             initial={{ opacity: 0 }}
@@ -227,13 +258,15 @@ export default function Header() {
               {navItems.map((item, i) => {
                 const isActive = activeSection === item.name.toLowerCase()
                 return (
-                  <motion.button
+                  <motion.a
                     key={item.name}
+                    href={item.href}
+                    aria-current={isActive ? 'true' : undefined}
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ delay: i * 0.05, duration: 0.3 }}
-                    onClick={() => goTo(item.href)}
+                    onClick={(e) => onNavClick(e, item.href)}
                     className="text-2xl font-semibold py-2 px-6 rounded-lg transition-colors relative"
                     style={{ color: isActive ? 'var(--accent-primary)' : 'var(--text-secondary)' }}
                   >
@@ -244,7 +277,7 @@ export default function Header() {
                       />
                     )}
                     {item.name}
-                  </motion.button>
+                  </motion.a>
                 )
               })}
             </div>
@@ -257,6 +290,8 @@ export default function Header() {
                   background: 'var(--glass-bg)',
                   border: '1px solid var(--glass-border)',
                 }}
+                aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
+                aria-pressed={theme === 'dark'}
               >
                 {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
               </button>

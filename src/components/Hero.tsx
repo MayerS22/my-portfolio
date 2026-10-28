@@ -1,140 +1,116 @@
 'use client'
 
-import { useState, useEffect, useMemo, useRef } from 'react'
+import { useMemo, useRef } from 'react'
 import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion'
 import { Mail, Github, Linkedin, ArrowRight, MapPin } from 'lucide-react'
 import Image from 'next/image'
 import MagneticButton from '@/components/motion/MagneticButton'
 
 export default function Hero() {
-  const [mounted, setMounted] = useState(false)
-  const [currentText, setCurrentText] = useState('')
-  const [isDeleting, setIsDeleting] = useState(false)
-  const [textIndex, setTextIndex] = useState(0)
   const sectionRef = useRef<HTMLElement>(null)
   const prefersReducedMotion = useReducedMotion()
-
-  const texts = useMemo(() => ['Full Stack Developer', 'React Specialist', 'Node.js Expert', 'Problem Solver'], [])
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ['start start', 'end start'],
   })
 
-  const textY = useTransform(scrollYProgress, [0, 1], [0, -150])
-  const photoY = useTransform(scrollYProgress, [0, 1], [0, -60])
-  const photoScale = useTransform(scrollYProgress, [0, 1], [1, 0.92])
-  const sectionOpacity = useTransform(scrollYProgress, [0, 0.6], [1, 0])
+  const textY = useTransform(scrollYProgress, [0, 1], [0, -120])
+  const photoY = useTransform(scrollYProgress, [0, 1], [0, -50])
+  const sectionOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0])
 
-  useEffect(() => {
-    const typeSpeed = isDeleting ? 30 : 60
-    const pauseTime = 1500
-    const timer = setTimeout(() => {
-      const current = texts[textIndex]
-      if (isDeleting) {
-        setCurrentText(current.substring(0, currentText.length - 1))
-      } else {
-        setCurrentText(current.substring(0, currentText.length + 1))
-      }
-      if (!isDeleting && currentText === current) {
-        setTimeout(() => setIsDeleting(true), pauseTime)
-      } else if (isDeleting && currentText === '') {
-        setIsDeleting(false)
-        setTextIndex((prev) => (prev + 1) % texts.length)
-      }
-    }, typeSpeed)
-    return () => clearTimeout(timer)
-  }, [currentText, isDeleting, textIndex, texts])
-
-  useEffect(() => { setMounted(true) }, [])
+  const socials = useMemo(() => [
+    { href: 'https://github.com/MayerS22', icon: Github, label: 'GitHub' },
+    { href: 'https://www.linkedin.com/in/mayer-frieg-7a0368226/', icon: Linkedin, label: 'LinkedIn' },
+    { href: 'mailto:mayerfrieg@outlook.com', icon: Mail, label: 'Email' },
+  ], [])
 
   return (
-    <section id="home" ref={sectionRef} className="relative min-h-screen flex items-center overflow-hidden">
-      {/* Subtle static gradient */}
+    <section
+      id="home"
+      ref={sectionRef}
+      className="relative min-h-screen flex items-center overflow-hidden"
+    >
       <div className="absolute inset-0 pointer-events-none gradient-mesh" />
 
-      {!mounted && <div className="min-h-screen" />}
-
-      {mounted && (
       <motion.div
-        className="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8 items-center pt-20 pb-10 lg:pt-0 lg:pb-0"
+        className="relative z-10 w-full max-w-6xl mx-auto px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center pt-28 pb-16 lg:pt-0 lg:pb-0"
         style={prefersReducedMotion ? {} : { opacity: sectionOpacity }}
       >
-
-        {/* ═══ LEFT: Text Content ═══ */}
-        <motion.div className="order-2 lg:order-1" style={prefersReducedMotion ? {} : { y: textY }}>
-          {/* Badge */}
+        {/* ═══ LEFT: Text ═══ */}
+        <motion.div
+          className="lg:col-span-7 order-2 lg:order-1"
+          style={prefersReducedMotion ? {} : { y: textY }}
+        >
+          {/* Eyebrow */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.3 }}
-            className="inline-flex items-center gap-2 rounded-full px-4 py-2 mb-8 text-sm"
-            style={{ background: 'var(--glass-bg)', border: '1px solid var(--glass-border)', color: 'var(--text-secondary)' }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="inline-flex items-center gap-2.5 mb-8 eyebrow"
+            style={{ color: 'var(--text-secondary)' }}
           >
             <span className="relative flex h-2 w-2">
-              <span className="relative inline-flex rounded-full h-2 w-2" style={{ background: '#22c55e' }} />
+              <span className="absolute inline-flex h-full w-full rounded-full opacity-60 animate-ping" style={{ background: 'var(--live)' }} />
+              <span className="relative inline-flex rounded-full h-2 w-2" style={{ background: 'var(--live)' }} />
             </span>
             Available for new opportunities
           </motion.div>
 
-          {/* Name */}
-          <div className="overflow-hidden mb-1">
-            <motion.h1
-              className="text-5xl sm:text-6xl md:text-7xl font-bold tracking-tight leading-[1.1]"
-              style={{ color: 'var(--text-primary)' }}
-              initial={{ y: '110%' }}
-              animate={{ y: 0 }}
-              transition={{ duration: 0.9, ease: [0.77, 0, 0.175, 1], delay: 0.5 }}
-            >
-              Mayer
-            </motion.h1>
-          </div>
-          <div className="overflow-hidden mb-6">
-            <motion.h1
-              className="text-5xl sm:text-6xl md:text-7xl font-bold tracking-tight leading-[1.1] text-gradient"
-              initial={{ y: '110%' }}
-              animate={{ y: 0 }}
-              transition={{ duration: 0.9, ease: [0.77, 0, 0.175, 1], delay: 0.65 }}
-            >
-              Frieg
-            </motion.h1>
-          </div>
+          {/* Name — oversized display */}
+          <h1 className="heading-display text-clamp-hero" style={{ color: 'var(--text-primary)' }}>
+            <span className="block overflow-hidden">
+              <motion.span
+                className="block"
+                initial={{ y: '110%' }}
+                animate={{ y: 0 }}
+                transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.35 }}
+              >
+                Mayer
+              </motion.span>
+            </span>
+            <span className="block overflow-hidden">
+              <motion.span
+                className="block text-gradient"
+                initial={{ y: '110%' }}
+                animate={{ y: 0 }}
+                transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
+              >
+                Frieg
+              </motion.span>
+            </span>
+          </h1>
 
-          {/* Typing */}
+          {/* Accent rule */}
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 1.1 }}
-            className="font-mono text-lg sm:text-xl mb-4 h-8 flex items-center"
-          >
-            <span style={{ color: 'var(--accent-primary)' }}>{'>'}</span>
-            <span className="ml-2" style={{ color: 'var(--text-secondary)' }}>{currentText}</span>
-            <motion.span
-              className="typing-cursor inline-block ml-0.5"
-              style={{ color: 'var(--accent-primary)' }}
-              animate={{ opacity: [1, 0] }}
-              transition={{ duration: 0.8, repeat: Infinity, repeatType: 'reverse' }}
-            >|</motion.span>
-          </motion.div>
+            className="rule-accent w-24 my-8"
+            initial={{ scaleX: 0, originX: 0 }}
+            animate={{ scaleX: 1 }}
+            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.7 }}
+          />
 
-          {/* Description */}
-          <motion.p
-            initial={{ opacity: 0, y: 10 }}
+          {/* Role + tagline */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 1.3 }}
-            className="text-base sm:text-lg max-w-lg leading-relaxed mb-8"
-            style={{ color: 'var(--text-muted)' }}
+            transition={{ duration: 0.6, delay: 0.8 }}
+            className="max-w-xl space-y-3"
           >
-            Building scalable web &amp; mobile experiences with modern technologies.
-            Passionate about clean code, innovative solutions, and user-centered design.
-          </motion.p>
+            <p className="font-display text-xl sm:text-2xl font-medium" style={{ color: 'var(--text-primary)' }}>
+              Full-Stack Developer
+            </p>
+            <p className="text-base sm:text-lg leading-relaxed" style={{ color: 'var(--text-muted)' }}>
+              Building scalable web &amp; mobile experiences with modern technologies —
+              clean code, thoughtful interfaces, and systems that last.
+            </p>
+          </motion.div>
 
           {/* Location */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 1.4 }}
-            className="flex items-center gap-2 mb-8 text-sm"
+            transition={{ delay: 1, duration: 0.5 }}
+            className="flex items-center gap-2 mt-6 text-sm"
             style={{ color: 'var(--text-muted)' }}
           >
             <MapPin size={14} style={{ color: 'var(--accent-primary)' }} />
@@ -143,10 +119,10 @@ export default function Hero() {
 
           {/* CTAs */}
           <motion.div
-            initial={{ opacity: 0, y: 15 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 1.5 }}
-            className="flex flex-col sm:flex-row gap-4 mb-10"
+            transition={{ duration: 0.6, delay: 1.1 }}
+            className="flex flex-col sm:flex-row gap-4 mt-8"
           >
             <MagneticButton
               href="#projects"
@@ -164,26 +140,22 @@ export default function Hero() {
             </MagneticButton>
           </motion.div>
 
-          {/* Social links */}
+          {/* Socials */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 1.7 }}
-            className="flex items-center gap-3"
+            transition={{ delay: 1.3, duration: 0.5 }}
+            className="flex items-center gap-3 mt-10"
           >
-            {[
-              { href: 'https://github.com/MayerS22', icon: Github, label: 'GitHub' },
-              { href: 'https://www.linkedin.com/in/mayer-frieg-7a0368226/', icon: Linkedin, label: 'LinkedIn' },
-              { href: 'mailto:mayerfrieg@outlook.com', icon: Mail, label: 'Email' },
-            ].map((social) => (
+            {socials.map((social) => (
               <motion.a
                 key={social.label}
                 href={social.href}
                 target={social.href.startsWith('mailto') ? undefined : '_blank'}
                 rel={social.href.startsWith('mailto') ? undefined : 'noopener noreferrer'}
-                className="p-3 rounded-xl"
+                className="p-3 rounded-xl transition-colors"
                 style={{ color: 'var(--text-muted)', background: 'var(--glass-bg)', border: '1px solid var(--glass-border)' }}
-                whileHover={{ y: -3, scale: 1.1, boxShadow: '0 4px 20px rgba(99, 102, 241, 0.2)' }}
+                whileHover={{ y: -3, color: 'var(--accent-primary)' }}
                 whileTap={{ scale: 0.95 }}
                 aria-label={social.label}
               >
@@ -194,75 +166,30 @@ export default function Hero() {
         </motion.div>
 
         {/* ═══ RIGHT: Photo ═══ */}
-        <div className="order-1 lg:order-2 flex justify-center lg:justify-end">
+        <div className="lg:col-span-5 order-1 lg:order-2 flex justify-center lg:justify-end">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, ease: [0.25, 0.46, 0.45, 0.94], delay: 0.4 }}
-            className="relative group"
-            style={prefersReducedMotion ? {} : { y: photoY, scale: photoScale }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
+            className="relative group w-full max-w-[380px]"
+            style={prefersReducedMotion ? {} : { y: photoY }}
           >
-            {/* Gradient border */}
             <div className="relative rounded-2xl p-[2px]" style={{ background: 'var(--accent-gradient)' }}>
-              <div className="relative w-[300px] h-[360px] sm:w-[360px] sm:h-[420px] lg:w-[420px] lg:h-[500px] rounded-2xl overflow-hidden">
+              <div className="relative w-full aspect-[4/5] rounded-2xl overflow-hidden">
                 <Image
                   src="/Me.jpeg"
                   alt="Mayer Frieg"
                   fill
-                  className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                  className="object-cover object-top transition-transform duration-700 group-hover:scale-105"
                   priority
-                  sizes="(max-width: 640px) 300px, (max-width: 1024px) 360px, 420px"
+                  sizes="(max-width: 1024px) 380px, 380px"
                 />
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-400" style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.08) 0%, transparent 50%)' }} />
-                <div className="absolute inset-x-0 bottom-0 h-2/5" style={{ background: 'linear-gradient(to top, var(--bg-primary), transparent)' }} />
-
-                {/* Corner accents */}
-                <div className="absolute top-4 left-4 w-8 h-8 border-l-2 border-t-2 rounded-tl-lg opacity-40" style={{ borderColor: 'var(--accent-primary)' }} />
-                <div className="absolute bottom-4 right-4 w-8 h-8 border-r-2 border-b-2 rounded-br-lg opacity-40" style={{ borderColor: 'var(--accent-primary)' }} />
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.08) 0%, transparent 50%)' }} />
               </div>
             </div>
-
-            {/* Floating tech badges */}
-            <motion.div
-              className="absolute -right-5 top-14 px-3 py-1.5 rounded-lg text-xs font-semibold shadow-lg"
-              style={{ background: 'var(--bg-elevated)', border: '1px solid var(--glass-border)', color: 'var(--accent-primary)' }}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 1.2, duration: 0.5 }}
-            >
-              <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full" style={{ background: 'var(--accent-primary)' }} />Next.js</span>
-            </motion.div>
-            <motion.div
-              className="absolute -left-5 bottom-32 px-3 py-1.5 rounded-lg text-xs font-semibold shadow-lg"
-              style={{ background: 'var(--bg-elevated)', border: '1px solid var(--glass-border)', color: 'var(--accent-secondary)' }}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 1.4, duration: 0.5 }}
-            >
-              <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full" style={{ background: 'var(--accent-secondary)' }} />React</span>
-            </motion.div>
-            <motion.div
-              className="absolute -right-3 bottom-14 px-3 py-1.5 rounded-lg text-xs font-semibold shadow-lg"
-              style={{ background: 'var(--bg-elevated)', border: '1px solid var(--glass-border)', color: 'var(--text-primary)' }}
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.6, duration: 0.5 }}
-            >
-              <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full" style={{ background: '#3178c6' }} />TypeScript</span>
-            </motion.div>
-            <motion.div
-              className="absolute -left-3 top-32 px-3 py-1.5 rounded-lg text-xs font-semibold shadow-lg"
-              style={{ background: 'var(--bg-elevated)', border: '1px solid var(--glass-border)', color: 'var(--text-muted)' }}
-              initial={{ opacity: 0, x: -15 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 1.8, duration: 0.5 }}
-            >
-              <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full" style={{ background: '#339933' }} />Node.js</span>
-            </motion.div>
           </motion.div>
         </div>
       </motion.div>
-      )}
     </section>
   )
 }

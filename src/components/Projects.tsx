@@ -45,53 +45,46 @@ export default function Projects() {
   )
 
   return (
-    <section id="projects" ref={ref} className="py-16 sm:py-24">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="projects" ref={ref} className="section">
+      <div className="container-content">
         {/* Header */}
         <motion.div
-          className="text-center mb-14"
+          className="mb-14"
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7 }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
         >
-          <motion.span
-            className="inline-block text-xs font-semibold uppercase tracking-[0.2em] mb-4 px-4 py-1.5 rounded-full"
-            style={{ color: 'var(--accent-primary)', background: 'var(--glass-bg)', border: '1px solid var(--glass-border)' }}
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={isInView ? { opacity: 1, scale: 1 } : {}}
-            transition={{ delay: 0.1, duration: 0.5 }}
-          >
-            Portfolio
-          </motion.span>
-          <h2 className="text-clamp-section font-bold mb-4" style={{ color: 'var(--text-primary)' }}>
-            <SplitText text="Featured" charDelay={35} />{' '}
-            <span className="text-gradient"><SplitText text="Projects" charDelay={35} /></span>
+          <span className="eyebrow mb-4 block">Portfolio</span>
+          <h2 className="heading-display text-clamp-section" style={{ color: 'var(--text-primary)' }}>
+            <SplitText text="Featured" charDelay={30} />{' '}
+            <span className="text-gradient"><SplitText text="Projects" charDelay={30} /></span>
           </h2>
           <motion.p
-            className="text-lg max-w-3xl mx-auto"
+            className="mt-3 text-base sm:text-lg max-w-md"
             style={{ color: 'var(--text-secondary)' }}
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ delay: 0.3, duration: 0.8 }}
+            transition={{ delay: 0.2, duration: 0.6 }}
           >
-            A showcase of my recent work
+            A showcase of my recent work.
           </motion.p>
         </motion.div>
 
         {/* Filter */}
         <motion.div
-          className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-12"
+          className="flex flex-wrap gap-2 sm:gap-3 mb-12"
           initial={{ opacity: 0, y: 15 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.4, duration: 0.5 }}
+          transition={{ delay: 0.3, duration: 0.5 }}
         >
           {categories.map((category) => (
             <button
               key={category}
               onClick={() => setActiveCategory(category)}
               className="px-5 py-2.5 rounded-xl font-medium text-sm transition-all touch-target"
+              aria-pressed={activeCategory === category}
               style={activeCategory === category
-                ? { background: 'var(--accent-gradient)', color: 'white', boxShadow: '0 4px 20px rgba(99, 102, 241, 0.3)' }
+                ? { background: 'var(--accent-gradient)', color: 'white', boxShadow: '0 8px 24px -8px color-mix(in srgb, var(--accent-primary) 60%, transparent)' }
                 : { background: 'var(--glass-bg)', border: '1px solid var(--glass-border)', color: 'var(--text-secondary)' }
               }
             >
@@ -106,104 +99,95 @@ export default function Projects() {
             const isFirst = index === 0 && activeCategory === "All"
             return (
               <TiltCard key={project.id} className={`[perspective:1000px] ${isFirst ? 'sm:col-span-2 lg:col-span-2' : ''}`}>
-                  <motion.div
-                    className="relative rounded-2xl overflow-hidden group cursor-pointer"
-                    style={{ background: 'var(--bg-tertiary)' }}
-                    initial={{ opacity: 0, y: 40, scale: 0.97 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    transition={{ delay: index * 0.08, duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-                    whileHover={{ scale: 1.015, boxShadow: '0 20px 60px rgba(99, 102, 241, 0.15)' }}
-                    layout
-                    onClick={() => openProjectModal(project)}
-                  >
-                {/* Background image */}
-                <div className={`relative overflow-hidden ${isFirst ? 'h-64 sm:h-80 lg:h-96' : 'h-64 sm:h-72'}`}>
-                  <Image
-                    src={project.image}
-                    alt={project.title}
-                    fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-110"
-                    sizes={isFirst ? "(max-width: 768px) 100vw, 66vw" : "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"}
-                  />
+                <motion.div
+                  className="relative rounded-2xl overflow-hidden group cursor-pointer"
+                  style={{ background: 'var(--bg-tertiary)' }}
+                  initial={{ opacity: 0, y: 40, scale: 0.97 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={{ delay: index * 0.08, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                  whileHover={{ scale: 1.015, boxShadow: '0 20px 60px -20px color-mix(in srgb, var(--accent-primary) 40%, transparent)' }}
+                  layout
+                  onClick={() => openProjectModal(project)}
+                >
+                  <div className={`relative overflow-hidden ${isFirst ? 'h-64 sm:h-80 lg:h-96' : 'h-64 sm:h-72'}`}>
+                    <Image
+                      src={project.image}
+                      alt={project.title}
+                      fill
+                      className="object-cover transition-transform duration-700 group-hover:scale-110"
+                      sizes={isFirst ? "(max-width: 768px) 100vw, 66vw" : "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"}
+                    />
+                    <div className="absolute inset-0 dark-overlay" />
+                    <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, color-mix(in srgb, var(--accent-primary) 12%, transparent) 0%, transparent 50%)' }} />
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ background: 'radial-gradient(circle at 50% 80%, color-mix(in srgb, var(--accent-primary) 18%, transparent) 0%, transparent 60%)' }} />
 
-                  {/* Multi-layer gradient overlay — theme-aware */}
-                  <div className="absolute inset-0 dark-overlay" />
-                  <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, rgba(99,102,241,0.1) 0%, transparent 50%)' }} />
-
-                  {/* Hover glow */}
-                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ background: 'radial-gradient(circle at 50% 80%, rgba(99,102,241,0.15) 0%, transparent 60%)' }} />
-
-                  {/* Number badge */}
-                  <div className="absolute top-4 left-4 z-10 w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold" style={{ background: 'var(--accent-gradient)' }}>
-                    {String(index + 1).padStart(2, '0')}
-                  </div>
-
-                  {/* Category badge */}
-                  <div className="absolute top-4 right-4 z-10">
-                    <span className="px-3 py-1.5 text-xs font-semibold rounded-full backdrop-blur-md text-white" style={{ background: 'rgba(0,0,0,0.35)' }}>
-                      {project.category}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Content overlay at bottom */}
-                <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6 z-10">
-                  <h3 className={`font-bold mb-2 text-white ${isFirst ? 'text-xl sm:text-2xl' : 'text-lg'}`}>
-                    {project.title}
-                  </h3>
-                  <p className="text-sm mb-4 line-clamp-2" style={{ color: 'rgba(255,255,255,0.65)' }}>
-                    {project.description}
-                  </p>
-
-                  {/* Tech tags */}
-                  <div className="flex flex-wrap gap-1.5 mb-4">
-                    {project.technologies.slice(0, isFirst ? 6 : 4).map((tech) => (
-                      <span key={tech} className="px-2.5 py-1 text-xs rounded-md font-medium backdrop-blur-sm" style={{ background: 'rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.8)' }}>
-                        {tech}
+                    <div className="absolute top-4 left-4 z-10 w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold" style={{ background: 'var(--accent-gradient)' }}>
+                      {String(index + 1).padStart(2, '0')}
+                    </div>
+                    <div className="absolute top-4 right-4 z-10">
+                      <span className="px-3 py-1.5 text-xs font-semibold rounded-full backdrop-blur-md text-white" style={{ background: 'rgba(0,0,0,0.4)' }}>
+                        {project.category}
                       </span>
-                    ))}
-                    {project.technologies.length > (isFirst ? 6 : 4) && (
-                      <span className="px-2.5 py-1 text-xs rounded-md" style={{ background: 'rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.5)' }}>
-                        +{project.technologies.length - (isFirst ? 6 : 4)}
-                      </span>
-                    )}
+                    </div>
                   </div>
 
-                  {/* Actions */}
-                  <div className="flex items-center gap-2.5">
-                    <button
-                      className="flex items-center gap-1.5 text-xs font-semibold px-3.5 py-2 rounded-lg backdrop-blur-sm transition-all hover:bg-white/20"
-                      style={{ background: 'rgba(255,255,255,0.15)', color: 'white' }}
-                    >
-                      <Eye size={13} /> Details
-                    </button>
-                    {project.githubUrl && project.githubUrl !== "#" && (
-                      <a
-                        href={project.githubUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-1.5 text-xs font-semibold px-3.5 py-2 rounded-lg transition-all hover:bg-white/20"
-                        style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.2)', color: 'white' }}
-                        onClick={(e) => e.stopPropagation()}
+                  <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6 z-10">
+                    <h3 className={`font-display font-semibold mb-2 text-white ${isFirst ? 'text-xl sm:text-2xl' : 'text-lg'}`}>
+                      {project.title}
+                    </h3>
+                    <p className="text-sm mb-4 line-clamp-2" style={{ color: 'rgba(255,255,255,0.7)' }}>
+                      {project.description}
+                    </p>
+
+                    <div className="flex flex-wrap gap-1.5 mb-4">
+                      {project.technologies.slice(0, isFirst ? 6 : 4).map((tech) => (
+                        <span key={tech} className="px-2.5 py-1 text-xs rounded-md font-medium backdrop-blur-sm" style={{ background: 'rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.85)' }}>
+                          {tech}
+                        </span>
+                      ))}
+                      {project.technologies.length > (isFirst ? 6 : 4) && (
+                        <span className="px-2.5 py-1 text-xs rounded-md" style={{ background: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.55)' }}>
+                          +{project.technologies.length - (isFirst ? 6 : 4)}
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="flex items-center gap-2.5">
+                      <span
+                        className="flex items-center gap-1.5 text-xs font-semibold px-3.5 py-2 rounded-lg backdrop-blur-sm"
+                        style={{ background: 'rgba(255,255,255,0.16)', color: 'white' }}
                       >
-                        <Github size={13} /> Code
-                      </a>
-                    )}
-                    {project.liveUrl && project.liveUrl !== "#" && (
-                      <a
-                        href={project.liveUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-lg text-white"
-                        style={{ background: 'var(--accent-gradient)' }}
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <ExternalLink size={13} /> Live
-                      </a>
-                    )}
+                        <Eye size={13} /> Details
+                      </span>
+                      {project.githubUrl && project.githubUrl !== "#" && (
+                        <a
+                          href={project.githubUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-1.5 text-xs font-semibold px-3.5 py-2 rounded-lg transition-all hover:bg-white/25"
+                          style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.22)', color: 'white' }}
+                          onClick={(e) => e.stopPropagation()}
+                          aria-label={`${project.title} source code on GitHub`}
+                        >
+                          <Github size={13} /> Code
+                        </a>
+                      )}
+                      {project.liveUrl && project.liveUrl !== "#" && (
+                        <a
+                          href={project.liveUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-lg text-white"
+                          style={{ background: 'var(--accent-gradient)' }}
+                          onClick={(e) => e.stopPropagation()}
+                          aria-label={`${project.title} live demo`}
+                        >
+                          <ExternalLink size={13} /> Live
+                        </a>
+                      )}
+                    </div>
                   </div>
-                </div>
-              </motion.div>
+                </motion.div>
               </TiltCard>
             )
           })}
