@@ -1,195 +1,202 @@
 'use client'
 
-import { useMemo, useRef } from 'react'
-import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion'
-import { Mail, Github, Linkedin, ArrowRight, MapPin } from 'lucide-react'
+import { useRef } from 'react'
+import { Mail, Github, Linkedin, ArrowRight, MapPin, ArrowDown } from 'lucide-react'
 import Image from 'next/image'
 import MagneticButton from '@/components/motion/MagneticButton'
+import { gsap, SplitText, useGSAP, MQ } from '@/lib/gsap'
 
+const socials = [
+  { href: 'https://github.com/MayerS22', icon: Github, label: 'GitHub' },
+  { href: 'https://www.linkedin.com/in/mayer-frieg-7a0368226/', icon: Linkedin, label: 'LinkedIn' },
+  { href: 'mailto:mayerfrieg@outlook.com', icon: Mail, label: 'Email' },
+]
+
+const TAGLINE =
+  'Building scalable web & mobile experiences with modern technologies — clean code, thoughtful interfaces, and systems that last.'
+
+/**
+ * Chapter 01. Desktop: the hero pins and the scroll plays a timeline — the name splits apart,
+ * the portrait recedes, and the tagline takes the stage word by word. Mobile: a stacked intro.
+ */
 export default function Hero() {
   const sectionRef = useRef<HTMLElement>(null)
-  const prefersReducedMotion = useReducedMotion()
 
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ['start start', 'end start'],
-  })
+  useGSAP(() => {
+    const mm = gsap.matchMedia()
 
-  const textY = useTransform(scrollYProgress, [0, 1], [0, -120])
-  const photoY = useTransform(scrollYProgress, [0, 1], [0, -50])
-  const sectionOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0])
+    // Load-in (all sizes, motion allowed)
+    mm.add(MQ.motion, () => {
+      gsap.timeline({ delay: 0.15 })
+        .from('[data-hero-line] > span', { yPercent: 115, duration: 1.2, stagger: 0.12 })
+        .fromTo('[data-hero-photo]',
+          { clipPath: 'inset(100% 0% 0% 0% round 20px)' },
+          { clipPath: 'inset(0% 0% 0% 0% round 20px)', duration: 1.3, ease: 'expo.inOut' }, 0)
+        .from('[data-hero-photo] img', { scale: 1.35, duration: 1.6 }, 0)
+        .from('[data-hero-fade]', { y: 24, opacity: 0, duration: 0.9, stagger: 0.08 }, 0.5)
+    })
 
-  const socials = useMemo(() => [
-    { href: 'https://github.com/MayerS22', icon: Github, label: 'GitHub' },
-    { href: 'https://www.linkedin.com/in/mayer-frieg-7a0368226/', icon: Linkedin, label: 'LinkedIn' },
-    { href: 'mailto:mayerfrieg@outlook.com', icon: Mail, label: 'Email' },
-  ], [])
+    // Pinned scroll story (desktop)
+    mm.add(MQ.desktopMotion, () => {
+      const split = SplitText.create('[data-hero-statement]', { type: 'words' })
+      gsap.set(split.words, { opacity: 0.08 })
+
+      const tl = gsap.timeline({
+        defaults: { ease: 'none' },
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top top',
+          end: '+=140%',
+          pin: true,
+          scrub: 1,
+          anticipatePin: 1,
+        },
+      })
+
+      tl.to('[data-hero-line="1"]', { xPercent: -45, opacity: 0.12, duration: 0.6 }, 0)
+        .to('[data-hero-line="2"]', { xPercent: 45, opacity: 0.12, duration: 0.6 }, 0)
+        .to('[data-hero-bottom]', { y: -40, opacity: 0, duration: 0.3 }, 0)
+        .to('[data-hero-meta]', { opacity: 0, duration: 0.25 }, 0)
+        .to('[data-hero-photo]', { scale: 0.55, rotate: -6, yPercent: -10, opacity: 0, duration: 0.55 }, 0.1)
+        .fromTo('[data-hero-statement-wrap]', { autoAlpha: 0, y: 60 }, { autoAlpha: 1, y: 0, duration: 0.25 }, 0.35)
+        .to(split.words, { opacity: 1, stagger: 0.02, duration: 0.1 }, 0.45)
+
+      return () => split.revert()
+    })
+
+    // Mouse parallax: layers drift at different depths toward the pointer.
+    mm.add(MQ.pointerMotion, () => {
+      const layers = [
+        { el: '[data-hero-photo]', x: 26, y: 18, r: 3 },
+        { el: '[data-hero-line="1"] > span', x: -18, y: -8, r: 0 },
+        { el: '[data-hero-line="2"] > span', x: 22, y: 10, r: 0 },
+      ].map((l) => ({
+        ...l,
+        qx: gsap.quickTo(l.el, 'x', { duration: 1.1, ease: 'power3' }),
+        qy: gsap.quickTo(l.el, 'y', { duration: 1.1, ease: 'power3' }),
+        qr: gsap.quickTo(l.el, 'rotationY', { duration: 1.1, ease: 'power3' }),
+      }))
+      const onMove = (e: PointerEvent) => {
+        const nx = e.clientX / window.innerWidth - 0.5
+        const ny = e.clientY / window.innerHeight - 0.5
+        layers.forEach((l) => { l.qx(nx * l.x * 2); l.qy(ny * l.y * 2); l.qr(nx * l.r * 2) })
+      }
+      const section = sectionRef.current!
+      section.addEventListener('pointermove', onMove)
+      return () => section.removeEventListener('pointermove', onMove)
+    })
+  }, { scope: sectionRef })
 
   return (
     <section
       id="home"
       ref={sectionRef}
-      className="relative min-h-screen flex items-center overflow-hidden"
+      className="relative overflow-hidden lg:motion-safe:h-[100svh] lg:motion-safe:min-h-[680px]"
     >
       <div className="absolute inset-0 pointer-events-none gradient-mesh" />
 
-      <motion.div
-        className="relative z-10 w-full max-w-6xl mx-auto px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center pt-28 pb-16 lg:pt-0 lg:pb-0"
-        style={prefersReducedMotion ? {} : { opacity: sectionOpacity }}
-      >
-        {/* ═══ LEFT: Text ═══ */}
-        <motion.div
-          className="lg:col-span-7 order-2 lg:order-1"
-          style={prefersReducedMotion ? {} : { y: textY }}
-        >
-          {/* Eyebrow */}
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="inline-flex items-center gap-2.5 mb-8 eyebrow"
-            style={{ color: 'var(--text-secondary)' }}
-          >
+      <div className="relative z-10 h-full w-full max-w-[90rem] mx-auto px-6 lg:px-10 pt-28 pb-14 lg:pt-24 lg:pb-10 flex flex-col justify-between gap-10">
+        {/* Meta row */}
+        <div data-hero-meta className="flex items-center justify-between gap-4">
+          <div data-hero-fade className="inline-flex items-center gap-2.5 eyebrow" style={{ color: 'var(--text-secondary)' }}>
             <span className="relative flex h-2 w-2">
               <span className="absolute inline-flex h-full w-full rounded-full opacity-60 animate-ping" style={{ background: 'var(--live)' }} />
               <span className="relative inline-flex rounded-full h-2 w-2" style={{ background: 'var(--live)' }} />
             </span>
             Available for new opportunities
-          </motion.div>
+          </div>
+          <div data-hero-fade className="hidden sm:flex items-center gap-2 eyebrow">
+            <MapPin size={13} style={{ color: 'var(--accent-primary)' }} />
+            Cairo, Egypt
+          </div>
+        </div>
 
-          {/* Name — oversized display */}
-          <h1 className="heading-display text-clamp-hero" style={{ color: 'var(--text-primary)' }}>
-            <span className="block overflow-hidden">
-              <motion.span
-                className="block"
-                initial={{ y: '110%' }}
-                animate={{ y: 0 }}
-                transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.35 }}
-              >
-                Mayer
-              </motion.span>
-            </span>
-            <span className="block overflow-hidden">
-              <motion.span
-                className="block text-gradient"
-                initial={{ y: '110%' }}
-                animate={{ y: 0 }}
-                transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
-              >
-                Frieg
-              </motion.span>
-            </span>
-          </h1>
+        {/* Name — split lines */}
+        <h1
+          className="heading-display leading-[0.85] relative"
+          style={{ color: 'var(--text-primary)', fontSize: 'clamp(3.75rem, 14.5vw, 15rem)' }}
+          aria-label="Mayer Frieg"
+        >
+          <span data-hero-line="1" className="block overflow-hidden">
+            <span className="block">Mayer</span>
+          </span>
+          <span data-hero-line="2" className="block overflow-hidden lg:text-right">
+            <span className="block text-gradient">Frieg</span>
+          </span>
+        </h1>
 
-          {/* Accent rule */}
-          <motion.div
-            className="rule-accent w-24 my-8"
-            initial={{ scaleX: 0, originX: 0 }}
-            animate={{ scaleX: 1 }}
-            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.7 }}
-          />
+        {/* Portrait: in-flow on mobile, centred between the name lines on desktop */}
+        <div
+          data-hero-photo
+          className="relative w-full max-w-[320px] aspect-[4/5] rounded-[20px] overflow-hidden mx-auto lg:absolute lg:left-[56%] lg:top-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2 lg:w-[clamp(200px,17vw,300px)] z-20"
+          style={{ boxShadow: '0 40px 80px -30px color-mix(in srgb, var(--accent-primary) 45%, transparent)' }}
+        >
+          <Image src="/Me.jpeg" alt="Portrait of Mayer Frieg" fill priority className="object-cover object-top" sizes="(max-width: 1024px) 320px, 17vw" />
+          <div className="absolute inset-0 rounded-[20px] pointer-events-none" style={{ boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.12)' }} />
+        </div>
 
-          {/* Role + tagline */}
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.8 }}
-            className="max-w-xl space-y-3"
-          >
+        {/* Bottom row */}
+        <div data-hero-bottom className="grid gap-8 lg:grid-cols-2 lg:items-end">
+          <div data-hero-fade className="max-w-md space-y-3">
             <p className="font-display text-xl sm:text-2xl font-medium" style={{ color: 'var(--text-primary)' }}>
               Software Engineer – Full Stack
             </p>
-            <p className="text-base sm:text-lg leading-relaxed" style={{ color: 'var(--text-muted)' }}>
-              Building scalable web &amp; mobile experiences with modern technologies —
-              clean code, thoughtful interfaces, and systems that last.
+            <p className="text-base leading-relaxed lg:motion-safe:hidden" style={{ color: 'var(--text-muted)' }}>
+              {TAGLINE}
             </p>
-          </motion.div>
+          </div>
 
-          {/* Location */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1, duration: 0.5 }}
-            className="flex items-center gap-2 mt-6 text-sm"
-            style={{ color: 'var(--text-muted)' }}
-          >
-            <MapPin size={14} style={{ color: 'var(--accent-primary)' }} />
-            Cairo, Egypt
-          </motion.div>
-
-          {/* CTAs */}
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 1.1 }}
-            className="flex flex-col sm:flex-row gap-4 mt-8"
-          >
+          <div data-hero-fade className="flex flex-col sm:flex-row sm:items-center gap-4 lg:justify-end">
             <MagneticButton
               href="#projects"
-              className="px-8 py-3.5 rounded-xl font-semibold text-white flex items-center justify-center gap-2 text-sm"
+              className="px-7 py-3.5 rounded-full font-semibold text-white flex items-center justify-center gap-2 text-sm"
               style={{ background: 'var(--accent-gradient)' }}
             >
               View My Work <ArrowRight size={16} />
             </MagneticButton>
             <MagneticButton
               href="#contact"
-              className="px-8 py-3.5 rounded-xl font-semibold flex items-center justify-center gap-2 text-sm"
+              className="px-7 py-3.5 rounded-full font-semibold flex items-center justify-center gap-2 text-sm"
               style={{ background: 'var(--glass-bg)', border: '1px solid var(--glass-border)', color: 'var(--text-primary)' }}
             >
               Get In Touch
             </MagneticButton>
-          </motion.div>
-
-          {/* Socials */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.3, duration: 0.5 }}
-            className="flex items-center gap-3 mt-10"
-          >
-            {socials.map((social) => (
-              <motion.a
-                key={social.label}
-                href={social.href}
-                target={social.href.startsWith('mailto') ? undefined : '_blank'}
-                rel={social.href.startsWith('mailto') ? undefined : 'noopener noreferrer'}
-                className="p-3 rounded-xl transition-colors"
-                style={{ color: 'var(--text-muted)', background: 'var(--glass-bg)', border: '1px solid var(--glass-border)' }}
-                whileHover={{ y: -3, color: 'var(--accent-primary)' }}
-                whileTap={{ scale: 0.95 }}
-                aria-label={social.label}
-              >
-                <social.icon size={20} />
-              </motion.a>
-            ))}
-          </motion.div>
-        </motion.div>
-
-        {/* ═══ RIGHT: Photo ═══ */}
-        <div className="lg:col-span-5 order-1 lg:order-2 flex justify-center lg:justify-end">
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
-            className="relative group w-full max-w-[380px]"
-            style={prefersReducedMotion ? {} : { y: photoY }}
-          >
-            <div className="relative rounded-2xl p-[2px]" style={{ background: 'var(--accent-gradient)' }}>
-              <div className="relative w-full aspect-[4/5] rounded-2xl overflow-hidden">
-                <Image
-                  src="/Me.jpeg"
-                  alt="Mayer Frieg"
-                  fill
-                  className="object-cover object-top transition-transform duration-700 group-hover:scale-105"
-                  priority
-                  sizes="(max-width: 1024px) 380px, 380px"
-                />
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.08) 0%, transparent 50%)' }} />
-              </div>
+            <div className="flex items-center gap-2 sm:ml-2">
+              {socials.map((social) => (
+                <a
+                  key={social.label}
+                  href={social.href}
+                  target={social.href.startsWith('mailto') ? undefined : '_blank'}
+                  rel={social.href.startsWith('mailto') ? undefined : 'noopener noreferrer'}
+                  className="p-3 rounded-full transition-all hover:-translate-y-0.5 hover:text-[color:var(--accent-primary)] touch-target flex items-center justify-center"
+                  style={{ color: 'var(--text-muted)', border: '1px solid var(--glass-border)' }}
+                  aria-label={social.label}
+                >
+                  <social.icon size={18} />
+                </a>
+              ))}
             </div>
-          </motion.div>
+          </div>
         </div>
-      </motion.div>
+      </div>
+
+      {/* Statement layer — revealed by the pinned scroll (desktop only) */}
+      <div
+        data-hero-statement-wrap
+        className="invisible absolute inset-0 z-30 hidden lg:motion-safe:flex flex-col items-center justify-center px-10 pointer-events-none"
+      >
+        <span className="eyebrow mb-8" style={{ color: 'var(--accent-primary)' }}>What I do</span>
+        <p
+          data-hero-statement
+          className="font-display font-semibold text-center max-w-5xl leading-[1.08] tracking-tight"
+          style={{ color: 'var(--text-primary)', fontSize: 'clamp(2rem, 4.2vw, 4.25rem)' }}
+        >
+          {TAGLINE}
+        </p>
+        <span className="eyebrow mt-10 flex items-center gap-2">
+          Keep scrolling <ArrowDown size={13} className="animate-bounce" />
+        </span>
+      </div>
     </section>
   )
 }

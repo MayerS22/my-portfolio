@@ -1,0 +1,88 @@
+'use client'
+
+import { useRef } from 'react'
+import { gsap, useGSAP, MQ } from '@/lib/gsap'
+
+/**
+ * Mouse-follower (desktop, fine pointer, motion allowed only). A small dot tracks the pointer
+ * exactly, a ring trails it; the ring grows over links/buttons and expands into a labelled
+ * disc over anything with `data-cursor="Label"` (e.g. project cards → "View").
+ * The native cursor stays visible — this is decoration, not a replacement.
+ */
+export default function CustomCursor() {
+  const ref = useRef<HTMLDivElement>(null)
+
+  useGSAP(() => {
+    const mm = gsap.matchMedia()
+    mm.add(MQ.pointerMotion, () => {
+      const root = ref.current!
+      const dot = root.querySelector<HTMLElement>('[data-c-dot]')!
+      const ring = root.querySelector<HTMLElement>('[data-c-ring]')!
+      const label = root.querySelector<HTMLElement>('[data-c-label]')!
+      gsap.set(root, { autoAlpha: 1 })
+
+      const dotX = gsap.quickTo(dot, 'x', { duration: 0.1, ease: 'power3' })
+      const dotY = gsap.quickTo(dot, 'y', { duration: 0.1, ease: 'power3' })
+      const ringX = gsap.quickTo(ring, 'x', { duration: 0.55, ease: 'power3' })
+      const ringY = gsap.quickTo(ring, 'y', { duration: 0.55, ease: 'power3' })
+
+      const onMove = (e: PointerEvent) => {
+        dotX(e.clientX); dotY(e.clientY); ringX(e.clientX); ringY(e.clientY)
+      }
+
+      const onOver = (e: PointerEvent) => {
+        const target = e.target as Element
+        const labelled = target.closest<HTMLElement>('[data-cursor]')
+        const interactive = target.closest('a, button, [role="button"], input, textarea, select')
+        if (labelled) {
+          label.textContent = labelled.dataset.cursor ?? ''
+          gsap.to(ring, { scale: 3.4, backgroundColor: 'var(--accent-primary)', borderColor: 'transparent', duration: 0.45, ease: 'expo.out' })
+          gsap.to(label, { opacity: 1, scale: 1, duration: 0.3 })
+          gsap.to(dot, { scale: 0, duration: 0.2 })
+        } else if (interactive) {
+          gsap.to(ring, { scale: 1.9, backgroundColor: 'transparent', borderColor: 'var(--accent-primary)', duration: 0.4, ease: 'expo.out' })
+          gsap.to(label, { opacity: 0, scale: 0.6, duration: 0.2 })
+          gsap.to(dot, { scale: 1.6, duration: 0.2 })
+        } else {
+          gsap.to(ring, { scale: 1, backgroundColor: 'transparent', borderColor: 'var(--text-muted)', duration: 0.4, ease: 'expo.out' })
+          gsap.to(label, { opacity: 0, scale: 0.6, duration: 0.2 })
+          gsap.to(dot, { scale: 1, duration: 0.2 })
+        }
+      }
+
+      const onLeave = () => gsap.to(root, { autoAlpha: 0, duration: 0.2 })
+      const onEnter = () => gsap.to(root, { autoAlpha: 1, duration: 0.2 })
+      const onDown = () => gsap.to(ring, { scale: '-=0.3', duration: 0.15, yoyo: true, repeat: 1 })
+
+      window.addEventListener('pointermove', onMove)
+      window.addEventListener('pointerover', onOver)
+      window.addEventListener('pointerdown', onDown)
+      document.documentElement.addEventListener('pointerleave', onLeave)
+      document.documentElement.addEventListener('pointerenter', onEnter)
+      return () => {
+        window.removeEventListener('pointermove', onMove)
+        window.removeEventListener('pointerover', onOver)
+        window.removeEventListener('pointerdown', onDown)
+        document.documentElement.removeEventListener('pointerleave', onLeave)
+        document.documentElement.removeEventListener('pointerenter', onEnter)
+      }
+    })
+  })
+
+  return (
+    <div ref={ref} className="invisible fixed inset-0 pointer-events-none z-[9999]" aria-hidden>
+      <div
+        data-c-ring
+        className="absolute left-0 top-0 -ml-5 -mt-5 w-10 h-10 rounded-full border flex items-center justify-center"
+        style={{ borderColor: 'var(--text-muted)' }}
+      >
+        <span
+          data-c-label
+          className="font-mono uppercase tracking-[0.12em] text-[4px] font-semibold opacity-0 scale-50"
+          style={{ color: 'var(--accent-ink)' }}
+        />
+      </div>
+      <div data-c-dot className="absolute left-0 top-0 -ml-1 -mt-1 w-2 h-2 rounded-full" style={{ background: 'var(--accent-primary)' }} />
+    </div>
+  )
+}

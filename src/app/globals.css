@@ -2,7 +2,7 @@
 
 /* ============================================================
    THEME SYSTEM — Editorial Minimalism
-   Monochrome backbone + single indigo accent identity.
+   Ocean palette: deep-sea teal backbone, cerulean/icy accents, frost-white text.
    ============================================================ */
 
 @theme {
@@ -44,92 +44,104 @@
   --ease-editorial: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* ---------- Dark Theme (Default) ---------- */
+/* ---------- Dark Theme (Default) — ocean ----------
+   Palette: Deep Sea Teal #0C3846 · Arctic Ocean #2A7387 · Cerulean Ripple #5EB0C8
+            Icy Glaze #9FD3E3 · Frost White #E4F4F8 */
 :root,
 [data-theme="dark"] {
-  --bg-primary: #0a0a0f;
-  --bg-secondary: #101017;
-  --bg-tertiary: #16161f;
-  --bg-elevated: #14141d;
+  --bg-primary: #082c38;
+  --bg-secondary: #0c3846;
+  --bg-tertiary: #114453;
+  --bg-elevated: #0f3f4d;
 
-  --accent-primary: #6366f1;
-  --accent-secondary: #8b5cf6;
-  --accent-gradient: linear-gradient(135deg, #6366f1, #8b5cf6);
+  /* Accent: Cerulean Ripple -> Icy Glaze (dots, rules, accent words) */
+  --accent-primary: #5eb0c8;
+  --accent-secondary: #9fd3e3;
+  /* Fills (buttons, badges, bars): Frost White -> Icy Glaze */
+  --accent-gradient: linear-gradient(120deg, #e4f4f8 0%, #9fd3e3 100%);
+  --accent-ink: #0c3846; /* text on fills */
+  --accent-text-gradient: linear-gradient(120deg, #9fd3e3 0%, #5eb0c8 100%);
 
-  --text-primary: #f5f5f7;
-  --text-secondary: #a1a1aa;
-  --text-muted: #71717a;
+  --text-primary: #e4f4f8;
+  --text-secondary: #9fd3e3;
+  --text-muted: #6fa6b8;
 
   /* Semantic */
-  --live: #22c55e;
-  --warning: #f59e0b;
-  --info: #3b82f6;
+  --live: #7fd8a9;
+  --warning: #f0cf8a;
+  --info: #9fd3e3;
 
   /* Surfaces / lines */
-  --border-hair: rgba(255, 255, 255, 0.09);
-  --card-bg: #111119;
-  --card-border: rgba(255, 255, 255, 0.08);
+  --border-hair: rgba(228, 244, 248, 0.10);
+  --card-bg: #0c3846;
+  --card-border: rgba(159, 211, 227, 0.14);
   --card-hover-border: var(--accent-primary);
 
-  --glass-bg: rgba(255, 255, 255, 0.045);
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  --glass-bg: rgba(228, 244, 248, 0.05);
+  --glass-border: rgba(159, 211, 227, 0.16);
+  --glass-shadow: 0 8px 32px rgba(2, 20, 26, 0.5);
 
-  --selection-bg: rgba(99, 102, 241, 0.3);
+  --selection-bg: rgba(94, 176, 200, 0.35);
 
-  --scrollbar-track: #0f0f16;
-  --scrollbar-thumb: #2e2e3a;
+  --scrollbar-track: #072833;
+  --scrollbar-thumb: #2a7387;
 
-  --gradient-mesh: radial-gradient(at 18% 82%, rgba(99, 102, 241, 0.10) 0, transparent 45%),
-                    radial-gradient(at 82% 18%, rgba(139, 92, 246, 0.10) 0, transparent 45%);
+  --gradient-mesh: radial-gradient(at 15% 85%, rgba(42, 115, 135, 0.28) 0, transparent 50%),
+                    radial-gradient(at 85% 15%, rgba(94, 176, 200, 0.12) 0, transparent 45%);
 
   --section-bg-alt: var(--bg-secondary);
-  --section-bg-alt-2: radial-gradient(ellipse at 80% 50%, rgba(139, 92, 246, 0.04) 0%, transparent 50%);
+  --section-bg-alt-2: radial-gradient(ellipse at 80% 50%, rgba(94, 176, 200, 0.06) 0%, transparent 50%);
+
+  --grain-opacity: 0.05;
 
   /* Photo scrim */
-  --scrim-strong: linear-gradient(to top, rgba(10, 10, 15, 0.94) 0%, rgba(10, 10, 15, 0.7) 38%, rgba(10, 10, 15, 0.25) 68%, transparent 100%);
+  --scrim-strong: linear-gradient(to top, rgba(8, 44, 56, 0.94) 0%, rgba(8, 44, 56, 0.7) 38%, rgba(8, 44, 56, 0.25) 68%, transparent 100%);
 }
 
 [data-theme="light"] {
-  --bg-primary: #fafafa;
-  --bg-secondary: #ffffff;
-  --bg-tertiary: #f4f4f5;
-  --bg-elevated: #ffffff;
+  --bg-primary: #e4f4f8;
+  --bg-secondary: #eef8fb;
+  --bg-tertiary: #d2eaf1;
+  --bg-elevated: #f6fbfd;
 
-  --accent-primary: #4f46e5;
-  --accent-secondary: #7c3aed;
-  --accent-gradient: linear-gradient(135deg, #4f46e5, #7c3aed);
+  --accent-primary: #2a7387;
+  --accent-secondary: #5eb0c8;
+  --accent-gradient: linear-gradient(120deg, #0c3846 0%, #2a7387 100%);
+  --accent-ink: #e4f4f8;
+  --accent-text-gradient: linear-gradient(120deg, #0c3846 0%, #2a7387 100%);
 
-  --text-primary: #09090b;
-  --text-secondary: #52525b;
-  --text-muted: #71717a;
+  --text-primary: #0c3846;
+  --text-secondary: #24606f;
+  --text-muted: #3d7383;
 
   /* Semantic (darker for contrast on light) */
-  --live: #16a34a;
-  --warning: #d97706;
-  --info: #2563eb;
+  --live: #1f7a52;
+  --warning: #8a6a1f;
+  --info: #2a7387;
 
-  --border-hair: rgba(0, 0, 0, 0.10);
-  --card-bg: #ffffff;
-  --card-border: rgba(0, 0, 0, 0.08);
+  --border-hair: rgba(12, 56, 70, 0.12);
+  --card-bg: #f6fbfd;
+  --card-border: rgba(12, 56, 70, 0.12);
   --card-hover-border: var(--accent-primary);
 
-  --glass-bg: rgba(255, 255, 255, 0.72);
-  --glass-border: rgba(0, 0, 0, 0.08);
-  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  --glass-bg: rgba(246, 251, 253, 0.75);
+  --glass-border: rgba(12, 56, 70, 0.12);
+  --glass-shadow: 0 8px 32px rgba(12, 56, 70, 0.10);
 
-  --selection-bg: rgba(79, 70, 229, 0.2);
+  --selection-bg: rgba(94, 176, 200, 0.3);
 
-  --scrollbar-track: #f1f1f1;
-  --scrollbar-thumb: #c4c4cc;
+  --scrollbar-track: #d8edf3;
+  --scrollbar-thumb: #8fbfcd;
 
-  --gradient-mesh: radial-gradient(at 18% 82%, rgba(79, 70, 229, 0.07) 0, transparent 45%),
-                    radial-gradient(at 82% 18%, rgba(124, 58, 237, 0.06) 0, transparent 45%);
+  --gradient-mesh: radial-gradient(at 15% 85%, rgba(94, 176, 200, 0.18) 0, transparent 50%),
+                    radial-gradient(at 85% 15%, rgba(159, 211, 227, 0.30) 0, transparent 45%);
 
   --section-bg-alt: var(--bg-secondary);
-  --section-bg-alt-2: radial-gradient(ellipse at 80% 50%, rgba(124, 58, 237, 0.05) 0%, transparent 50%);
+  --section-bg-alt-2: radial-gradient(ellipse at 80% 50%, rgba(94, 176, 200, 0.08) 0%, transparent 50%);
 
-  --scrim-strong: linear-gradient(to top, rgba(250, 250, 250, 0.94) 0%, rgba(250, 250, 250, 0.7) 38%, rgba(250, 250, 250, 0.25) 68%, transparent 100%);
+  --grain-opacity: 0.06;
+
+  --scrim-strong: linear-gradient(to top, rgba(228, 244, 248, 0.94) 0%, rgba(228, 244, 248, 0.7) 38%, rgba(228, 244, 248, 0.25) 68%, transparent 100%);
 }
 
 /* ========== Base Styles ========== */
@@ -154,7 +166,7 @@ body {
   color: var(--text-primary);
   font-family: var(--font-sans);
   line-height: 1.6;
-  overflow-x: hidden;
+  overflow-x: clip;
   min-height: 100vh;
   transition: background-color 0.3s ease, color 0.3s ease;
   -webkit-font-smoothing: antialiased;
@@ -214,7 +226,7 @@ body {
 .card:hover {
   border-color: var(--card-hover-border);
   transform: translateY(-3px);
-  box-shadow: 0 12px 40px var(--card-shadow, rgba(99, 102, 241, 0.08));
+  box-shadow: 0 12px 40px var(--card-shadow, rgba(2, 20, 26, 0.18));
 }
 
 /* Glass — reserved for header & overlays only */
@@ -235,7 +247,7 @@ body {
 
 /* Gradient text (used sparingly) */
 .text-gradient {
-  background: var(--accent-gradient);
+  background: var(--accent-text-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -340,3 +352,46 @@ body {
 /* Hide scrollbars on horizontal tracks */
 .no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
 .no-scrollbar::-webkit-scrollbar { display: none; }
+
+/* ── Scroll storytelling helpers (GSAP) ── */
+/* SplitText masks clip descenders on tight display line-heights — give them room. */
+.heading-display [data-split] > *,
+[data-hero-line] { padding-bottom: 0.24em; margin-bottom: -0.24em; }
+
+/* Experience sticky panel: fade the role details in when the active role changes. */
+.exp-panel-swap { animation: exp-swap 0.5s var(--ease-editorial) both; }
+@keyframes exp-swap {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .exp-panel-swap { animation: none; }
+}
+
+/* Anything filled with --accent-gradient (buttons, badges, chips, icon tiles) uses --accent-ink text:
+   dark on the off-white fill (dark theme), light on the ink fill (light theme). Centralised so
+   components can't drift. */
+[style*="--accent-gradient"],
+[style*="--accent-gradient"] * { color: var(--accent-ink) !important; }
+
+/* Film grain: a fixed SVG-noise layer for warm, printed texture. */
+body::after {
+  content: "";
+  position: fixed;
+  inset: -50%;
+  z-index: 70;
+  pointer-events: none;
+  opacity: var(--grain-opacity, 0.06);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grain 1.2s steps(6) infinite;
+}
+@keyframes grain {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-3%, 2%); }
+  40% { transform: translate(2%, -3%); }
+  60% { transform: translate(-2%, -1%); }
+  80% { transform: translate(3%, 3%); }
+  100% { transform: translate(0, 0); }
+}
+@media (prefers-reduced-motion: reduce) { body::after { animation: none; } }
+@media print { body::after { display: none; } }

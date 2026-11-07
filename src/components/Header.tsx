@@ -3,11 +3,11 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, Sun, Moon } from 'lucide-react'
-import { useMounted } from '@/hooks/useMounted'
 import { useFocusTrap } from '@/hooks/useFocusTrap'
 import { useTheme } from './ThemeProvider'
 import { useLenis } from '@/providers/SmoothScrollProvider'
 import { cn } from '@/lib/utils'
+import { gsap, ScrollTrigger, useGSAP, MQ } from '@/lib/gsap'
 
 const navItems = [
   { name: 'Home', href: '#home' },
@@ -23,36 +23,52 @@ export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileOpen, setIsMobileOpen] = useState(false)
   const [activeSection, setActiveSection] = useState('home')
-  const isMounted = useMounted()
   const { theme, toggleTheme } = useTheme()
   const lenis = useLenis()
   const menuRef = useRef<HTMLDivElement>(null)
+  const headerRef = useRef<HTMLElement>(null)
+  const menuOpenRef = useRef(false)
+  menuOpenRef.current = isMobileOpen
 
   useFocusTrap(menuRef, isMobileOpen)
 
-  const handleScroll = useCallback(() => {
-    setIsScrolled(window.scrollY > 30)
+  // Active section: whichever section's top has crossed 40% of the viewport (rect-based, so pin spacers don't skew it).
+  const updateActive = useCallback(() => {
     const sections = ['home', 'about', 'skills', 'experience', 'freelance', 'projects', 'contact']
-    const pos = window.scrollY + 120
-    if (window.innerHeight + window.scrollY >= document.body.scrollHeight - 50) {
+    if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 50) {
       setActiveSection('contact')
-    } else {
-      for (let i = sections.length - 1; i >= 0; i--) {
-        const el = document.getElementById(sections[i])
-        if (el && el.offsetTop <= pos) { setActiveSection(sections[i]); break }
-      }
+      return
     }
+    const line = window.innerHeight * 0.4
+    for (let i = sections.length - 1; i >= 0; i--) {
+      const el = document.getElementById(sections[i])
+      if (el && el.getBoundingClientRect().top <= line) { setActiveSection(sections[i]); return }
+    }
+    setActiveSection('home')
   }, [])
 
-  useEffect(() => {
-    if (!isMounted) return
-    let ticking = false
-    const onScroll = () => {
-      if (!ticking) { requestAnimationFrame(() => { handleScroll(); ticking = false }); ticking = true }
-    }
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [isMounted, handleScroll])
+  // Scroll events: glass state, hide on scroll down / reveal on scroll up, active nav item.
+  useGSAP(() => {
+    const header = headerRef.current!
+    const mm = gsap.matchMedia()
+    mm.add(MQ.motion, () => {
+      gsap.from(header, { yPercent: -100, opacity: 0, duration: 1, delay: 0.2 })
+    })
+
+    const showAnim = gsap.to(header, { yPercent: -110, duration: 0.45, ease: 'power3.inOut', paused: true })
+    const st = ScrollTrigger.create({
+      start: 0,
+      end: 'max',
+      onUpdate: (self) => {
+        const y = self.scroll()
+        setIsScrolled(y > 30)
+        updateActive()
+        if (menuOpenRef.current || y < 200 || self.direction === -1) showAnim.reverse()
+        else showAnim.play()
+      },
+    })
+    return () => { st.kill(); showAnim.kill() }
+  }, { dependencies: [updateActive] })
 
   useEffect(() => {
     if (isMobileOpen) {
@@ -80,6 +96,13 @@ export default function Header() {
     }
   }
 
+  // Hover: labels scramble into place (pointer devices, motion allowed).
+  const scramble = (e: React.PointerEvent<HTMLAnchorElement>, text: string) => {
+    if (!window.matchMedia(MQ.pointerMotion).matches) return
+    const label = e.currentTarget.querySelector('[data-nav-label]')
+    gsap.to(label, { duration: 0.6, scrambleText: { text, chars: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', speed: 0.5 }, overwrite: true })
+  }
+
   // Allow modifier-clicks (new tab / new window) to behave natively
   const onNavClick = (e: React.MouseEvent, href: string) => {
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return
@@ -89,14 +112,12 @@ export default function Header() {
 
   return (
     <>
-      <motion.header
+      <header
+        ref={headerRef}
         className={cn(
-          "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
+          "fixed top-0 left-0 right-0 z-50 transition-[background-color,backdrop-filter,border-color,box-shadow] duration-500",
           isScrolled && "glass glass--header"
         )}
-        initial={{ y: -20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.5 }}
       >
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           {/* Logo */}
@@ -129,6 +150,7 @@ export default function Header() {
                   href={item.href}
                   aria-current={isActive ? 'true' : undefined}
                   onClick={(e) => onNavClick(e, item.href)}
+                  onPointerEnter={(e) => scramble(e, item.name)}
                   className="relative text-[13px] font-medium tracking-wide uppercase px-4 py-2 rounded-lg transition-colors"
                 >
                   {isActive && (
@@ -140,6 +162,7 @@ export default function Header() {
                     />
                   )}
                   <span
+                    data-nav-label
                     className="relative z-10 transition-colors duration-200"
                     style={{ color: isActive ? 'var(--accent-primary)' : 'var(--text-muted)' }}
                   >
@@ -232,7 +255,7 @@ export default function Header() {
             </AnimatePresence>
           </button>
         </div>
-      </motion.header>
+      </header>
 
       {/* Mobile fullscreen menu */}
       <AnimatePresence>

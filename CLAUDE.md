@@ -7,7 +7,7 @@ Personal portfolio website for **Mayer Frieg**, a Full-Stack Developer based in 
 - **Live URL:** https://mayerfrieg.dev
 - **Deployment:** Vercel
 - **Font:** Space Grotesk (display) + Geist Sans (body/UI) + Geist Mono (labels)
-- **Direction:** Editorial Minimalism — monochrome backbone + single indigo→violet accent; dark default, light supported
+- **Direction:** Editorial scroll-story — ocean palette (deep-sea teal, cerulean, icy glaze, frost white); dark default, light supported. Every section is a GSAP ScrollTrigger "chapter".
 
 ---
 
@@ -18,8 +18,8 @@ Personal portfolio website for **Mayer Frieg**, a Full-Stack Developer based in 
 | Framework | Next.js 15.5.9 (App Router, Turbopack) |
 | UI | React 19, TypeScript 5 |
 | Styling | Tailwind CSS v4, CSS-variable design tokens (`@theme` + `:root`/`[data-theme]`) |
-| Animations | Framer Motion (sole engine) — view-toggle + scroll-linked primitives |
-| Smooth scroll | Lenis (`SmoothScrollProvider`, auto-disabled under reduced-motion) |
+| Animations | GSAP 3 + ScrollTrigger (scroll-linked / scrubbed / pinned) · Framer Motion (entrances, hover, modals) |
+| Smooth scroll | Lenis driven by `gsap.ticker` + `ScrollTrigger.update` (`SmoothScrollProvider`, auto-disabled under reduced-motion) |
 | Icons | lucide-react |
 | Utilities | clsx, tailwind-merge |
 
@@ -63,10 +63,14 @@ src/
 │   ├── ScrollProgress.tsx  # Top scroll-progress bar (token-driven)
 │   ├── BackToTop.tsx       # Lenis scroll-to-top
 │   ├── TextReveal.tsx      # Slide-up + fade (view-toggle)
-│   ├── SplitText.tsx       # Word-by-word staggered reveal
+│   ├── Credentials.tsx     # Certifications & courses ledger (used inside Experience)
 │   ├── Testimonials.tsx
-│   └── motion/             # Framer Motion primitives
-│       ├── MotionSection.tsx, ScrollReveal.tsx, ScrollScaleReveal.tsx, ParallaxLayer.tsx
+│   ├── scroll/             # GSAP scroll/pointer pieces
+│   │   ├── SectionHeading.tsx   # "0N — eyebrow" + SplitText char/word mask reveal + scrubbed rule
+│   │   ├── VelocityMarquee.tsx  # Text strip; speed/direction/skew follow scroll velocity
+│   │   └── CustomCursor.tsx     # Dot + trailing ring; grows on links, labels on [data-cursor]
+│   └── motion/             # Framer Motion primitives (entrances, hover, modals)
+│       ├── MotionSection.tsx
 │       └── StaggerGrid.tsx, TiltCard.tsx, MagneticButton.tsx, AnimatedModal.tsx
 ├── providers/
 │   └── SmoothScrollProvider.tsx  # Lenis + useLenis hook (skipped under reduced-motion)
@@ -81,15 +85,17 @@ src/
 
 ### Page Section Order (top to bottom)
 
-1. **Header** — Fixed, transparent → glass-blur on scroll. Active-section tracking (`aria-current`). Nav items are `<a href>` with modifier-click guard. Mobile menu is a focus-trapped `role="dialog"` (Escape to close).
-2. **Hero** — Two-column editorial layout: oversized split "Mayer / Frieg" in Space Grotesk with clip reveal, accent rule, single tagline (typewriter removed), location, two MagneticButton CTAs, socials. Photo right with gradient border. Parallax on text/photo, reduced-motion-aware.
-3. **About** — Editorial bio + "currently building at QueenSoft" card + 4 stat counters. (The old tech-grid was removed — that content lives in Skills.)
-4. **Skills** — **Signature pinned horizontal-scroll**: vertical scroll drives oversized Space Grotesk tech names across a sticky viewport (desktop). Falls back to a category grid on mobile / reduced-motion. Lucide category icons.
-5. **Experience** — Education featured card + work dot-and-line timeline + grouped certs/courses by issuer. Issuers with ≥5 items (e.g. Anthropic) collapse into a compact list card. Certificate `AnimatedModal`.
-6. **Freelance** — Reframed as one **SafetyZone case study**: intro card + 3 deliverable cards (Web / Consumer App / Provider App) + `AnimatedModal` carousel (arrow-key nav).
-7. **Projects** — Category-filtered bento grid (All / Full-Stack / Mobile / Frontend). Dead `"#"` links are hidden. `ProjectDetailModal`.
-8. **Contact** — Email + CV CTA cards, consistent info row (Phone / Location / Save-as-PDF), social links, confetti.
-9. **Footer** — Quick nav + social echo + Lenis back-to-top.
+1. **Header** — Fixed; GSAP entrance; **hides on scroll down, returns on scroll up** (ScrollTrigger direction). Active section computed from rects (pin-safe). Desktop nav labels scramble on hover (ScrambleText). Mobile menu is a focus-trapped `role="dialog"`.
+2. **Hero** (01) — Split name "Mayer / Frieg" with the portrait between them. Desktop: **pinned** for +140%; the scroll splits the name apart, recedes the portrait and reveals the tagline word by word. Mouse parallax on name/photo. Mobile: stacked, no pin.
+   - Velocity marquee between Hero and About.
+3. **About** (02) — Bio statement whose words light up as you scroll (scrubbed SplitText), detail row + "currently building" card, stats grid with count-up on enter.
+4. **Skills** (03) — GSAP **pinned horizontal track** (desktop): category panels slide sideways, ghost outline word, counter + progress HUD, row reveals via `containerAnimation`. Mobile: grid with batch reveals.
+5. **Experience** (04) — Sticky role panel (index, logo, company, period) that follows the role in view + self-drawing timeline; education card; **Credentials ledger** (`Credentials.tsx`): sticky summary (counts, segmented filter, issuer logos) + year-grouped rows, row click opens the certificate `AnimatedModal`.
+6. **Freelance** (05) — SafetyZone case study intro + **stacking sticky cards** (each card scales back/dims as the next slides over) + `AnimatedModal` carousel.
+7. **Projects** (06) — Two **featured case-study rows** (Grace, MayerHub; `FEATURED_IDS`) with clip-path wipe + image parallax (accent duotone tint → full color on hover); then a filterable **index list** with a cursor-following preview image (desktop) / thumbnails (mobile). `ProjectDetailModal`.
+   - Outline velocity marquee before Contact.
+8. **Contact** (07) — Giant "Get In Touch" mailto CTA scaled by scroll, email/CV cards, info row, socials, confetti.
+9. **Footer** — Nav + socials + back-to-top, oversized wordmark that rises with the scroll.
 
 ### Dynamic Imports
 
@@ -99,23 +105,26 @@ src/
 
 ## Design System
 
-### Visual Direction — Editorial Minimalism
+### Visual Direction — Ocean
 
-Monochrome backbone (near-black ↔ white) + a single indigo→violet accent identity used sparingly.
+Deep-sea teal backbone, frost-white text, cerulean/icy-glaze accents used sparingly (dots, rules, accent words). Subtle animated film grain (`body::after`, `--grain-opacity`).
+Palette: Deep Sea Teal `#0C3846` · Arctic Ocean `#2A7387` · Cerulean Ripple `#5EB0C8` · Icy Glaze `#9FD3E3` · Frost White `#E4F4F8`.
 Dark mode is the default; light mode is fully supported via the `[data-theme]` token swap in `globals.css`.
 
 ```
-Dark (default)                     Light
-  --bg-primary:     #0a0a0f         --bg-primary:     #fafafa
-  --bg-secondary:   #101017         --bg-secondary:   #ffffff
-  --accent-primary:   #6366f1       --accent-primary:   #4f46e5
-  --accent-secondary: #8b5cf6       --accent-secondary: #7c3aed
-  --accent-gradient: linear-gradient(135deg, accent-primary → accent-secondary)
-  --text-primary:   #f5f5f7         --text-primary:   #09090b
-  --text-secondary: #a1a1aa         --text-secondary: #52525b
-  --text-muted:     #71717a
+Dark (default)                          Light
+  --bg-primary:     #082c38              --bg-primary:     #e4f4f8 (Frost White)
+  --bg-secondary:   #0c3846 (Deep Sea)   --bg-secondary:   #eef8fb
+  --text-primary:   #e4f4f8 (Frost)      --text-primary:   #0c3846 (Deep Sea)
+  --text-secondary: #9fd3e3 (Icy Glaze)  --text-secondary: #24606f
+  --text-muted:     #6fa6b8              --text-muted:     #3d7383
+  --accent-primary: #5eb0c8 (Cerulean)   --accent-primary: #2a7387 (Arctic Ocean)
+  --accent-gradient: Frost->Icy fill     --accent-gradient: Deep Sea->Arctic fill   (buttons, badges, bars)
+  --accent-ink:     #0c3846              --accent-ink:     #e4f4f8                  (text on fills)
+  --accent-text-gradient: Icy->Cerulean (dark) / Deep Sea->Arctic (light), used by .text-gradient
 ```
 
+**Fill rule:** any element whose inline style uses `--accent-gradient` automatically gets `--accent-ink` text (global rule in `globals.css`) — don't add `text-white` to fills.
 Semantic tokens (both themes): `--live` (green — "available/current"), `--warning`, `--info`.
 Cards: `var(--card-bg)` + `1px var(--card-border)`, hairline borders, minimal shadow. `.glass` (blur) is reserved for the header and overlays only, not default cards.
 `.dark-overlay` is **always dark** (white text sits on photos in both themes).
@@ -131,12 +140,17 @@ Cards: `var(--card-bg)` + `1px var(--card-border)`, hairline borders, minimal sh
 
 ### Animations
 
-- **Sole engine:** Framer Motion. There is **no** CSS IntersectionObserver scroll system.
-- **Two patterns:** view-toggle reveals (`MotionSection`, `TextReveal`, `SplitText`, `StaggerGrid` via `useInView`) and scroll-linked transforms (`ScrollReveal`, `ScrollScaleReveal`, `ParallaxLayer` via `useScroll`/`useTransform`).
+- **Two engines, split by job:**
+  - **GSAP** owns everything tied to scroll or pointer: scrubbed timelines, pins, scroll events, SplitText, ScrambleText, cursor, parallax. Import from `@/lib/gsap` (registers ScrollTrigger, SplitText, ScrambleTextPlugin, useGSAP once; exports `gsap`, `ScrollTrigger`, `SplitText`, `useGSAP`, `MQ`). Always `useGSAP(..., { scope })` + `gsap.matchMedia()` with `MQ.motion` / `MQ.desktopMotion` / `MQ.mobileMotion` / `MQ.pointerMotion` so reduced-motion and cleanup are automatic.
+  - **Framer Motion** owns hover/tap micro-interactions (`TiltCard`, `MagneticButton`), header mobile menu, and modals (`AnimatedModal`).
+  - Never let both engines animate the same element's transform — GSAP targets a wrapper (`data-*` hook) around Framer elements.
+- **Pins:** Hero (desktop) and Skills (desktop). Freelance stacking and the Experience/Credentials panels use CSS `sticky` — their sections are `overflow-clip` (not `overflow-hidden`, which breaks sticky).
+- **Tailwind + GSAP media:** horizontal/pinned layouts use the literal `lg:motion-safe:` variant (must be literal — Tailwind can't see classes built from template strings).
+- **Gradient text + SplitText:** split gradient words by *word* with `wordsClass: 'text-gradient'` — per-char transforms break `background-clip: text`.
+- **Refresh:** `SmoothScrollProvider` calls `ScrollTrigger.refresh()` (debounced) whenever page height changes (lazy sections, images, filters). Filtered lists re-create their triggers via `useGSAP({ dependencies, revertOnUpdate: true })`.
 - **Shared variants** in `lib/animations.ts` (`fadeInUp`, `staggerContainer`, `staggerItem`, `modal*`); `EASE_EDITORIAL = cubic-bezier(0.16,1,0.3,1)`.
-- **Smooth scroll:** Lenis via `SmoothScrollProvider` (skipped entirely under reduced-motion).
-- **Accessibility:** every motion primitive respects `prefers-reduced-motion` (Pattern B primitives bail out to static). The pinned horizontal-scroll section falls back to a grid.
-- Animate 1–2 key elements per view; the Skills pin is the **only** pinned section on the page.
+- **Smooth scroll:** Lenis via `SmoothScrollProvider`, ticked by `gsap.ticker` (skipped entirely under reduced-motion).
+- **Accessibility:** all GSAP effects live inside `MQ.motion`-gated matchMedia blocks, so reduced-motion gets static, fully visible content (no pins, no grain animation). The custom cursor is decorative; the native cursor stays.
 
 ### Responsive
 
