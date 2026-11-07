@@ -40,6 +40,8 @@ export default function SmoothScrollProvider({ children }: { children: ReactNode
       smoothWheel: true,
     })
     setLenisInstance(lenis)
+    // Dev-only handle for debugging scroll scenes from the console.
+    if (process.env.NODE_ENV !== 'production') (window as unknown as { __lenis?: Lenis }).__lenis = lenis
 
     lenis.on('scroll', ScrollTrigger.update)
     const tick = (time: number) => lenis.raf(time * 1000)

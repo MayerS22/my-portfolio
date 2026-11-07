@@ -82,7 +82,14 @@ export default function CustomCursor() {
           style={{ color: 'var(--accent-ink)' }}
         />
       </div>
-      <div data-c-dot className="absolute left-0 top-0 -ml-1 -mt-1 w-2 h-2 rounded-full" style={{ background: 'var(--accent-primary)' }} />
+      {/* Quill: the nib (bottom-left of the svg) sits exactly on the pointer */}
+      <div data-c-dot className="absolute left-0 top-0 -mt-[26px] w-[26px] h-[26px] origin-bottom-left">
+        <svg viewBox="0 0 26 26" className="w-full h-full drop-shadow-[0_2px_3px_rgba(0,0,0,0.6)]">
+          <path d="M1 25 L5 17 C 9 9, 16 3, 25 1 C 23 9, 17 16, 9 21 Z" fill="var(--accent-primary)" opacity="0.95" />
+          <path d="M1 25 L 18 8" stroke="var(--bg-primary)" strokeWidth="0.9" strokeLinecap="round" opacity="0.7" />
+          <path d="M11 15 l3 1 M14 12 l3 1 M17 9 l3 1" stroke="var(--bg-primary)" strokeWidth="0.6" opacity="0.5" />
+        </svg>
+      </div>
     </div>
   )
 }

@@ -43,6 +43,38 @@ const experiences = [
     { title: 'Python 3 Guide', issuer: 'Udemy', date: 'July 2023', image: '/images/Udemy.jpg', certificateImage: '/images/Certifcation/Python.jpg' }
   ]
 
+const NUMERALS = ['XII', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI']
+
+/** Brass clock face for the Journey chapter; hands are scrubbed by the timeline scroll. */
+function JourneyClock({ year }: { year: string }) {
+  return (
+    <div className="relative w-44 h-44 mb-8">
+      <svg viewBox="0 0 200 200" className="w-full h-full" aria-hidden>
+        <circle cx="100" cy="100" r="94" fill="var(--bg-elevated)" stroke="var(--accent-primary)" strokeWidth="2" />
+        <circle cx="100" cy="100" r="86" fill="none" stroke="var(--border-hair)" strokeWidth="1" />
+        <circle data-jc-arc cx="100" cy="100" r="90" fill="none" stroke="var(--accent-primary)" strokeWidth="3" pathLength={1} className="ink-stroke" transform="rotate(-90 100 100)" opacity="0.8" />
+        {Array.from({ length: 60 }).map((_, i) => (
+          <line key={i} x1="100" y1="14" x2="100" y2={i % 5 === 0 ? 22 : 18} stroke="var(--accent-primary)" strokeWidth={i % 5 === 0 ? 1.6 : 0.6} opacity={i % 5 === 0 ? 0.9 : 0.4} transform={`rotate(${i * 6} 100 100)`} />
+        ))}
+        {NUMERALS.map((n, i) => {
+          const a = (i * 30 - 90) * (Math.PI / 180)
+          return (
+            <text key={n} x={100 + Math.cos(a) * 66} y={100 + Math.sin(a) * 66 + 5} textAnchor="middle" fontSize={i % 3 === 0 ? 15 : 10} fill="var(--text-secondary)" style={{ fontFamily: 'var(--font-serif)' }} opacity={i % 3 === 0 ? 1 : 0.55}>
+              {n}
+            </text>
+          )
+        })}
+        <line data-jc-hour x1="100" y1="100" x2="100" y2="58" stroke="var(--text-primary)" strokeWidth="5" strokeLinecap="round" />
+        <line data-jc-min x1="100" y1="112" x2="100" y2="30" stroke="var(--accent-primary)" strokeWidth="2.5" strokeLinecap="round" />
+        <circle cx="100" cy="100" r="6" fill="var(--accent-primary)" />
+      </svg>
+      <span key={year} className="exp-panel-swap absolute left-1/2 -translate-x-1/2 bottom-[22%] font-mono text-[0.65rem] tracking-[0.25em]" style={{ color: 'var(--accent-primary)' }}>
+        {year}
+      </span>
+    </div>
+  )
+}
+
 const Experience = () => {
   const sectionRef = useRef<HTMLElement>(null)
   const timelineRef = useRef<HTMLDivElement>(null)
@@ -59,6 +91,15 @@ const Experience = () => {
         ease: 'none',
         scrollTrigger: { trigger: timelineRef.current, start: 'top 60%', end: 'bottom 60%', scrub: 0.6 },
       })
+
+      // Journey clock: as you read down the timeline, the hands race through the years
+      gsap.timeline({
+        defaults: { ease: 'none' },
+        scrollTrigger: { trigger: timelineRef.current, start: 'top 60%', end: 'bottom 60%', scrub: 1 },
+      })
+        .fromTo('[data-jc-min]', { rotation: 0, svgOrigin: '100 100' }, { rotation: 360 * 4, svgOrigin: '100 100' }, 0)
+        .fromTo('[data-jc-hour]', { rotation: 0, svgOrigin: '100 100' }, { rotation: 120, svgOrigin: '100 100' }, 0)
+        .fromTo('[data-jc-arc]', { strokeDashoffset: 1 }, { strokeDashoffset: 0 }, 0)
 
       gsap.utils.toArray<HTMLElement>('[data-exp-card]').forEach((card) => {
         gsap.from(card, {
@@ -108,7 +149,7 @@ const Experience = () => {
       <div className="absolute inset-0 pointer-events-none gradient-mesh" />
 
       <div className="container-content relative z-10">
-        <SectionHeading index="04" eyebrow="My journey" title="Experience &" accent="Education" />
+        <SectionHeading index="04" eyebrow="The journey so far" title="Experience &" accent="Education" />
 
         <div className="max-w-6xl mx-auto">
           {/* Work Experience: sticky role panel + timeline */}
@@ -121,7 +162,8 @@ const Experience = () => {
                   </div>
                   <h3 className="font-display text-xl font-semibold" style={{ color: 'var(--text-primary)' }}>Work Experience</h3>
                 </div>
-                <div className="heading-display tabular-nums leading-none mb-6" style={{ fontSize: 'clamp(5rem, 9vw, 8rem)' }}>
+                <JourneyClock year={experiences[activeExp].year} />
+                <div className="heading-display tabular-nums leading-none mb-6" style={{ fontSize: 'clamp(3.5rem, 6vw, 5.5rem)' }}>
                   <span className="text-gradient">{String(activeExp + 1).padStart(2, '0')}</span>
                   <span className="text-3xl align-top ml-2" style={{ color: 'var(--text-muted)' }}>/ {String(experiences.length).padStart(2, '0')}</span>
                 </div>
@@ -154,7 +196,9 @@ const Experience = () => {
                   {experiences.map((exp) => (
                     <div key={exp.title} data-exp-card className="relative">
                       <div className="absolute -left-8 top-6 w-[15px] h-[15px] flex items-center justify-center">
-                        <div data-timeline-dot className="w-2.5 h-2.5 rounded-full" style={{ background: exp.isCurrent ? 'var(--live)' : 'var(--accent-primary)' }} />
+                        <div data-timeline-dot className="w-3 h-3 rounded-full relative" style={{ border: `1.5px solid ${exp.isCurrent ? 'var(--live)' : 'var(--accent-primary)'}`, background: 'var(--bg-primary)' }}>
+                          <span className="absolute left-1/2 top-[1px] w-px h-[4px] -translate-x-1/2 clock-tick origin-bottom" style={{ background: exp.isCurrent ? 'var(--live)' : 'var(--accent-primary)' }} />
+                        </div>
                       </div>
 
                       <TiltCard>

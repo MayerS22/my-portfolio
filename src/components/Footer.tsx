@@ -62,7 +62,7 @@ export default function Footer() {
 
       <div className="container-content mt-10">
         <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
-          &copy; {new Date().getFullYear()} Mayer Frieg. Designed &amp; built with passion.
+          &copy; {new Date().getFullYear()} Mayer Frieg. Written in code, one chapter at a time. <span className="serif-italic" style={{ color: 'var(--accent-primary)' }}>Fin.</span>
         </p>
       </div>
 

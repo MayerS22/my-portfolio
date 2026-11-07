@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 /* ============================================================
-   THEME SYSTEM — Editorial Minimalism
-   Ocean palette: deep-sea teal backbone, cerulean/icy accents, frost-white text.
+   THEME SYSTEM — Midnight Library
+   The portfolio as a book: leather & ink backbone, brass/gilt accents, parchment text.
    ============================================================ */
 
 @theme {
@@ -26,7 +26,8 @@
   --color-card-border: var(--card-border);
 
   /* Fonts */
-  --font-display: var(--font-space-grotesk), var(--font-geist-sans), sans-serif;
+  --font-display: var(--font-fraunces), Georgia, 'Times New Roman', serif;
+  --font-serif: var(--font-fraunces), Georgia, serif;
   --font-sans: var(--font-geist-sans), Arial, Helvetica, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 
@@ -44,104 +45,114 @@
   --ease-editorial: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* ---------- Dark Theme (Default) — Aqua Nebula ----------
-   Palette: Midnight Abyss #061826 · Atlantic Steel #1C4E75 · Tidepool Teal #2FA0C6
-            Summer Surf #58C9F3 · Glacier Mist #BDE5FF */
+/* ---------- Dark Theme (Default) — Midnight Library ----------
+   Palette: Ink Leather #0e0a07 · Walnut #1a130d · Brass #d6a85c · Parchment #f3e6cc · Sage #9fbf7a
+   The site is Mayer's book: warm ink, gilt edges, candle-lit paper. */
 :root,
 [data-theme="dark"] {
-  --bg-primary: #061826;
-  --bg-secondary: #0a2236;
-  --bg-tertiary: #102c45;
-  --bg-elevated: #0d2740;
+  --bg-primary: #0e0a07;
+  --bg-secondary: #140f0a;
+  --bg-tertiary: #20180f;
+  --bg-elevated: #1a130d;
 
-  /* Accent: Summer Surf / Tidepool Teal (dots, rules, accent words) */
-  --accent-primary: #58c9f3;
-  --accent-secondary: #2fa0c6;
-  /* Fills (buttons, badges, bars): Glacier Mist -> Summer Surf */
-  --accent-gradient: linear-gradient(120deg, #bde5ff 0%, #58c9f3 100%);
-  --accent-ink: #061826; /* text on fills */
-  --accent-text-gradient: linear-gradient(120deg, #bde5ff 0%, #58c9f3 100%);
+  --accent-primary: #d6a85c;
+  --accent-secondary: #b07f3c;
+  --accent-gradient: linear-gradient(120deg, #f6e7c8 0%, #d6a85c 100%);
+  --accent-ink: #140e09;
+  --accent-text-gradient: linear-gradient(120deg, #f6e7c8 0%, #e2b468 55%, #b07f3c 100%);
 
-  --text-primary: #eef8ff;
-  --text-secondary: #bde5ff;
-  --text-muted: #7fa8c6;
+  --text-primary: #f5ead6;
+  --text-secondary: #dcc8a6;
+  --text-muted: #9e8868;
 
-  /* Semantic */
-  --live: #7fd8a9;
-  --warning: #f0cf8a;
-  --info: #bde5ff;
+  --live: #9fbf7a;
+  --warning: #e8b86a;
+  --info: #dcc8a6;
 
-  /* Surfaces / lines */
-  --border-hair: rgba(189, 229, 255, 0.10);
-  --card-bg: #0a2236;
-  --card-border: rgba(189, 229, 255, 0.12);
+  /* Book materials */
+  --paper: #efe2c6;
+  --paper-2: #e0cca5;
+  --paper-ink: #2a1d12;
+  --paper-line: rgba(42, 29, 18, 0.12);
+  --leather: #4a2c18;
+  --leather-2: #2a180c;
+
+  --border-hair: rgba(243, 230, 204, 0.09);
+  --card-bg: #15100b;
+  --card-border: rgba(243, 230, 204, 0.11);
   --card-hover-border: var(--accent-primary);
 
-  --glass-bg: rgba(189, 229, 255, 0.05);
-  --glass-border: rgba(189, 229, 255, 0.14);
-  --glass-shadow: 0 8px 32px rgba(2, 20, 26, 0.5);
+  --glass-bg: rgba(243, 230, 204, 0.045);
+  --glass-border: rgba(243, 230, 204, 0.13);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
 
-  --selection-bg: rgba(88, 201, 243, 0.35);
+  --selection-bg: rgba(214, 168, 92, 0.35);
 
-  --scrollbar-track: #071c2c;
-  --scrollbar-thumb: #1c4e75;
+  --scrollbar-track: #0e0a07;
+  --scrollbar-thumb: #4a3420;
 
-  --gradient-mesh: radial-gradient(at 15% 85%, rgba(28, 78, 117, 0.45) 0, transparent 50%),
-                    radial-gradient(at 85% 15%, rgba(47, 160, 198, 0.14) 0, transparent 45%);
+  /* Candle light: warm pool top-left, ember bottom-right */
+  --gradient-mesh: radial-gradient(at 18% 12%, rgba(214, 168, 92, 0.13) 0, transparent 50%),
+                    radial-gradient(at 85% 90%, rgba(176, 95, 44, 0.10) 0, transparent 45%);
 
   --section-bg-alt: var(--bg-secondary);
-  --section-bg-alt-2: radial-gradient(ellipse at 80% 50%, rgba(88, 201, 243, 0.06) 0%, transparent 50%);
+  --section-bg-alt-2: radial-gradient(ellipse at 80% 50%, rgba(214, 168, 92, 0.06) 0%, transparent 50%);
 
-  --grain-opacity: 0.05;
+  --grain-opacity: 0.07;
 
-  /* Photo scrim */
-  --scrim-strong: linear-gradient(to top, rgba(6, 24, 38, 0.94) 0%, rgba(6, 24, 38, 0.7) 38%, rgba(6, 24, 38, 0.25) 68%, transparent 100%);
+  --scrim-strong: linear-gradient(to top, rgba(14, 10, 7, 0.94) 0%, rgba(14, 10, 7, 0.7) 38%, rgba(14, 10, 7, 0.25) 68%, transparent 100%);
 }
 
 [data-theme="light"] {
-  --bg-primary: #eef7ff;
-  --bg-secondary: #f6fbff;
-  --bg-tertiary: #dbeefc;
-  --bg-elevated: #fbfdff;
+  --bg-primary: #f3ead8;
+  --bg-secondary: #f8f1e3;
+  --bg-tertiary: #e9dcc2;
+  --bg-elevated: #fbf6ec;
 
-  --accent-primary: #1c6f99;
-  --accent-secondary: #2fa0c6;
-  --accent-gradient: linear-gradient(120deg, #061826 0%, #1c4e75 100%);
-  --accent-ink: #eef7ff;
-  --accent-text-gradient: linear-gradient(120deg, #1c4e75 0%, #1f8db5 100%);
+  --accent-primary: #8a5a22;
+  --accent-secondary: #a8732f;
+  --accent-gradient: linear-gradient(120deg, #2a1d12 0%, #6b4520 100%);
+  --accent-ink: #f8f1e3;
+  --accent-text-gradient: linear-gradient(120deg, #3a2414 0%, #8a5a22 60%, #b07f3c 100%);
 
-  --text-primary: #061826;
-  --text-secondary: #1c4e75;
-  --text-muted: #3d6a8e;
+  --text-primary: #21170e;
+  --text-secondary: #4f3a25;
+  --text-muted: #7d6448;
 
-  /* Semantic (darker for contrast on light) */
-  --live: #1f7a52;
-  --warning: #8a6a1f;
-  --info: #1c4e75;
+  --live: #4d7a2e;
+  --warning: #8a5a22;
+  --info: #4f3a25;
 
-  --border-hair: rgba(6, 24, 38, 0.12);
-  --card-bg: #fbfdff;
-  --card-border: rgba(6, 24, 38, 0.12);
+  --paper: #fbf5e8;
+  --paper-2: #e9d9b8;
+  --paper-ink: #2a1d12;
+  --paper-line: rgba(42, 29, 18, 0.12);
+  --leather: #6a4122;
+  --leather-2: #3a2414;
+
+  --border-hair: rgba(33, 23, 14, 0.12);
+  --card-bg: #fbf6ec;
+  --card-border: rgba(33, 23, 14, 0.12);
   --card-hover-border: var(--accent-primary);
 
-  --glass-bg: rgba(251, 253, 255, 0.75);
-  --glass-border: rgba(6, 24, 38, 0.12);
-  --glass-shadow: 0 8px 32px rgba(6, 24, 38, 0.10);
+  --glass-bg: rgba(251, 246, 236, 0.78);
+  --glass-border: rgba(33, 23, 14, 0.12);
+  --glass-shadow: 0 8px 32px rgba(33, 23, 14, 0.10);
 
-  --selection-bg: rgba(88, 201, 243, 0.3);
+  --selection-bg: rgba(176, 127, 60, 0.28);
 
-  --scrollbar-track: #e1effa;
-  --scrollbar-thumb: #8fb9d8;
+  --scrollbar-track: #efe4cf;
+  --scrollbar-thumb: #c4a57a;
 
-  --gradient-mesh: radial-gradient(at 15% 85%, rgba(88, 201, 243, 0.18) 0, transparent 50%),
-                    radial-gradient(at 85% 15%, rgba(189, 229, 255, 0.45) 0, transparent 45%);
+  --gradient-mesh: radial-gradient(at 18% 12%, rgba(214, 168, 92, 0.22) 0, transparent 50%),
+                    radial-gradient(at 85% 90%, rgba(176, 95, 44, 0.10) 0, transparent 45%);
 
   --section-bg-alt: var(--bg-secondary);
-  --section-bg-alt-2: radial-gradient(ellipse at 80% 50%, rgba(47, 160, 198, 0.08) 0%, transparent 50%);
+  --section-bg-alt-2: radial-gradient(ellipse at 80% 50%, rgba(138, 90, 34, 0.08) 0%, transparent 50%);
 
-  --grain-opacity: 0.06;
+  --grain-opacity: 0.08;
 
-  --scrim-strong: linear-gradient(to top, rgba(238, 247, 255, 0.94) 0%, rgba(238, 247, 255, 0.7) 38%, rgba(238, 247, 255, 0.25) 68%, transparent 100%);
+  --scrim-strong: linear-gradient(to top, rgba(243, 234, 216, 0.94) 0%, rgba(243, 234, 216, 0.7) 38%, rgba(243, 234, 216, 0.25) 68%, transparent 100%);
 }
 
 /* ========== Base Styles ========== */
@@ -195,8 +206,9 @@ body {
 .font-display { font-family: var(--font-display); }
 .heading-display {
   font-family: var(--font-display);
-  font-weight: 700;
-  letter-spacing: -0.03em;
+  font-weight: 600;
+  font-variation-settings: "opsz" 144, "SOFT" 30;
+  letter-spacing: -0.025em;
   line-height: 0.98;
 }
 .eyebrow {
@@ -238,6 +250,10 @@ body {
   box-shadow: var(--glass-shadow);
 }
 .glass--header {
+  /* Opaque-ish instead of backdrop-filter: blurring the page under a fixed bar costs a repaint every scroll frame. */
+  background: color-mix(in srgb, var(--bg-primary) 88%, transparent);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
   border-top: none;
   border-left: none;
   border-right: none;
@@ -378,12 +394,12 @@ body {
 body::after {
   content: "";
   position: fixed;
-  inset: -50%;
+  inset: 0;
   z-index: 70;
   pointer-events: none;
   opacity: var(--grain-opacity, 0.06);
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  animation: grain 1.2s steps(6) infinite;
+  /* Static on purpose: an animated full-screen overlay costs a composite every frame, forever. */
 }
 @keyframes grain {
   0% { transform: translate(0, 0); }
@@ -395,3 +411,115 @@ body::after {
 }
 @media (prefers-reduced-motion: reduce) { body::after { animation: none; } }
 @media print { body::after { display: none; } }
+
+/* ============================================================
+   BOOK & TIME — materials for the "Midnight Library" story
+   ============================================================ */
+.font-serif { font-family: var(--font-serif); }
+.serif-italic { font-family: var(--font-serif); font-style: italic; font-variation-settings: "opsz" 144, "SOFT" 100; }
+
+/* Paper: warm sheet with faint ruling, foxed edges and a soft inner vignette */
+.paper {
+  background-color: var(--paper);
+  background-image:
+    radial-gradient(ellipse at 50% 40%, transparent 55%, rgba(120, 80, 30, 0.18) 100%),
+    repeating-linear-gradient(to bottom, transparent 0 25px, var(--paper-line) 25px 26px);
+  color: var(--paper-ink);
+}
+.paper-plain {
+  background-color: var(--paper);
+  background-image: radial-gradient(ellipse at 50% 40%, transparent 55%, rgba(120, 80, 30, 0.2) 100%);
+  color: var(--paper-ink);
+}
+
+/* Leather cover with a tooled gilt frame */
+.leather {
+  background-color: var(--leather);
+  background-image:
+    radial-gradient(ellipse at 30% 20%, rgba(255, 220, 160, 0.14), transparent 60%),
+    radial-gradient(ellipse at 80% 90%, rgba(0, 0, 0, 0.45), transparent 60%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='l'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.35 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23l)'/%3E%3C/svg%3E");
+}
+.gilt-frame { position: absolute; inset: 7%; border: 1.5px solid rgba(226, 180, 104, 0.75); border-radius: 3px; }
+.gilt-frame::after { content: ''; position: absolute; inset: 5px; border: 1px solid rgba(226, 180, 104, 0.4); border-radius: 2px; }
+.gilt-text {
+  background: linear-gradient(120deg, #f6e7c8 0%, #e2b468 45%, #9c6a2c 100%);
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+}
+
+/* 3D book. --bw drives every dimension so it scales as one object. */
+.book-stage { perspective: 2400px; perspective-origin: 50% 40%; }
+.book {
+  --bw: clamp(150px, 21vw, 330px);
+  position: relative;
+  width: var(--bw);
+  height: calc(var(--bw) * 1.42);
+  transform-style: preserve-3d;
+}
+.book > * { position: absolute; inset: 0; border-radius: 2px 6px 6px 2px; }
+.book-back { background: var(--leather-2); transform: translateZ(-2px); box-shadow: 0 50px 80px -20px rgba(0, 0, 0, 0.7); }
+.book-block {
+  inset: 2% 1.5% 2% 0 !important;
+  /* fake page-edge thickness */
+  box-shadow: 1px 0 0 var(--paper-2), 2px 0 0 var(--paper), 3px 0 0 var(--paper-2), 4px 0 0 var(--paper), 5px 0 0 var(--paper-2), 6px 1px 0 #b99a6a;
+}
+.book-leaf, .book-cover { transform-origin: left center; transform-style: preserve-3d; }
+.book-leaf { inset: 2% 1.5% 2% 0 !important; }
+.book-face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: inherit; overflow: hidden; }
+.book-face--back { transform: rotateY(180deg); }
+.book-spine-shade { position: absolute; inset: 0 auto 0 0; width: 9%; background: linear-gradient(90deg, rgba(0,0,0,0.55), rgba(255,220,160,0.12) 45%, rgba(0,0,0,0.2)); }
+.page-gutter { position: absolute; inset: 0 auto 0 0; width: 14%; background: linear-gradient(90deg, rgba(90, 60, 25, 0.35), transparent); pointer-events: none; }
+.page-gutter--right { inset: 0 0 0 auto; background: linear-gradient(270deg, rgba(90, 60, 25, 0.35), transparent); }
+
+/* Desk surface & candle glow under the hero props */
+.desk-glow {
+  background: radial-gradient(ellipse at 50% 70%, rgba(226, 170, 90, 0.22), transparent 62%);
+  will-change: opacity;
+}
+@keyframes glow-flicker { 0%, 100% { opacity: 1; } 30% { opacity: 0.85; } 55% { opacity: 0.95; } 78% { opacity: 0.8; } }
+.glow-flicker { animation: glow-flicker 3.2s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .glow-flicker { animation: none; } }
+.desk-shadow { background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.55), transparent 70%); filter: blur(6px); }
+
+/* Hourglass: sand levels follow --p (0 → 1) set on the svg */
+.hourglass { --p: 0; overflow: visible; }
+.hourglass .sand-top { transform: translateY(calc(var(--p) * 30px)); }
+.hourglass .sand-bottom { transform: translateY(calc((1 - var(--p)) * 30px)); }
+.hourglass .sand-stream { stroke-dasharray: 2 3; animation: sand-fall 0.5s linear infinite; }
+@keyframes sand-fall { to { stroke-dashoffset: -5; } }
+
+/* Ink: hand-drawn strokes that write themselves */
+.ink-stroke { stroke-dasharray: 1; stroke-dashoffset: 1; }
+
+/* Clock ticking (decorative) */
+@keyframes tick { to { transform: rotate(360deg); } }
+.clock-tick { transform-origin: 50% 50%; transform-box: fill-box; animation: tick 60s steps(60) infinite; }
+
+/* Candle flicker for warm glows */
+@keyframes flicker {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  22% { opacity: 0.86; transform: scale(0.98); }
+  48% { opacity: 0.95; transform: scale(1.02); }
+  71% { opacity: 0.82; transform: scale(0.99); }
+}
+.flicker { animation: flicker 3.2s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hourglass .sand-stream, .clock-tick, .flicker { animation: none; }
+}
+
+/* Handwriting (diary entries, margin notes) */
+.font-hand { font-family: var(--font-hand), 'Segoe Print', cursive; }
+.ink-blue { color: #22314f; }
+.ink-gold { color: #9a6424; }
+/* Coffee ring stain */
+.coffee-ring {
+  border-radius: 50%;
+  background: radial-gradient(circle, transparent 58%, rgba(120, 72, 28, 0.22) 61%, rgba(120, 72, 28, 0.08) 66%, transparent 70%);
+}
+
+/* Interlude ink-bleed: while parchment covers the quote, its text turns to ink */
+[data-quote], [data-author], [data-folio-l], [data-folio-r] { transition: color 0.35s ease; }
+section.inked [data-quote] { color: var(--paper-ink) !important; }
+section.inked [data-author] { color: #7a4f22 !important; }
+section.inked [data-folio-l], section.inked [data-folio-r] { color: #7a5a38 !important; }
