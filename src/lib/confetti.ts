@@ -9,7 +9,7 @@ export function confettiBurst(originX: number, originY: number) {
   document.body.appendChild(canvas)
 
   const ctx = canvas.getContext('2d')!
-  const colors = ['#0c3846', '#2a7387', '#5eb0c8', '#9fd3e3', '#e4f4f8', '#ffffff']
+  const colors = ['#061826', '#1c4e75', '#2fa0c6', '#58c9f3', '#bde5ff', '#ffffff']
 
   const particles = Array.from({ length: 50 }, () => ({
     x: originX,

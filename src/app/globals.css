@@ -44,104 +44,104 @@
   --ease-editorial: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* ---------- Dark Theme (Default) — ocean ----------
-   Palette: Deep Sea Teal #0C3846 · Arctic Ocean #2A7387 · Cerulean Ripple #5EB0C8
-            Icy Glaze #9FD3E3 · Frost White #E4F4F8 */
+/* ---------- Dark Theme (Default) — Aqua Nebula ----------
+   Palette: Midnight Abyss #061826 · Atlantic Steel #1C4E75 · Tidepool Teal #2FA0C6
+            Summer Surf #58C9F3 · Glacier Mist #BDE5FF */
 :root,
 [data-theme="dark"] {
-  --bg-primary: #082c38;
-  --bg-secondary: #0c3846;
-  --bg-tertiary: #114453;
-  --bg-elevated: #0f3f4d;
+  --bg-primary: #061826;
+  --bg-secondary: #0a2236;
+  --bg-tertiary: #102c45;
+  --bg-elevated: #0d2740;
 
-  /* Accent: Cerulean Ripple -> Icy Glaze (dots, rules, accent words) */
-  --accent-primary: #5eb0c8;
-  --accent-secondary: #9fd3e3;
-  /* Fills (buttons, badges, bars): Frost White -> Icy Glaze */
-  --accent-gradient: linear-gradient(120deg, #e4f4f8 0%, #9fd3e3 100%);
-  --accent-ink: #0c3846; /* text on fills */
-  --accent-text-gradient: linear-gradient(120deg, #9fd3e3 0%, #5eb0c8 100%);
+  /* Accent: Summer Surf / Tidepool Teal (dots, rules, accent words) */
+  --accent-primary: #58c9f3;
+  --accent-secondary: #2fa0c6;
+  /* Fills (buttons, badges, bars): Glacier Mist -> Summer Surf */
+  --accent-gradient: linear-gradient(120deg, #bde5ff 0%, #58c9f3 100%);
+  --accent-ink: #061826; /* text on fills */
+  --accent-text-gradient: linear-gradient(120deg, #bde5ff 0%, #58c9f3 100%);
 
-  --text-primary: #e4f4f8;
-  --text-secondary: #9fd3e3;
-  --text-muted: #6fa6b8;
+  --text-primary: #eef8ff;
+  --text-secondary: #bde5ff;
+  --text-muted: #7fa8c6;
 
   /* Semantic */
   --live: #7fd8a9;
   --warning: #f0cf8a;
-  --info: #9fd3e3;
+  --info: #bde5ff;
 
   /* Surfaces / lines */
-  --border-hair: rgba(228, 244, 248, 0.10);
-  --card-bg: #0c3846;
-  --card-border: rgba(159, 211, 227, 0.14);
+  --border-hair: rgba(189, 229, 255, 0.10);
+  --card-bg: #0a2236;
+  --card-border: rgba(189, 229, 255, 0.12);
   --card-hover-border: var(--accent-primary);
 
-  --glass-bg: rgba(228, 244, 248, 0.05);
-  --glass-border: rgba(159, 211, 227, 0.16);
+  --glass-bg: rgba(189, 229, 255, 0.05);
+  --glass-border: rgba(189, 229, 255, 0.14);
   --glass-shadow: 0 8px 32px rgba(2, 20, 26, 0.5);
 
-  --selection-bg: rgba(94, 176, 200, 0.35);
+  --selection-bg: rgba(88, 201, 243, 0.35);
 
-  --scrollbar-track: #072833;
-  --scrollbar-thumb: #2a7387;
+  --scrollbar-track: #071c2c;
+  --scrollbar-thumb: #1c4e75;
 
-  --gradient-mesh: radial-gradient(at 15% 85%, rgba(42, 115, 135, 0.28) 0, transparent 50%),
-                    radial-gradient(at 85% 15%, rgba(94, 176, 200, 0.12) 0, transparent 45%);
+  --gradient-mesh: radial-gradient(at 15% 85%, rgba(28, 78, 117, 0.45) 0, transparent 50%),
+                    radial-gradient(at 85% 15%, rgba(47, 160, 198, 0.14) 0, transparent 45%);
 
   --section-bg-alt: var(--bg-secondary);
-  --section-bg-alt-2: radial-gradient(ellipse at 80% 50%, rgba(94, 176, 200, 0.06) 0%, transparent 50%);
+  --section-bg-alt-2: radial-gradient(ellipse at 80% 50%, rgba(88, 201, 243, 0.06) 0%, transparent 50%);
 
   --grain-opacity: 0.05;
 
   /* Photo scrim */
-  --scrim-strong: linear-gradient(to top, rgba(8, 44, 56, 0.94) 0%, rgba(8, 44, 56, 0.7) 38%, rgba(8, 44, 56, 0.25) 68%, transparent 100%);
+  --scrim-strong: linear-gradient(to top, rgba(6, 24, 38, 0.94) 0%, rgba(6, 24, 38, 0.7) 38%, rgba(6, 24, 38, 0.25) 68%, transparent 100%);
 }
 
 [data-theme="light"] {
-  --bg-primary: #e4f4f8;
-  --bg-secondary: #eef8fb;
-  --bg-tertiary: #d2eaf1;
-  --bg-elevated: #f6fbfd;
+  --bg-primary: #eef7ff;
+  --bg-secondary: #f6fbff;
+  --bg-tertiary: #dbeefc;
+  --bg-elevated: #fbfdff;
 
-  --accent-primary: #2a7387;
-  --accent-secondary: #5eb0c8;
-  --accent-gradient: linear-gradient(120deg, #0c3846 0%, #2a7387 100%);
-  --accent-ink: #e4f4f8;
-  --accent-text-gradient: linear-gradient(120deg, #0c3846 0%, #2a7387 100%);
+  --accent-primary: #1c6f99;
+  --accent-secondary: #2fa0c6;
+  --accent-gradient: linear-gradient(120deg, #061826 0%, #1c4e75 100%);
+  --accent-ink: #eef7ff;
+  --accent-text-gradient: linear-gradient(120deg, #1c4e75 0%, #1f8db5 100%);
 
-  --text-primary: #0c3846;
-  --text-secondary: #24606f;
-  --text-muted: #3d7383;
+  --text-primary: #061826;
+  --text-secondary: #1c4e75;
+  --text-muted: #3d6a8e;
 
   /* Semantic (darker for contrast on light) */
   --live: #1f7a52;
   --warning: #8a6a1f;
-  --info: #2a7387;
+  --info: #1c4e75;
 
-  --border-hair: rgba(12, 56, 70, 0.12);
-  --card-bg: #f6fbfd;
-  --card-border: rgba(12, 56, 70, 0.12);
+  --border-hair: rgba(6, 24, 38, 0.12);
+  --card-bg: #fbfdff;
+  --card-border: rgba(6, 24, 38, 0.12);
   --card-hover-border: var(--accent-primary);
 
-  --glass-bg: rgba(246, 251, 253, 0.75);
-  --glass-border: rgba(12, 56, 70, 0.12);
-  --glass-shadow: 0 8px 32px rgba(12, 56, 70, 0.10);
+  --glass-bg: rgba(251, 253, 255, 0.75);
+  --glass-border: rgba(6, 24, 38, 0.12);
+  --glass-shadow: 0 8px 32px rgba(6, 24, 38, 0.10);
 
-  --selection-bg: rgba(94, 176, 200, 0.3);
+  --selection-bg: rgba(88, 201, 243, 0.3);
 
-  --scrollbar-track: #d8edf3;
-  --scrollbar-thumb: #8fbfcd;
+  --scrollbar-track: #e1effa;
+  --scrollbar-thumb: #8fb9d8;
 
-  --gradient-mesh: radial-gradient(at 15% 85%, rgba(94, 176, 200, 0.18) 0, transparent 50%),
-                    radial-gradient(at 85% 15%, rgba(159, 211, 227, 0.30) 0, transparent 45%);
+  --gradient-mesh: radial-gradient(at 15% 85%, rgba(88, 201, 243, 0.18) 0, transparent 50%),
+                    radial-gradient(at 85% 15%, rgba(189, 229, 255, 0.45) 0, transparent 45%);
 
   --section-bg-alt: var(--bg-secondary);
-  --section-bg-alt-2: radial-gradient(ellipse at 80% 50%, rgba(94, 176, 200, 0.08) 0%, transparent 50%);
+  --section-bg-alt-2: radial-gradient(ellipse at 80% 50%, rgba(47, 160, 198, 0.08) 0%, transparent 50%);
 
   --grain-opacity: 0.06;
 
-  --scrim-strong: linear-gradient(to top, rgba(228, 244, 248, 0.94) 0%, rgba(228, 244, 248, 0.7) 38%, rgba(228, 244, 248, 0.25) 68%, transparent 100%);
+  --scrim-strong: linear-gradient(to top, rgba(238, 247, 255, 0.94) 0%, rgba(238, 247, 255, 0.7) 38%, rgba(238, 247, 255, 0.25) 68%, transparent 100%);
 }
 
 /* ========== Base Styles ========== */

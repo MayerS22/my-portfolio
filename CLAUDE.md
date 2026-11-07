@@ -7,7 +7,7 @@ Personal portfolio website for **Mayer Frieg**, a Full-Stack Developer based in 
 - **Live URL:** https://mayerfrieg.dev
 - **Deployment:** Vercel
 - **Font:** Space Grotesk (display) + Geist Sans (body/UI) + Geist Mono (labels)
-- **Direction:** Editorial scroll-story — ocean palette (deep-sea teal, cerulean, icy glaze, frost white); dark default, light supported. Every section is a GSAP ScrollTrigger "chapter".
+- **Direction:** Editorial scroll-story — Aqua Nebula palette (midnight abyss, atlantic steel, tidepool teal, summer surf, glacier mist); dark default, light supported. Every section is a GSAP ScrollTrigger "chapter".
 
 ---
 
@@ -105,23 +105,23 @@ src/
 
 ## Design System
 
-### Visual Direction — Ocean
+### Visual Direction — Aqua Nebula
 
-Deep-sea teal backbone, frost-white text, cerulean/icy-glaze accents used sparingly (dots, rules, accent words). Subtle animated film grain (`body::after`, `--grain-opacity`).
-Palette: Deep Sea Teal `#0C3846` · Arctic Ocean `#2A7387` · Cerulean Ripple `#5EB0C8` · Icy Glaze `#9FD3E3` · Frost White `#E4F4F8`.
+Midnight-abyss backbone, glacier-mist text, surf/tidepool accents used sparingly (dots, rules, accent words). Subtle animated film grain (`body::after`, `--grain-opacity`).
+Palette: Midnight Abyss `#061826` · Atlantic Steel `#1C4E75` · Tidepool Teal `#2FA0C6` · Summer Surf `#58C9F3` · Glacier Mist `#BDE5FF`.
 Dark mode is the default; light mode is fully supported via the `[data-theme]` token swap in `globals.css`.
 
 ```
-Dark (default)                          Light
-  --bg-primary:     #082c38              --bg-primary:     #e4f4f8 (Frost White)
-  --bg-secondary:   #0c3846 (Deep Sea)   --bg-secondary:   #eef8fb
-  --text-primary:   #e4f4f8 (Frost)      --text-primary:   #0c3846 (Deep Sea)
-  --text-secondary: #9fd3e3 (Icy Glaze)  --text-secondary: #24606f
-  --text-muted:     #6fa6b8              --text-muted:     #3d7383
-  --accent-primary: #5eb0c8 (Cerulean)   --accent-primary: #2a7387 (Arctic Ocean)
-  --accent-gradient: Frost->Icy fill     --accent-gradient: Deep Sea->Arctic fill   (buttons, badges, bars)
-  --accent-ink:     #0c3846              --accent-ink:     #e4f4f8                  (text on fills)
-  --accent-text-gradient: Icy->Cerulean (dark) / Deep Sea->Arctic (light), used by .text-gradient
+Dark (default)                            Light
+  --bg-primary:     #061826 (Midnight)     --bg-primary:     #eef7ff
+  --bg-secondary:   #0a2236                --bg-secondary:   #f6fbff
+  --text-primary:   #eef8ff                --text-primary:   #061826 (Midnight)
+  --text-secondary: #bde5ff (Glacier)      --text-secondary: #1c4e75 (Atlantic Steel)
+  --text-muted:     #7fa8c6                --text-muted:     #3d6a8e
+  --accent-primary: #58c9f3 (Summer Surf)  --accent-primary: #1c6f99 (deep Tidepool)
+  --accent-gradient: Glacier->Surf fill    --accent-gradient: Midnight->Atlantic fill   (buttons, badges, bars)
+  --accent-ink:     #061826                --accent-ink:     #eef7ff                    (text on fills)
+  --accent-text-gradient: Glacier->Surf (dark) / Atlantic->Tidepool (light), used by .text-gradient
 ```
 
 **Fill rule:** any element whose inline style uses `--accent-gradient` automatically gets `--accent-ink` text (global rule in `globals.css`) — don't add `text-white` to fills.
