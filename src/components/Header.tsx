@@ -5,9 +5,10 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, Sun, Moon } from 'lucide-react'
 import { useFocusTrap } from '@/hooks/useFocusTrap'
 import { useTheme } from './ThemeProvider'
-import { useLenis } from '@/providers/SmoothScrollProvider'
 import { cn } from '@/lib/utils'
 import { gsap, ScrollTrigger, useGSAP, MQ } from '@/lib/gsap'
+import { turnTo } from '@/lib/pageTurn'
+import HeaderDesk from './book/HeaderDesk'
 
 const navItems = [
   { name: 'Home', href: '#home' },
@@ -24,7 +25,6 @@ export default function Header() {
   const [isMobileOpen, setIsMobileOpen] = useState(false)
   const [activeSection, setActiveSection] = useState('home')
   const { theme, toggleTheme } = useTheme()
-  const lenis = useLenis()
   const menuRef = useRef<HTMLDivElement>(null)
   const headerRef = useRef<HTMLElement>(null)
   const menuOpenRef = useRef(false)
@@ -87,13 +87,10 @@ export default function Header() {
     return () => window.removeEventListener('keydown', onKey)
   }, [isMobileOpen])
 
+  // Chapter navigation plays the ink page-turn (falls back to a smooth scroll without motion).
   const goTo = (href: string) => {
     setIsMobileOpen(false)
-    if (lenis) {
-      lenis.scrollTo(href)
-    } else {
-      document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' })
-    }
+    turnTo(href)
   }
 
   // Hover: labels scramble into place (pointer devices, motion allowed).
@@ -175,6 +172,7 @@ export default function Header() {
 
           {/* Desktop right area */}
           <div className="hidden md:flex items-center gap-2">
+            <HeaderDesk />
             <button
               onClick={toggleTheme}
               className="p-2 rounded-lg transition-all duration-200 hover:scale-110"

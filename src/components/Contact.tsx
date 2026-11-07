@@ -41,9 +41,9 @@ export default function Contact() {
 
       <div className="container-content relative z-10">
         <div className="flex items-center gap-4 mb-8">
-          <span className="font-mono text-sm tabular-nums" style={{ color: 'var(--accent-primary)' }}>07</span>
+          <span className="font-serif text-base sm:text-lg serif-italic" style={{ color: 'var(--accent-primary)' }}>Epilogue</span>
           <span className="h-px w-16" style={{ background: 'var(--accent-gradient)' }} />
-          <span className="eyebrow">Let&apos;s connect</span>
+          <span className="eyebrow">Let&apos;s write the next chapter</span>
         </div>
 
         {/* Scroll-scaled CTA */}
@@ -55,9 +55,9 @@ export default function Contact() {
           aria-label="Get in touch — send an email to mayerfrieg@outlook.com"
         >
           <span className="heading-display block leading-[0.9]" style={{ fontSize: 'clamp(3.25rem, 11vw, 11rem)', color: 'var(--text-primary)' }}>
-            <span data-cta-line="plain" className="block">Get In</span>
+            <span data-cta-line="plain" className="block">Write To</span>
             <span data-cta-line="accent" className="flex items-center gap-[0.15em]">
-              <span className="text-gradient">Touch</span>
+              <span className="text-gradient serif-italic">Me</span>
               <ArrowUpRight
                 className="shrink-0 transition-transform duration-500 group-hover:translate-x-2 group-hover:-translate-y-2"
                 style={{ width: '0.7em', height: '0.7em', color: 'var(--accent-primary)' }}
@@ -65,7 +65,7 @@ export default function Contact() {
             </span>
           </span>
           <span className="mt-6 block text-base sm:text-lg max-w-md" style={{ color: 'var(--text-secondary)' }}>
-            Have a project in mind? I&apos;d love to hear about it.
+            Have a project in mind? Every great book starts with a first line. Send me yours.
           </span>
         </a>
 

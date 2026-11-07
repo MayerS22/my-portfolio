@@ -8,9 +8,12 @@ import Skills from '@/components/Skills'
 import Contact from '@/components/Contact'
 import Footer from '@/components/Footer'
 import ThemeProvider from '@/components/ThemeProvider'
-import PageLoader from '@/components/PageLoader'
+import BookLoader from '@/components/book/BookLoader'
 import VelocityMarquee from '@/components/scroll/VelocityMarquee'
 import CustomCursor from '@/components/scroll/CustomCursor'
+import Interlude from '@/components/book/Interlude'
+import Atmosphere from '@/components/book/Atmosphere'
+import InkWipe from '@/components/book/InkWipe'
 import SmoothScrollProvider from '@/providers/SmoothScrollProvider'
 
 const ScrollProgress = dynamic(() => import('@/components/ScrollProgress'), { ssr: false, loading: () => null })
@@ -28,29 +31,51 @@ export default function Home() {
   return (
     <ThemeProvider>
       <SmoothScrollProvider>
-        <PageLoader>
+        <>
+        <BookLoader />
           <main id="main" className="min-h-screen relative">
             <CommandPalette />
             <CustomCursor />
+            <Atmosphere />
+            <InkWipe />
             <ScrollProgress />
             <Header />
             <Hero />
-            <VelocityMarquee items={['Full-Stack', 'Next.js', 'Nest.js', 'Mobile', 'AI & Cloud', 'TypeScript']} />
+            <VelocityMarquee items={['Read', 'Plan', 'Build', 'Ship', 'Reflect', 'Repeat']} />
             <div className="section-bg-alt"><About /></div>
-            <Divider />
+            <Interlude
+              folio="12"
+              motif="clock"
+              quote="It is not that we have a short time to live, but that we waste a lot of it."
+              highlight="waste"
+              author="Seneca · On the Shortness of Life"
+            />
             <Skills />
             <Divider />
             <div className="section-bg-alt"><Experience /></div>
-            <Divider />
+            <Interlude
+              folio="48"
+              motif="book"
+              quote="A room without books is like a body without a soul."
+              highlight="books"
+              author="Cicero"
+            />
             <Freelance />
             <Divider />
             <div className="section-bg-alt"><Projects /></div>
-            <VelocityMarquee outline direction={-1} items={['Open to work', 'Let’s build', 'Cairo, Egypt', 'Available now']} />
+            <Interlude
+              folio="96"
+              motif="candle"
+              quote="Lost time is never found again."
+              highlight="time"
+              author="Benjamin Franklin"
+            />
+            <VelocityMarquee outline direction={-1} items={['Open to work', 'Your next chapter', 'Cairo, Egypt', 'Let’s build']} />
             <div className="section-bg-alt"><Contact /></div>
             <Footer />
             <BackToTop />
           </main>
-        </PageLoader>
+        </>
       </SmoothScrollProvider>
     </ThemeProvider>
   )

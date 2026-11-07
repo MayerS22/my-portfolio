@@ -4,27 +4,19 @@ import { useRef, useState, useMemo, useCallback } from 'react'
 import { Github, ExternalLink, ArrowUpRight } from 'lucide-react'
 import Image from 'next/image'
 import ProjectDetailModal, { Project } from './ProjectDetailModal'
+import { projects } from '@/data/projects'
 import SectionHeading from './scroll/SectionHeading'
 import { gsap, ScrollTrigger, useGSAP, MQ } from '@/lib/gsap'
 
-const projects: Project[] = [
-  { id: 1, title: "Grace App", description: "AI-powered practice-management SaaS for Canadian mental-health professionals. Built most of the UI and API integration, owned the appointment-scheduling module (availability checks, conflict detection), booking links and waitlist, and built AI features: live session transcription and AI session summaries using OpenAI and Gemini on an event-driven Google Cloud pipeline.", image: "/images/GraceApp.png", images: ["/images/GraceApp.png"], technologies: ["Next.js", "NestJS", "TypeScript", "PostgreSQL", "Redis", "Python", "GCP", "OpenAI", "Gemini"], githubUrl: "#", liveUrl: "https://www.joingrace.ai/en/", category: "Full-Stack" },
-  { id: 2, title: "MayerHub", description: "My all-in-one personal life manager: tasks, finances, calendar, notes, journal, health and reports, with AI-powered features like a smart food tracker and expense tracking. Shipped as a web app plus desktop installers for Windows, macOS and Linux on one shared backend.", image: "/images/MayerHub.png", images: ["/images/MayerHub.png"], technologies: ["Next.js", "TypeScript", "AI APIs", "Desktop"], githubUrl: "#", liveUrl: "https://mayer-rise-up.vercel.app", category: "Full-Stack" },
-  { id: 3, title: "SafetyZone Consumer Website", description: "Modern consumer-facing website with real-time safety reporting and emergency services integration.", image: "/images/SaftyZoneprovider/SaftyZone.png", images: ["/images/SaftyZoneprovider/SaftyZone.png", "/images/safetyZoneWebsite/1.png", "/images/safetyZoneWebsite/2.png", "/images/safetyZoneWebsite/3.png", "/images/safetyZoneWebsite/4.png", "/images/safetyZoneWebsite/5.png"], technologies: ["Next.js", "React", "TypeScript", "Tailwind CSS"], githubUrl: "#", liveUrl: "https://safetyzoone.com/", category: "Frontend" },
-  { id: 4, title: "AutoInsight", description: "Graduation project (A+): a platform that turns company data into cleaned datasets, ML forecasts and chatbot answers for layoff planning. I built the frontend dashboard in a 5-person team.", image: "/images/AutoInsight.png", images: ["/images/AutoInsight.png"], technologies: ["React", "Vite", "Python", "ML"], githubUrl: "https://github.com/MayerS22/AutoInsight", liveUrl: "#", category: "Full-Stack" },
-  { id: 5, title: "Mini-Instapay", description: "Microservices P2P payment platform with JWT auth, transaction history, RabbitMQ-driven notifications and financial reports. I built the React/Tailwind frontend in a 4-person team.", image: "/images/MiniInstapay.png", images: ["/images/MiniInstapay.png"], technologies: ["React", "Tailwind CSS", "Node.js", "MongoDB", "RabbitMQ", "Docker"], githubUrl: "#", liveUrl: "#", category: "Full-Stack" },
-  { id: 6, title: "SafetyZone Provider App", description: "Mobile app for SafetyZone providers with real-time incident management, emergency response coordination, and communication with dispatch center.", image: "/images/SaftyZoneprovider/SaftyZone.png", images: ["/images/SaftyZoneprovider/HomePage.png", "/images/SaftyZoneprovider/BasicInfo.png", "/images/SaftyZoneprovider/chats.png", "/images/SaftyZoneprovider/Offers.png", "/images/SaftyZoneprovider/PendingScreen.png"], technologies: ["Flutter", "Firebase", "Dart", "Socket.io"], githubUrl: "#", liveUrl: "#", category: "Mobile" },
-  { id: 7, title: "SafetyZone Consumer App", description: "Mobile app for SafetyZone consumers with real-time safety reporting, emergency services, and incident tracking.", image: "/images/safetyZoneConsumer/0.png", images: ["/images/safetyZoneConsumer/0.png", "/images/safetyZoneConsumer/1.png", "/images/safetyZoneConsumer/2.png", "/images/safetyZoneConsumer/3.png", "/images/safetyZoneConsumer/4.png", "/images/safetyZoneConsumer/5.png"], technologies: ["Flutter", "Firebase", "Dart", "REST APIs"], githubUrl: "#", liveUrl: "#", category: "Mobile" },
-  { id: 8, title: "Speedo Transfer", description: "Money-transfer app built during my Banque Misr internship. I built the frontend with my team: screens, UI components and navigation in Jetpack Compose, connected to REST APIs.", image: "/images/Speedo.png", images: ["/images/Speedo.png"], technologies: ["Kotlin", "Jetpack Compose", "Material Design", "REST APIs"], githubUrl: "https://github.com/MayerS22/speedoo", liveUrl: "#", category: "Mobile" },
-  { id: 9, title: "Checko", description: "Full-stack mobile todo with intelligent insights.", image: "/images/Checko/checko-1.jpeg", images: ["/images/Checko/checko-1.jpeg", "/images/Checko/checko-2.jpeg"], technologies: ["React Native", "Firebase", "TypeScript"], githubUrl: "https://github.com/MayerS22/Checko", liveUrl: "#", category: "Mobile" },
-  { id: 10, title: "E-Commerce", description: "Mobile e-commerce with real-time data.", image: "/images/ecommerce-app.jpg", images: ["/images/ecommerce-app.jpg"], technologies: ["Flutter", "Firebase", "Dart"], githubUrl: "https://github.com/MayerS22/E-commerce-Mobile-App", liveUrl: "#", category: "Mobile" }
-]
 
 /** Shown as large case-study rows; everything else lives in the index list. */
 const FEATURED_IDS = [1, 2]
 const CATEGORIES = ['All', 'Full-Stack', 'Mobile', 'Frontend'] as const
 
 const hasLink = (url?: string) => Boolean(url && url !== '#')
+
+/** Library call-number prefixes for the card catalogue. */
+const CALL: Record<string, string> = { 'Full-Stack': 'FS', Mobile: 'MB', Frontend: 'FE' }
 
 /**
  * Chapter 06. Featured work as alternating case-study rows (image wipes open, drifts with
@@ -62,9 +54,11 @@ export default function Projects() {
       gsap.utils.toArray<HTMLElement>('[data-feat]').forEach((row) => {
         const frame = row.querySelector('[data-feat-frame]')
         const img = row.querySelector('[data-feat-img]')
-        gsap.fromTo(frame,
-          { clipPath: 'inset(12% 12% 12% 12% round 24px)' },
-          { clipPath: 'inset(0% 0% 0% 0% round 24px)', ease: 'none', scrollTrigger: { trigger: row, start: 'top 90%', end: 'top 35%', scrub: true } })
+        // Calm entrance: the frame fades up into place once, no 3D
+        gsap.from(frame, {
+          y: 60, opacity: 0, scale: 0.96, duration: 1.2, ease: 'expo.out',
+          scrollTrigger: { trigger: row, start: 'top 85%', toggleActions: 'play none none reverse' },
+        })
         gsap.fromTo(img, { yPercent: -5, scale: 1.12 }, {
           yPercent: 5, scale: 1.04, ease: 'none',
           scrollTrigger: { trigger: row, start: 'top bottom', end: 'bottom top', scrub: true },
@@ -83,12 +77,12 @@ export default function Projects() {
     mm.add(MQ.motion, () => {
       const rows = gsap.utils.toArray<HTMLElement>('[data-idx-row]')
       gsap.set(rows, { opacity: 0, y: 30 })
-      gsap.set('[data-idx-line]', { scaleX: 0 })
+      // Cards rise out of the drawer, tipping up from flat, one after another
+      gsap.set(rows, { y: 90, rotationX: -55, transformOrigin: '50% 100%' })
       ScrollTrigger.batch(rows, {
-        start: 'top 94%',
+        start: 'top 96%',
         onEnter: (batch) => {
-          gsap.to(batch, { opacity: 1, y: 0, duration: 0.9, stagger: 0.07, overwrite: true })
-          gsap.to(batch.map((r) => r.querySelector('[data-idx-line]')), { scaleX: 1, duration: 1.2, stagger: 0.07, ease: 'expo.inOut' })
+          gsap.to(batch, { opacity: 1, y: 0, rotationX: 0, duration: 1, stagger: 0.08, ease: 'back.out(1.4)', overwrite: true })
         },
       })
     })
@@ -125,7 +119,7 @@ export default function Projects() {
   return (
     <section id="projects" ref={ref} className="section relative">
       <div className="container-content">
-        <SectionHeading index="06" eyebrow="Portfolio" title="Featured" accent="Projects" intro="A showcase of my recent work." />
+        <SectionHeading index="06" eyebrow="Selected work" title="Featured" accent="Projects" intro="The chapters I'm proudest of: real products, shipped and in use." />
 
         {/* ── Featured case studies ── */}
         <div className="space-y-24 sm:space-y-32 mb-28 sm:mb-36">
@@ -217,12 +211,17 @@ export default function Projects() {
           })}
         </div>
 
-        {/* ── Index ── */}
-        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-8">
-          <h3 className="heading-display text-3xl sm:text-4xl" style={{ color: 'var(--text-primary)' }}>
-            More work <span className="font-mono text-base align-top" style={{ color: 'var(--text-muted)' }}>({String(rest.length).padStart(2, '0')})</span>
-          </h3>
-          <div role="group" aria-label="Filter projects" className="inline-flex flex-wrap p-1 rounded-full self-start" style={{ background: 'var(--glass-bg)', border: '1px solid var(--glass-border)' }}>
+        {/* ── The card catalogue ── */}
+        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-10">
+          <div>
+            <p className="eyebrow mb-3" style={{ color: 'var(--accent-primary)' }}>More work</p>
+            <h3 className="heading-display text-3xl sm:text-5xl" style={{ color: 'var(--text-primary)' }}>
+              The Card <span className="serif-italic text-gradient">Catalogue</span>{' '}
+              <span className="font-mono text-base align-top" style={{ color: 'var(--text-muted)' }}>({String(rest.length).padStart(2, '0')})</span>
+            </h3>
+          </div>
+          {/* Drawer tabs */}
+          <div role="group" aria-label="Filter projects" className="flex flex-wrap items-end gap-1.5 self-start sm:self-end">
             {CATEGORIES.map((category) => {
               const active = activeCategory === category
               return (
@@ -230,8 +229,10 @@ export default function Projects() {
                   key={category}
                   onClick={() => setActiveCategory(category)}
                   aria-pressed={active}
-                  className="px-4 py-2 rounded-full text-sm font-medium transition-colors"
-                  style={active ? { background: 'var(--accent-gradient)' } : { color: 'var(--text-secondary)' }}
+                  className="relative px-3 sm:px-4 pt-2 pb-2.5 rounded-t-lg font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.18em] transition-all duration-300"
+                  style={active
+                    ? { background: 'var(--paper)', color: 'var(--paper-ink)', transform: 'translateY(-4px)', boxShadow: '0 -6px 14px -6px rgba(0,0,0,0.6)' }
+                    : { background: 'color-mix(in srgb, var(--paper) 14%, transparent)', color: 'var(--text-secondary)', border: '1px solid var(--glass-border)', borderBottom: 'none' }}
                 >
                   {category}
                 </button>
@@ -240,88 +241,131 @@ export default function Projects() {
           </div>
         </div>
 
-        <ul data-idx-list className="relative border-t" style={{ borderColor: 'var(--card-border)' }}>
-          {rest.map((project, i) => (
-            <li key={project.id} data-idx-row className="relative">
-              <span data-idx-line className="absolute left-0 right-0 bottom-0 h-px origin-left" style={{ background: 'var(--card-border)' }} />
-              <div
-                role="button"
-                tabIndex={0}
-                data-cursor="View"
-                onClick={() => openProjectModal(project)}
-                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openProjectModal(project) } }}
-                onPointerEnter={() => setHovered(project)}
-                aria-label={`Open ${project.title} details`}
-                className="group grid grid-cols-[auto_1fr_auto] lg:grid-cols-[3rem_1.4fr_1fr_8rem_auto] items-center gap-4 lg:gap-6 py-6 sm:py-7 cursor-pointer outline-none focus-visible:bg-[color:var(--glass-bg)]"
-              >
-                <span className="hidden lg:block font-mono text-xs tabular-nums" style={{ color: 'var(--text-muted)' }}>
-                  {String(i + 1).padStart(2, '0')}
-                </span>
-                {/* Mobile thumbnail */}
-                <span className="lg:hidden relative w-14 h-14 rounded-xl overflow-hidden" style={{ background: 'var(--bg-tertiary)' }}>
-                  <Image src={project.image} alt="" fill className="object-cover" sizes="56px" />
-                </span>
-                <span className="min-w-0">
-                  <span
-                    className="block heading-display transition-[transform,color] duration-500 group-hover:translate-x-3"
-                    style={{ fontSize: 'clamp(1.4rem, 3vw, 2.5rem)', color: 'var(--text-primary)' }}
-                  >
-                    {project.title}
-                  </span>
-                  <span className="lg:hidden block eyebrow mt-1">{project.category}</span>
-                </span>
-                <span className="hidden lg:block text-sm truncate" style={{ color: 'var(--text-muted)' }}>
-                  {project.technologies.slice(0, 3).join(' · ')}
-                </span>
-                <span className="hidden lg:block eyebrow">{project.category}</span>
-                <span className="flex items-center gap-2">
-                  {hasLink(project.githubUrl) && (
-                    <a
-                      href={project.githubUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={(e) => e.stopPropagation()}
-                      className="w-10 h-10 rounded-full flex items-center justify-center"
-                      style={{ border: '1px solid var(--glass-border)', color: 'var(--text-secondary)' }}
-                      aria-label={`${project.title} source code on GitHub`}
-                    >
-                      <Github size={16} />
-                    </a>
-                  )}
-                  {hasLink(project.liveUrl) && (
-                    <a
-                      href={project.liveUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={(e) => e.stopPropagation()}
-                      className="w-10 h-10 rounded-full flex items-center justify-center"
-                      style={{ border: '1px solid var(--glass-border)', color: 'var(--text-secondary)' }}
-                      aria-label={`${project.title} live site`}
-                    >
-                      <ExternalLink size={15} />
-                    </a>
-                  )}
-                  <span
-                    className="w-10 h-10 rounded-full flex items-center justify-center transition-transform duration-500 group-hover:rotate-45"
-                    style={{ background: 'var(--glass-bg)', color: 'var(--text-primary)' }}
-                  >
-                    <ArrowUpRight size={16} />
-                  </span>
-                </span>
-              </div>
-            </li>
-          ))}
-        </ul>
+        <div className="relative">
+          <ul data-idx-list className="relative space-y-[-6px] px-1 sm:px-4 pb-10" style={{ perspective: '1600px' }}>
+            {rest.map((project, i) => (
+              <li key={project.id} data-idx-row className="relative" style={{ zIndex: i + 1 }}>
+                <div
+                  role="button"
+                  tabIndex={0}
+                  data-cursor="View"
+                  onClick={() => openProjectModal(project)}
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openProjectModal(project) } }}
+                  onPointerEnter={() => setHovered(project)}
+                  aria-label={`Open ${project.title} details`}
+                  className="group paper relative block rounded-[4px] cursor-pointer outline-none transition-[translate,rotate,box-shadow] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-4 hover:rotate-[-0.6deg] focus-visible:-translate-y-4"
+                  style={{ boxShadow: '0 -1px 0 rgba(90,60,25,0.15), 0 10px 22px -12px rgba(0,0,0,0.75)', color: 'var(--paper-ink)' }}
+                >
+                  {/* Red header rule, like a real index card */}
+                  <span aria-hidden className="hidden lg:block absolute inset-x-0 top-[38px] h-px" style={{ background: 'rgba(170,40,30,0.45)' }} />
+                  <div className="grid grid-cols-[auto_1fr_auto] lg:grid-cols-[1.7fr_1fr_8rem_auto] items-center gap-4 lg:gap-6 px-4 sm:px-6 pt-3 pb-5">
+                    {/* Call number */}
+                    <span className="hidden lg:block absolute left-6 top-3 font-mono text-[11px] tracking-[0.12em] opacity-70">
+                      {CALL[project.category] ?? 'MS'}·{String(project.id).padStart(3, '0')}
+                    </span>
+                    {/* Mobile thumbnail */}
+                    <span className="lg:hidden relative w-14 h-14 overflow-hidden bg-white p-1 rotate-[-2deg]" style={{ boxShadow: '0 4px 10px -4px rgba(60,35,10,0.6)' }}>
+                      <span className="relative block w-full h-full overflow-hidden">
+                        <Image src={project.image} alt="" fill className="object-cover sepia-[0.3]" sizes="56px" />
+                      </span>
+                    </span>
+                    <span className="min-w-0 lg:pt-6">
+                      <span className="lg:hidden block font-mono text-[10px] tracking-[0.12em] opacity-60 mb-1">
+                        {CALL[project.category] ?? 'MS'}·{String(project.id).padStart(3, '0')}
+                      </span>
+                      <span
+                        className="block font-serif font-semibold leading-tight transition-transform duration-500 group-hover:translate-x-2"
+                        style={{ fontSize: 'clamp(1.35rem, 2.6vw, 2.2rem)' }}
+                      >
+                        {project.title}
+                      </span>
+                      <span className="block serif-italic text-sm opacity-70 mt-1 truncate">{project.description}</span>
+                    </span>
+                    <span className="hidden lg:block font-mono text-xs opacity-70 truncate lg:pt-6">
+                      {project.technologies.slice(0, 3).join(' · ')}
+                    </span>
+                    {/* Rubber stamp */}
+                    <span className="hidden lg:flex justify-center lg:pt-6">
+                      <span
+                        className="px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.2em] rotate-[-7deg] transition-transform duration-500 group-hover:rotate-[-2deg] group-hover:scale-110"
+                        style={{ color: '#a3291f', border: '2px solid rgba(163,41,31,0.75)', borderRadius: 3, opacity: 0.85, mixBlendMode: 'multiply' }}
+                      >
+                        {project.category}
+                      </span>
+                    </span>
+                    <span className="flex items-center gap-2 lg:pt-6">
+                      {hasLink(project.githubUrl) && (
+                        <a
+                          href={project.githubUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          className="w-10 h-10 rounded-full flex items-center justify-center transition-colors hover:bg-[rgba(42,29,18,0.08)]"
+                          style={{ border: '1px solid rgba(42,29,18,0.3)' }}
+                          aria-label={`${project.title} source code on GitHub`}
+                        >
+                          <Github size={16} />
+                        </a>
+                      )}
+                      {hasLink(project.liveUrl) && (
+                        <a
+                          href={project.liveUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          className="w-10 h-10 rounded-full flex items-center justify-center transition-colors hover:bg-[rgba(42,29,18,0.08)]"
+                          style={{ border: '1px solid rgba(42,29,18,0.3)' }}
+                          aria-label={`${project.title} live site`}
+                        >
+                          <ExternalLink size={15} />
+                        </a>
+                      )}
+                      <span
+                        className="w-10 h-10 rounded-full flex items-center justify-center transition-transform duration-500 group-hover:rotate-45"
+                        style={{ background: '#2a1d12', color: '#f5ead6' }}
+                      >
+                        <ArrowUpRight size={16} />
+                      </span>
+                    </span>
+                  </div>
+                  {/* Punch hole */}
+                  <span aria-hidden className="absolute left-1/2 -translate-x-1/2 bottom-1.5 w-3 h-3 rounded-full" style={{ background: 'var(--bg-primary)', boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.6)' }} />
+                </div>
+              </li>
+            ))}
+          </ul>
+
+          {/* Drawer front: the cards stand inside it */}
+          <div
+            aria-hidden
+            className="relative -mt-14 z-[30] h-24 sm:h-28 rounded-[6px] flex items-center justify-center gap-6 sm:gap-10"
+            style={{ background: 'linear-gradient(180deg, #5a3a20, #3a2412 70%, #2a190c)', boxShadow: 'inset 0 2px 0 rgba(255,220,160,0.15), 0 30px 50px -20px rgba(0,0,0,0.9)' }}
+          >
+            {/* Brass label holder */}
+            <span className="px-5 py-2 rounded-sm font-serif serif-italic text-sm sm:text-base" style={{ background: 'linear-gradient(180deg, #f0cd8a, #a87a3a)', color: '#2a1a0c', boxShadow: '0 2px 4px rgba(0,0,0,0.5), inset 0 0 0 2px rgba(90,55,20,0.35)' }}>
+              Projects · A–Z
+            </span>
+            {/* Pull handle */}
+            <span className="w-20 sm:w-28 h-4 rounded-full" style={{ background: 'linear-gradient(180deg, #f0cd8a, #8a5c28)', boxShadow: '0 4px 6px rgba(0,0,0,0.5)' }} />
+          </div>
+        </div>
       </div>
 
-      {/* Cursor-following preview (desktop) */}
+      {/* Cursor-following preview (desktop): a photo clipped to the card */}
       <div
         ref={previewRef}
         aria-hidden
-        className="invisible fixed left-0 top-0 z-40 pointer-events-none -ml-[150px] -mt-[100px] w-[300px] h-[200px] rounded-2xl overflow-hidden scale-50"
-        style={{ background: 'var(--bg-tertiary)', boxShadow: '0 30px 60px -20px rgba(0,0,0,0.5)' }}
+        className="invisible fixed left-0 top-0 z-40 pointer-events-none -ml-[150px] -mt-[110px] w-[300px] h-[220px] p-2.5 pb-8 bg-[#fffaf0] scale-50"
+        style={{ boxShadow: '0 30px 60px -20px rgba(0,0,0,0.7)' }}
       >
-        {hovered && <Image key={hovered.id} src={hovered.image} alt="" fill className="object-cover object-top" sizes="300px" />}
+        <span className="relative block w-full h-full overflow-hidden" style={{ background: 'var(--paper-2)' }}>
+          {hovered && <Image key={hovered.id} src={hovered.image} alt="" fill className="object-cover object-top sepia-[0.25]" sizes="300px" />}
+        </span>
+        {hovered && <span className="absolute bottom-1.5 inset-x-0 text-center font-hand text-lg" style={{ color: '#22314f' }}>{hovered.title}</span>}
+        {/* Paper clip */}
+        <svg viewBox="0 0 24 60" className="absolute -top-5 left-6 w-5 h-12" aria-hidden>
+          <path d="M8 40 V12 a6 6 0 0 1 12 0 V46 a9 9 0 0 1 -18 0 V18" fill="none" stroke="#b8b0a0" strokeWidth="2.4" strokeLinecap="round" />
+        </svg>
       </div>
 
       <ProjectDetailModal project={selectedProject} isOpen={isModalOpen} onClose={closeProjectModal} />

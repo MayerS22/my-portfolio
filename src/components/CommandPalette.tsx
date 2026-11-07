@@ -2,7 +2,10 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Search, Home, User, Code, Briefcase, Palette, Folder, Mail, FileText, Sun, Moon, Github, Linkedin, Printer, X, type LucideIcon } from 'lucide-react'
+import { Search, Home, User, Code, Briefcase, Palette, Folder, Mail, FileText, Sun, Moon, Github, Linkedin, Printer, X, Hourglass, Volume2, type LucideIcon } from 'lucide-react'
+import { turnTo } from '@/lib/pageTurn'
+import { toggleFocus, getFocus } from '@/lib/focus'
+import { isSoundOn, setSound } from '@/lib/sound'
 import { useTheme } from './ThemeProvider'
 import { useFocusTrap } from '@/hooks/useFocusTrap'
 
@@ -31,18 +34,20 @@ export default function CommandPalette() {
   useFocusTrap(dialogRef, isOpen)
 
   const commands: Command[] = [
-    { id: 'home', label: 'Go to Home', icon: Home, action: () => document.querySelector('#home')?.scrollIntoView({ behavior: 'smooth' }), keywords: ['home', 'top'] },
-    { id: 'about', label: 'Go to About', icon: User, action: () => document.querySelector('#about')?.scrollIntoView({ behavior: 'smooth' }), keywords: ['about', 'bio'] },
-    { id: 'skills', label: 'Go to Skills', icon: Code, action: () => document.querySelector('#skills')?.scrollIntoView({ behavior: 'smooth' }), keywords: ['skills', 'tech', 'stack'] },
-    { id: 'experience', label: 'Go to Experience', icon: Briefcase, action: () => document.querySelector('#experience')?.scrollIntoView({ behavior: 'smooth' }), keywords: ['experience', 'work', 'education'] },
-    { id: 'freelance', label: 'Go to Freelance', icon: Palette, action: () => document.querySelector('#freelance')?.scrollIntoView({ behavior: 'smooth' }), keywords: ['freelance', 'client'] },
-    { id: 'projects', label: 'Go to Projects', icon: Folder, action: () => document.querySelector('#projects')?.scrollIntoView({ behavior: 'smooth' }), keywords: ['projects', 'portfolio'] },
-    { id: 'contact', label: 'Go to Contact', icon: Mail, action: () => document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' }), keywords: ['contact', 'email'] },
+    { id: 'home', label: 'Go to Home', icon: Home, action: () => turnTo('#home'), keywords: ['home', 'top'] },
+    { id: 'about', label: 'Go to About', icon: User, action: () => turnTo('#about'), keywords: ['about', 'bio'] },
+    { id: 'skills', label: 'Go to Skills', icon: Code, action: () => turnTo('#skills'), keywords: ['skills', 'tech', 'stack'] },
+    { id: 'experience', label: 'Go to Experience', icon: Briefcase, action: () => turnTo('#experience'), keywords: ['experience', 'work', 'education'] },
+    { id: 'freelance', label: 'Go to Freelance', icon: Palette, action: () => turnTo('#freelance'), keywords: ['freelance', 'client'] },
+    { id: 'projects', label: 'Go to Projects', icon: Folder, action: () => turnTo('#projects'), keywords: ['projects', 'portfolio'] },
+    { id: 'contact', label: 'Go to Contact', icon: Mail, action: () => turnTo('#contact'), keywords: ['contact', 'email'] },
     { id: 'cv', label: 'View CV', icon: FileText, action: () => window.open('/images/Cv/Mayer Frieg CV.pdf'), keywords: ['cv', 'resume', 'download'] },
     { id: 'theme', label: `Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`, icon: theme === 'dark' ? Sun : Moon, action: toggleTheme, keywords: ['theme', 'dark', 'light', 'mode'] },
     { id: 'github', label: 'Open GitHub', icon: Github, action: () => window.open('https://github.com/MayerS22'), keywords: ['github', 'code'] },
     { id: 'linkedin', label: 'Open LinkedIn', icon: Linkedin, action: () => window.open('https://www.linkedin.com/in/mayer-frieg-7a0368226/'), keywords: ['linkedin', 'social'] },
     { id: 'email', label: 'Send Email', icon: Mail, action: () => window.location.href = 'mailto:mayerfrieg@outlook.com', keywords: ['email', 'send', 'mail'] },
+    { id: 'focus', label: getFocus().running ? 'Stop focus session' : 'Start a 25-min focus session', icon: Hourglass, action: toggleFocus, keywords: ['focus', 'pomodoro', 'timer', 'time', 'hourglass'] },
+    { id: 'sound', label: isSoundOn() ? 'Mute sound effects' : 'Turn on sound effects', icon: Volume2, action: () => setSound(!isSoundOn()), keywords: ['sound', 'audio', 'mute', 'volume'] },
     { id: 'print', label: 'Print / Save as PDF', icon: Printer, action: () => window.print(), keywords: ['print', 'pdf', 'save', 'export'] },
   ]
 
